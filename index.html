@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>점성술 주사위</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: #334155;
+      --accent: #38bdf8;
+      --yes: #34d399;
+      --no: #fb7185;
+      --hold: #fbbf24;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.18), transparent 32%),
+        radial-gradient(circle at top right, rgba(168,85,247,.16), transparent 32%),
+        linear-gradient(180deg, #020617, #0f172a);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 34px 16px 64px;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 54px rgba(0,0,0,.34);
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: -0.045em;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 19px;
+      letter-spacing: -0.03em;
+    }
+
+    h3 {
+      margin: 20px 0 10px;
+      font-size: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    p { margin: 0 0 12px; }
+
+    .muted { color: var(--muted); font-size: 14px; }
+    .small { color: var(--muted); font-size: 12px; }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 98px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #020617;
+      color: var(--text);
+      padding: 14px 15px;
+      font-size: 15px;
+      outline: none;
+    }
+
+    textarea:focus { border-color: var(--accent); }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      flex: 1;
+      cursor: pointer;
+      border: none;
+      border-radius: 15px;
+      padding: 14px 15px;
+      color: white;
+      font-weight: 900;
+      font-size: 15px;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      transition: transform .08s ease, opacity .1s ease;
+    }
+
+    button.secondary {
+      background: #1f2937;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    button:active { transform: scale(.99); }
+
+    @media (max-width: 640px) {
+      .row { flex-direction: column; }
+    }
+
+    .dice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 640px) {
+      .dice-grid { grid-template-columns: 1fr; }
+    }
+
+    .dice {
+      background: #020617;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px 12px;
+      text-align: center;
+    }
+
+    .dice .kind {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .dice .icon {
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .dice .name {
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.035em;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(2, 6, 23, .72);
+      border: 1px solid var(--line);
+    }
+
+    .block {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(15, 23, 42, .55);
+      margin-top: 12px;
+    }
+
+    .answer-title {
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.035em;
+      margin-bottom: 6px;
+    }
+
+    .yes { color: var(--yes); }
+    .no { color: var(--no); }
+    .hold { color: var(--hold); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      text-align: left;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    th {
+      width: 98px;
+      color: var(--muted);
+      font-weight: 800;
+      background: rgba(2,6,23,.55);
+    }
+
+    tr:last-child th, tr:last-child td { border-bottom: none; }
+
+    .scene {
+      white-space: pre-line;
+      font-size: 15px;
+    }
+
+    .notice {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(251,191,36,.35);
+      background: rgba(251,191,36,.08);
+      color: #fde68a;
+      font-size: 13px;
+    }
+
+    .error {
+      margin-top: 10px;
+      color: #fecaca;
+      font-size: 13px;
+      display: none;
+    }
+
+    .history {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(51,65,85,.6);
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 12px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    .history-item:hover {
+      background: rgba(15, 23, 42, .8);
+      color: var(--text);
+    }
+
+    .history-item:last-child { border-bottom: none; }
+
+    .question-box {
+      font-size: 15px;
+      color: #dbeafe;
+      word-break: break-word;
+    }
+  </style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=21242"></script>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="card">
+      <h1>점성술 주사위</h1>
+      <p class="muted">질문을 적고 주사위를 굴리면, 행성·별자리·하우스 좌표를 기준으로 짧게 답합니다.</p>
+
+      <label for="question">질문</label>
+      <textarea id="question" placeholder="예: 나 잘 하고 있는거지?"></textarea>
+      <div id="error" class="error">질문을 먼저 적어주세요.</div>
+
+      <div class="row">
+        <button id="rollBtn">주사위 굴리기</button>
+        <button class="secondary" id="clearBtn">초기화</button>
+      </div>
+
+      <div class="dice-grid" id="diceGrid">
+        <div class="dice"><div class="kind">행성 / 기능</div><div class="icon">-</div><div class="name">대기</div></div>
+        <div class="dice"><div class="kind">별자리 / 결</div><div class="icon">-</div><div class="name">대기</div></div>
+        <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div></div>
+      </div>
+
+      <div class="result" id="reading">
+        <p class="muted">질문을 입력하고 주사위를 굴려주세요.</p>
+      </div>
+
+      <div class="notice">
+        이 해석은 현재 흐름의 좌표일뿐 결론, 운명, 옳고 그름을 뜻하지 않습니다.
+      </div>
+
+      <div class="history">
+        <strong>기록</strong>
+        <div id="historyList" class="small" style="margin-top:8px;">기록 없음.</div>
+      </div>
+    </section>
+  </main>
+
+<script>
+const planets = [
+  { name:"태양", icon:"☉", key:"자아/확정", text:"의지와 존재감을 드러내려는 기능", drive:2, stability:0, clarity:1,
+    scene:"불이 켜진다. 숨은 기준이 밖으로 드러나며, 지금의 방향을 스스로 확인하려는 장면이다." },
+  { name:"달", icon:"☽", key:"반응/안정", text:"안전감과 익숙한 패턴을 확인하는 기능", drive:0, stability:2, clarity:0,
+    scene:"몸이 먼저 반응한다. 머리의 판단보다 익숙한 감각과 안전감이 먼저 올라오는 장면이다." },
+  { name:"수성", icon:"☿", key:"인지/해석", text:"정보를 연결하고 의미를 만드는 기능", drive:0, stability:0, clarity:2,
+    scene:"흩어진 종이를 한 장씩 맞춘다. 결정보다 이해와 정리가 먼저 필요한 장면이다." },
+  { name:"금성", icon:"♀", key:"가치/선택", text:"끌리는 것과 취할 것을 고르는 기능", drive:1, stability:1, clarity:1,
+    scene:"손이 자연스럽게 한쪽으로 간다. 억지보다 끌림과 선호가 기준이 되는 장면이다." },
+  { name:"화성", icon:"♂", key:"추진/행동", text:"욕망을 행동으로 밀어붙이는 기능", drive:2, stability:-1, clarity:0,
+    scene:"발이 먼저 앞으로 나간다. 움직임은 생기지만, 힘이 앞서면 부딪힐 수 있는 장면이다." },
+  { name:"목성", icon:"♃", key:"확장/신념", text:"판을 넓히고 의미를 부여하는 기능", drive:2, stability:0, clarity:1,
+    scene:"시야가 넓어진다. 작은 선택이 더 큰 방향과 의미로 이어지는 장면이다." },
+  { name:"토성", icon:"♄", key:"구조/시간", text:"한계와 책임을 통해 굳히는 기능", drive:0, stability:2, clarity:1,
+    scene:"기둥을 세운다. 빠른 결과보다 버틸 수 있는 구조를 먼저 확인하는 장면이다." },
+  { name:"천왕성", icon:"♅", key:"단절/혁신", text:"기존 판을 끊고 새 구조로 전환하는 기능", drive:2, stability:-2, clarity:0,
+    scene:"낡은 회로가 끊긴다. 익숙한 방식이 흔들리고, 다른 구조로 바꾸라는 신호가 들어오는 장면이다." },
+  { name:"해왕성", icon:"♆", key:"용해/혼합", text:"경계를 흐리고 감각을 퍼뜨리는 기능", drive:-1, stability:-1, clarity:-2,
+    scene:"안개가 내려앉는다. 분명한 판단보다 감정과 상상이 섞이며 경계가 흐려지는 장면이다." },
+  { name:"명왕성", icon:"♇", key:"근원/재편", text:"근본을 건드려 이전 상태를 바꾸는 기능", drive:1, stability:-1, clarity:0,
+    scene:"뿌리까지 파고든다. 표면의 문제가 아니라 근본 구조가 다시 짜이는 장면이다." },
+  { name:"북노드", icon:"☊", key:"성장 방향", text:"익숙하지 않지만 향하게 되는 방향", drive:1, stability:-1, clarity:0,
+    scene:"낯선 길이 열린다. 바로 편하진 않지만, 다음 방향을 향해 몸이 기울어지는 장면이다." },
+  { name:"남노드", icon:"☋", key:"기본값/회귀", text:"이미 익숙해서 자동으로 돌아가는 지점", drive:-1, stability:1, clarity:0,
+    scene:"발이 익숙한 자리로 돌아간다. 안정은 있지만, 변화가 필요할 때는 반복이 될 수 있는 장면이다." }
+];
+
+const signs = [
+  { name:"양자리", icon:"♈︎", key:"돌파", text:"유지보다 개시, 판단보다 행동", drive:2, stability:-1, clarity:0,
+    scene:"문이 열리기 전에 손이 먼저 나간다. 막힘을 힘으로 뚫는 장면이다." },
+  { name:"황소자리", icon:"♉︎", key:"지속", text:"속도보다 유지, 변화보다 안정", drive:0, stability:2, clarity:0,
+    scene:"땅을 다진다. 급하게 바꾸기보다 오래 버틸 수 있는 형태를 찾는 장면이다." },
+  { name:"쌍둥이자리", icon:"♊︎", key:"연결", text:"깊이보다 회전율, 정보의 이동", drive:0, stability:-1, clarity:1,
+    scene:"말과 정보가 오간다. 하나에 고정되기보다 여러 가능성을 확인하는 장면이다." },
+  { name:"게자리", icon:"♋︎", key:"보호", text:"확장보다 보존, 내부 경계 형성", drive:0, stability:1, clarity:0,
+    scene:"문을 닫고 안쪽을 살핀다. 바깥보다 내부의 안전감이 먼저인 장면이다." },
+  { name:"사자자리", icon:"♌︎", key:"발현", text:"효율보다 존재 확인, 드러냄", drive:1, stability:0, clarity:1,
+    scene:"무대 위에 불이 들어온다. 숨기기보다 존재를 확인받으려는 장면이다." },
+  { name:"처녀자리", icon:"♍︎", key:"정제", text:"분석·관리·점검, 리스크 최소화", drive:0, stability:1, clarity:2,
+    scene:"작은 나사를 다시 조인다. 큰 선언보다 빠진 부분을 정리하는 장면이다." },
+  { name:"천칭자리", icon:"♎︎", key:"조율", text:"충돌 최소화, 균형을 위한 지연", drive:0, stability:0, clarity:1,
+    scene:"저울이 흔들린다. 한쪽으로 밀기보다 균형점을 찾는 장면이다." },
+  { name:"전갈자리", icon:"♏︎", key:"관통", text:"핵심 외엔 배제, 폭보다 깊이", drive:1, stability:0, clarity:1,
+    scene:"겉껍질을 벗기고 안쪽을 본다. 넓게 보기보다 핵심을 파고드는 장면이다." },
+  { name:"사수자리", icon:"♐︎", key:"확장", text:"정밀도보다 방향, 의미로 움직임", drive:2, stability:-1, clarity:1,
+    scene:"먼 곳에 깃발이 보인다. 세부보다 방향과 의미가 먼저 보이는 장면이다." },
+  { name:"염소자리", icon:"♑︎", key:"구조", text:"감정보다 작동 가능성, 현실 기준", drive:0, stability:2, clarity:1,
+    scene:"계단을 하나씩 오른다. 감정보다 실제로 작동하는 구조를 확인하는 장면이다." },
+  { name:"물병자리", icon:"♒︎", key:"재설계", text:"감정을 개념화하고 구조를 바꿈", drive:1, stability:-1, clarity:1,
+    scene:"설계도를 다시 그린다. 감정에서 떨어져 구조를 새로 보는 장면이다." },
+  { name:"물고기자리", icon:"♓︎", key:"용해", text:"구분보다 통합, 경계 흐림", drive:-1, stability:-1, clarity:-1,
+    scene:"물감이 물에 번진다. 나누기보다 섞이며 하나로 흐르는 장면이다." }
+];
+
+const houses = [
+  { name:"1하우스", icon:"1", key:"자아", text:"자아와 존재감이 드러나는 무대", drive:1, stability:0, clarity:1,
+    scene:"내가 앞으로 나온다. 질문이 결국 나의 태도와 존재감으로 드러나는 장면이다." },
+  { name:"2하우스", icon:"2", key:"자원", text:"개인 자원과 소유 감각의 무대", drive:0, stability:2, clarity:1,
+    scene:"손에 쥔 것을 확인한다. 돈, 시간, 체력처럼 내가 감당할 자원을 보는 장면이다." },
+  { name:"3하우스", icon:"3", key:"정보", text:"인식과 정보 교환의 무대", drive:0, stability:0, clarity:2,
+    scene:"말과 신호를 확인한다. 판단보다 정보 정리와 소통이 먼저인 장면이다." },
+  { name:"4하우스", icon:"4", key:"기반", text:"정서적·물리적 기반의 무대", drive:0, stability:2, clarity:0,
+    scene:"집의 바닥을 본다. 바깥 결과보다 내부 기반과 정서적 안정이 중요한 장면이다." },
+  { name:"5하우스", icon:"5", key:"표현", text:"자발적 표현과 창조의 무대", drive:2, stability:0, clarity:1,
+    scene:"손에서 무언가 만들어진다. 억지보다 자발적 표현이 살아나는 장면이다." },
+  { name:"6하우스", icon:"6", key:"관리", text:"유지·관리·반복의 무대", drive:0, stability:1, clarity:2,
+    scene:"매일 쓰는 도구를 닦는다. 큰 변화보다 반복과 관리가 결과를 만드는 장면이다." },
+  { name:"7하우스", icon:"7", key:"타자", text:"1:1 관계와 상호작용의 무대", drive:0, stability:0, clarity:1,
+    scene:"마주 앉은 사람이 있다. 혼자 결정하는 문제가 아니라 상대와의 반응이 중요한 장면이다." },
+  { name:"8하우스", icon:"8", key:"공유/침잠", text:"통제 밖 자원과 깊은 얽힘의 무대", drive:-1, stability:-1, clarity:-1,
+    scene:"내 손 밖의 것이 얽힌다. 쉽게 통제하기 어렵고 깊게 들어가야 하는 장면이다." },
+  { name:"9하우스", icon:"9", key:"의미", text:"의미와 가치 체계가 확장되는 무대", drive:1, stability:0, clarity:1,
+    scene:"지도 밖을 바라본다. 당장의 효율보다 믿음과 방향을 다시 보는 장면이다." },
+  { name:"10하우스", icon:"10", key:"사회", text:"사회적 역할과 위치의 무대", drive:1, stability:1, clarity:1,
+    scene:"바깥 간판이 바뀐다. 개인 감정보다 사회적 역할과 위치가 드러나는 장면이다." },
+  { name:"11하우스", icon:"11", key:"집단", text:"선택된 집단과 흐름의 무대", drive:1, stability:0, clarity:0,
+    scene:"사람들의 흐름 속에 선다. 혼자보다 집단, 네트워크, 방향성이 중요해지는 장면이다." },
+  { name:"12하우스", icon:"12", key:"비가시", text:"경계가 사라지는 비가시적 무대", drive:-1, stability:-1, clarity:-2,
+    scene:"불 꺼진 방에서 소리가 들린다. 겉으로 보이지 않는 불안, 감각, 무의식이 작동하는 장면이다." }
+];
+
+let history = [];
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function cleanQuestion(q) {
+  return q.replaceAll(" ", "").replaceAll("\n", "").replaceAll("\t", "");
+}
+
+function classifyQuestion(question) {
+  const q = cleanQuestion(question);
+
+  const stopWords = /(그만|멈출까|안할까|끊을까|포기|취소|접을까|철회|중단)/;
+  const goWords = /(할까|해도될까|진행|계속|시작|가도|만나|살까|쓸까|결제|구매|등록|올릴까|괜찮|맞을까|해야|될까|나아)/;
+
+  if (stopWords.test(q)) return "stop";
+  if (goWords.test(q)) return "go";
+  return "open";
+}
+
+function getConclusion(p, s, h, question) {
+  const drive = p.drive + s.drive + h.drive;
+  const stability = p.stability + s.stability + h.stability;
+  const clarity = p.clarity + s.clarity + h.clarity;
+  const type = classifyQuestion(question);
+
+  const YES = {
+    label: "흐름이 열려있음",
+    badge: "YES",
+    className: "yes",
+    meaning: "자연스럽게 열릴 예정이니 이어가되 강행하지는 마세요",
+    line: "흐름이 막혀 있지 않고 이어질 수 있는 상태"
+  };
+
+  const NO = {
+    label: "흐름이 어긋남",
+    badge: "NO",
+    className: "no",
+    meaning: "너무 애쓰고 있거나 시야가 좁아진 상태, 점검·조정 필요",
+    line: "현재 좌표가 자연스럽게 이어지기보다 어긋나 있는 상태"
+  };
+
+  const HOLD = {
+    label: "판단이 어려움",
+    badge: "보류",
+    className: "hold",
+    meaning: "너무 광범위한 질문이며 기준이 서지 않은 상태",
+    line: "지금은 결론보다 기준을 다시 정리해야 하는 상태"
+  };
+
+  if (clarity <= -2) return HOLD;
+
+  if (type === "stop") {
+    if (drive <= 0 || stability <= -1) return YES;
+    if (drive >= 3 && stability >= 0) return NO;
+    return HOLD;
+  }
+
+  if (type === "go") {
+    if (drive >= 3 && stability >= 0 && clarity >= 0) return YES;
+    if (drive <= -1 || stability <= -2) return NO;
+    return HOLD;
+  }
+
+  if (drive >= 3 && stability >= 0 && clarity >= 0) return YES;
+  if (drive <= -1 || stability <= -2) return NO;
+  return HOLD;
+}
+
+function makeShortReading(c, p, s, h) {
+  if (c.badge === "YES") {
+    return `${p.key}의 힘이 ${s.key} 방식으로 ${h.key}의 무대에서 열리는 흐름입니다. 다만 힘으로 밀기보다 자연스럽게 이어지는지 확인하는 쪽이 좋습니다.`;
+  }
+  if (c.badge === "NO") {
+    return `${p.key}의 힘이 ${s.key} 방식으로 드러나지만, ${h.key}의 무대에서 흐름이 걸리는 상태입니다. 지금은 밀어붙이기보다 점검과 조정이 먼저입니다.`;
+  }
+  return `${p.key}의 힘이 ${s.key} 방식으로 ${h.key}의 무대에 놓여 있습니다. 지금은 결론보다 질문의 기준을 다시 정리하는 흐름입니다.`;
+}
+
+function makeSceneReading(p, s, h, c) {
+  const first = p.scene;
+  const second = s.scene;
+  const third = h.scene;
+
+  let ending = "";
+  if (c.badge === "YES") {
+    ending = "그래서 이 흐름은 막혀 있다기보다 열려 있다. 다만 억지로 열기보다, 이미 열린 틈을 따라가는 장면에 가깝다.";
+  } else if (c.badge === "NO") {
+    ending = "그래서 이 흐름은 바로 밀고 나가기보다 어긋난 축을 먼저 확인해야 한다. 힘을 더 쓰는 장면이 아니라, 손을 멈추고 위치를 다시 보는 장면에 가깝다.";
+  } else {
+    ending = "그래서 이 흐름은 아직 답을 고르는 장면이 아니다. 먼저 질문의 기준을 좁히고, 무엇을 보고 판단할지 다시 세우는 장면에 가깝다.";
+  }
+
+  return `${first}\n${second}\n${third}\n\n${ending}`;
+}
+
+function renderDice(p, s, h) {
+  document.getElementById("diceGrid").innerHTML = `
+    <div class="dice"><div class="kind">행성 / 기능</div><div class="icon">${p.icon}</div><div class="name">${p.name}</div></div>
+    <div class="dice"><div class="kind">별자리 / 결</div><div class="icon">${s.icon}</div><div class="name">${s.name}</div></div>
+    <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">${h.icon}</div><div class="name">${h.name}</div></div>
+  `;
+}
+
+function buildReading(question, p, s, h) {
+  const c = getConclusion(p, s, h, question);
+  const shortReading = makeShortReading(c, p, s, h);
+  const sceneReading = makeSceneReading(p, s, h, c);
+
+  return `
+    <div class="block">
+      <h2>질문내용</h2>
+      <div class="question-box">${escapeHtml(question)}</div>
+    </div>
+
+    <div class="block">
+      <div class="answer-title ${c.className}">✅ ${c.badge} · ${c.label}</div>
+      <p><strong>${c.meaning}</strong></p>
+      <p class="small">${c.line}</p>
+    </div>
+
+    <div class="block">
+      <h2>짧은 해석</h2>
+      <p>${shortReading}</p>
+    </div>
+
+    <div class="block">
+      <h2>상세 해석</h2>
+      <table>
+        <tbody>
+          <tr><th>${p.name}</th><td>${p.key} — ${p.text}</td></tr>
+          <tr><th>${s.name}</th><td>${s.key} — ${s.text}</td></tr>
+          <tr><th>${h.name}</th><td>${h.key} — ${h.text}</td></tr>
+        </tbody>
+      </table>
+
+      <h3>종합 해석</h3>
+      <div class="scene">${sceneReading}</div>
+    </div>
+  `;
+}
+
+function roll() {
+  const questionEl = document.getElementById("question");
+  const errorEl = document.getElementById("error");
+  const question = questionEl.value.trim();
+
+  if (!question) {
+    errorEl.style.display = "block";
+    questionEl.focus();
+    return;
+  }
+
+  errorEl.style.display = "none";
+
+  const p = pick(planets);
+  const s = pick(signs);
+  const h = pick(houses);
+
+  renderDice(p, s, h);
+  document.getElementById("reading").innerHTML = buildReading(question, p, s, h);
+
+  history.unshift({ question, p, s, h, time: new Date() });
+  if (history.length > 15) history = history.slice(0, 15);
+  renderHistory();
+
+  questionEl.value = "";
+}
+
+function renderHistory() {
+  if (!history.length) {
+    document.getElementById("historyList").textContent = "기록 없음.";
+    return;
+  }
+
+  document.getElementById("historyList").innerHTML = history.map((item, index) => `
+    <div class="history-item" data-index="${index}" title="클릭하면 상세 해석을 다시 봅니다">
+      <div>
+        <strong>${escapeHtml(item.question)}</strong><br>
+        ${item.p.icon} ${item.p.name} · ${item.s.icon} ${item.s.name} · ${item.h.name}
+      </div>
+      <div>${item.time.toLocaleTimeString()}</div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".history-item").forEach(el => {
+    el.addEventListener("click", () => {
+      const item = history[Number(el.dataset.index)];
+      if (!item) return;
+      renderDice(item.p, item.s, item.h);
+      document.getElementById("reading").innerHTML = buildReading(item.question, item.p, item.s, item.h);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+
+function clearAll() {
+  document.getElementById("question").value = "";
+  document.getElementById("error").style.display = "none";
+  document.getElementById("diceGrid").innerHTML = `
+    <div class="dice"><div class="kind">행성 / 기능</div><div class="icon">-</div><div class="name">대기</div></div>
+    <div class="dice"><div class="kind">별자리 / 결</div><div class="icon">-</div><div class="name">대기</div></div>
+    <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div></div>
+  `;
+  document.getElementById("reading").innerHTML = `
+    <p class="muted">질문을 입력하고 주사위를 굴려주세요.</p>
+  `;
+  history = [];
+  renderHistory();
+}
+
+function escapeHtml(str) {
+  return str
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+document.getElementById("rollBtn").addEventListener("click", roll);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+document.getElementById("question").addEventListener("keydown", function(e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") roll();
+});
+</script>
+</body>
+</html>
