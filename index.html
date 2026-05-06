@@ -82,10 +82,12 @@
     .soft-card-clear p{color:#7ea8a0}
     .soft-card-blur p{color:#a07080}
 
-    .snapshot-help{margin-top:10px;border:1px solid rgba(148,163,184,.14);border-radius:14px;background:rgba(2,6,23,.28);padding:0 12px;color:#6f879d}
-    .snapshot-help summary{list-style:none;cursor:pointer;padding:9px 0;font-size:12px;font-weight:800;color:#8aa4bc}
-    .snapshot-help summary::-webkit-details-marker{display:none}
-    .snapshot-help p{padding:0 0 10px;font-size:12px;line-height:1.65;color:#5f7588;word-break:keep-all}
+    .snapshot-help{margin-top:10px;border:1px solid rgba(148,163,184,.14);border-radius:14px;background:rgba(2,6,23,.28);padding:12px 14px;color:#6f879d}
+    .snapshot-help .snapshot-title{font-size:12px;font-weight:900;color:#8aa4bc;margin-bottom:5px}
+    .snapshot-help p{font-size:12px;line-height:1.65;color:#5f7588;word-break:keep-all;margin:0}
+    .ai-copy-box{margin-top:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(56,189,248,.16);background:rgba(8,24,45,.45);color:#7f99ad;font-size:12px;line-height:1.6;word-break:keep-all}
+    .ai-copy-box strong{display:block;color:#bae6fd;font-size:13px;margin-bottom:3px}
+    .ai-copy-box button{margin-top:8px;border-radius:999px;padding:7px 13px;background:rgba(56,189,248,.12);color:#bae6fd;border:1px solid rgba(56,189,248,.18);font-size:12px;font-weight:800}
 
     .read-guide{margin:16px 0 18px;border:1px solid rgba(148,163,184,.16);border-radius:18px;background:rgba(2,6,23,.34);overflow:hidden}
     .read-guide-head{padding:12px 15px;border-bottom:1px solid rgba(148,163,184,.10);color:#cbd5e1;font-size:13px;font-weight:900;letter-spacing:-.02em}
@@ -141,7 +143,7 @@
       .wrap{width:calc(100% - 24px);padding:22px 0 56px}.card{border-radius:20px;padding:18px}h1{font-size:24px}.row{flex-direction:column}.secondary{flex:1}.soft-grid{grid-template-columns:1fr}.signal-title{font-size:24px}.r-status{gap:6px}.history-item{grid-template-columns:1fr}.share-row{justify-content:stretch}.small-btn{flex:1}.guide-grid{grid-template-columns:1fr 1fr}.read-guide-body{grid-template-columns:1fr}.guide-box{border-right:0}.guide-box:nth-last-child(2){border-bottom:1px solid rgba(148,163,184,.10)}
     }
   </style>
-<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=2772"></script>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=3639"></script>
 <script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=15034"></script>
 </head>
 <body>
@@ -167,10 +169,10 @@
       <div class="row">
         <button id="rollBtn" class="main-btn" type="button">내 흐름의 스냅샷</button>
       </div>
-      <details class="snapshot-help">
-        <summary>왜 스냅샷인가요?</summary>
+      <div class="snapshot-help">
+        <div class="snapshot-title">왜 스냅샷인가요?</div>
         <p>이 결과는 미래 확정이 아니라, 지금 흐르는 감각과 방향의 한 장면을 보여주는 스냅샷입니다.</p>
-      </details>
+      </div>
 
       <div class="dice-grid" id="diceGrid">
         <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
@@ -185,6 +187,11 @@
       <div class="history">
         <strong>기록</strong>
         <div id="historyList" class="hint" style="margin-top:8px;">기록 없음.</div>
+        <div class="ai-copy-box">
+          <strong>더 종합적인 해석이 필요하다면</strong>
+          저장된 스냅샷들을 모아 AI에게 종합해석을 요청할 수 있습니다.
+          <button type="button" onclick="copyAiSummaryPrompt()">AI 종합해석용으로 복사</button>
+        </div>
       </div>
     </section>
   </main>
@@ -272,6 +279,7 @@ const houses = [
 
 let history = [];
 let lastShareText = '';
+let currentSnapshot = null;
 
 const $ = (id) => document.getElementById(id);
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
@@ -911,6 +919,7 @@ function buildReading(question,p,s,h){
   const bridge = getBridge(signal,p,s,h,qInfo);
   const closing = getClosing(signal, p, s, qInfo.tone);
   const readGuideBlock = buildReadGuide(question, signal, qInfo, p, s, h);
+  currentSnapshot = {question, p, s, h, signal, scene, bridge, closing, qInfo};
   lastShareText = [
     'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', `${signal.icon} ${signal.label}`, signal.title, signal.sub, '', scene, '', bridge, closing, '', '현재 흐름의 의미', getQuestionReadGuide(qInfo, question, p, s, h), '', '흐름을 맑게 하는 방법', getClearFlowGuide(signal,qInfo,p,s,h), '', '기억하면 좋은 기준', getRememberGuide(p,s,h)
   ].join('\n');
@@ -940,9 +949,8 @@ function buildReading(question,p,s,h){
       <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
     </div>
     <div class="share-row">
-      <button class="small-btn" type="button" onclick="copyCurrentText()">텍스트 복사</button>
-      <button class="small-btn" type="button" onclick="downloadCard(${JSON.stringify(question)}, ${JSON.stringify(signal.title)}, ${JSON.stringify(signal.className)}, ${JSON.stringify(bridge)}, ${JSON.stringify(`${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`)})">카드 저장</button>
-      <button class="small-btn" type="button" onclick="copySiteLink()">링크 복사</button>
+      <button class="small-btn" type="button" onclick="shareCurrentCard()">공유하기</button>
+      <button class="small-btn" type="button" onclick="copyAiSummaryPrompt()">AI 종합해석용 복사</button>
     </div>
   `;
 }
@@ -1177,6 +1185,138 @@ function wrapText(ctx, text, maxW, fontSize){
   if(cur) lines.push(cur);
   return lines;
 }
+
+
+function getSnapshotForPrompt(item, index){
+  const p = item.p, s = item.s, h = item.h;
+  const signal = item.signal || getSignal(p,s,h);
+  const scene = makeScene(p,s,h);
+  const qInfo = detectDomain(item.question || '');
+  const bridge = getBridge(signal,p,s,h,qInfo);
+  return [
+    `${index}.`,
+    `질문: ${item.question}`,
+    `결과: ${signal.icon || ''} ${signal.label || signal.title}`,
+    `흐름 요소: ${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`,
+    `핵심 장면: ${scene.replaceAll('\n',' / ')}`,
+    `보조 해석: ${bridge}`
+  ].join('\n');
+}
+
+async function copyAiSummaryPrompt(){
+  if(!history.length){ showToast('먼저 스냅샷을 확인해주세요.'); return; }
+  const items = history.slice().reverse();
+  const body = items.map((item, i)=>getSnapshotForPrompt(item, i+1)).join('\n\n');
+  const prompt = [
+    '아래 astro-compass 스냅샷들을 하나의 흐름으로 종합해주세요.',
+    '각 결과를 단정하지 말고, 반복되는 방향과 엇갈리는 신호를 중심으로 읽어주세요.',
+    '사용자가 불안해서 되묻는 질문이 있다면, 새 판정으로 보지 말고 앞선 흐름을 확인하는 질문으로 함께 묶어주세요.',
+    '최종 답변은 “무엇이 열려 있는지 / 어디서 조정이 필요한지 / 지금 기억할 기준” 중심으로 짧게 정리해주세요.',
+    '',
+    body,
+    '',
+    '사이트: https://astro-compass.structon.kr/'
+  ].join('\n');
+  try{
+    await navigator.clipboard.writeText(prompt);
+    showToast('AI 종합해석용 내용을 복사했습니다.');
+  }catch(e){
+    showToast('복사 권한이 막혀 있습니다.');
+  }
+}
+window.copyAiSummaryPrompt = copyAiSummaryPrompt;
+
+function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+  const chars = String(text || '').split('');
+  let line = '', lines = [];
+  for(const ch of chars){
+    const test = line + ch;
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line); line = ch;
+      if(maxLines && lines.length >= maxLines) break;
+    }else line = test;
+  }
+  if((!maxLines || lines.length < maxLines) && line) lines.push(line);
+  if(maxLines && lines.length === maxLines && chars.length){
+    const last = lines[lines.length-1];
+    if(ctx.measureText(last).width > maxWidth - 20) lines[lines.length-1] = last.slice(0, Math.max(0,last.length-2)) + '…';
+  }
+  lines.forEach((ln,i)=>ctx.fillText(ln, x, y + i*lineHeight));
+  return y + lines.length*lineHeight;
+}
+
+async function shareCurrentCard(){
+  if(!currentSnapshot){ showToast('먼저 흐름을 확인해주세요.'); return; }
+  const {question,p,s,h,signal,scene,bridge,closing} = currentSnapshot;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = 900, H = 1180;
+  const canvas = document.createElement('canvas');
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+
+  const bg = ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#050e1f'); bg.addColorStop(1,'#020617');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+
+  const glow = ctx.createRadialGradient(W/2,120,0,W/2,120,520);
+  glow.addColorStop(0,'rgba(94,234,212,.15)'); glow.addColorStop(1,'rgba(94,234,212,0)');
+  ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
+
+  ctx.strokeStyle = 'rgba(148,163,184,.20)'; ctx.lineWidth = 2;
+  ctx.roundRect(36,36,W-72,H-72,28); ctx.stroke();
+
+  let y = 84;
+  ctx.fillStyle = '#94a3b8'; ctx.font = '700 22px -apple-system,BlinkMacSystemFont,sans-serif';
+  y = drawWrappedText(ctx, question, 72, y, W-144, 34, 3) + 22;
+
+  ctx.strokeStyle = 'rgba(148,163,184,.16)'; ctx.beginPath(); ctx.moveTo(72,y); ctx.lineTo(W-72,y); ctx.stroke(); y += 52;
+
+  const colorMap = {'signal-strong-open':'#86efac','signal-open':'#ccfbf1','signal-soft-open':'#bae6fd','signal-watch':'#fde68a','signal-cross':'#fed7aa','signal-blur':'#ddd6fe'};
+  const sigColor = colorMap[signal.className] || '#ccfbf1';
+  ctx.fillStyle = 'rgba(148,163,184,.10)'; ctx.roundRect(72,y-30,190,44,22); ctx.fill();
+  ctx.fillStyle = sigColor; ctx.font = '900 20px -apple-system,BlinkMacSystemFont,sans-serif';
+  ctx.fillText(`${signal.icon || ''} ${signal.label || ''}`, 92, y);
+  y += 68;
+
+  ctx.fillStyle = sigColor; ctx.font = '900 42px -apple-system,BlinkMacSystemFont,sans-serif';
+  y = drawWrappedText(ctx, signal.title, 72, y, W-144, 56, 3) + 16;
+  ctx.fillStyle = '#6f879d'; ctx.font = '600 19px -apple-system,BlinkMacSystemFont,sans-serif';
+  y = drawWrappedText(ctx, signal.sub, 72, y, W-144, 30, 3) + 38;
+
+  ctx.fillStyle = '#e8f0fc'; ctx.font = '500 28px -apple-system,BlinkMacSystemFont,sans-serif';
+  y = drawWrappedText(ctx, scene.replaceAll('\n','  '), 72, y, W-144, 44, 7) + 34;
+
+  ctx.strokeStyle = 'rgba(148,163,184,.14)'; ctx.beginPath(); ctx.moveTo(72,y); ctx.lineTo(W-72,y); ctx.stroke(); y += 42;
+
+  ctx.fillStyle = '#a9c2d8'; ctx.font = '800 22px -apple-system,BlinkMacSystemFont,sans-serif';
+  y = drawWrappedText(ctx, bridge, 72, y, W-144, 34, 3) + 18;
+  ctx.fillStyle = '#64748b'; ctx.font = '600 18px -apple-system,BlinkMacSystemFont,sans-serif';
+  y = drawWrappedText(ctx, closing, 72, y, W-144, 30, 3) + 34;
+
+  const coords = `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`;
+  ctx.fillStyle = 'rgba(148,163,184,.08)'; ctx.strokeStyle = 'rgba(148,163,184,.18)';
+  ctx.roundRect(72, H-154, W-144, 48, 24); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#94a3b8'; ctx.font = '800 18px -apple-system,BlinkMacSystemFont,sans-serif';
+  ctx.fillText(coords, 96, H-124);
+
+  ctx.fillStyle = 'rgba(148,163,184,.50)'; ctx.font = '700 17px -apple-system,BlinkMacSystemFont,sans-serif';
+  ctx.fillText('astro-compass.structon.kr', 72, H-72);
+
+  canvas.toBlob(async (blob)=>{
+    const file = new File([blob], 'astro-compass.png', {type:'image/png'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file], title:'astro-compass', text:'https://astro-compass.structon.kr/'}); showToast('공유를 열었습니다.'); return; }catch(e){}
+    }
+    const link = document.createElement('a');
+    link.download = 'astro-compass.png';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    setTimeout(()=>URL.revokeObjectURL(link.href), 1000);
+    showToast('공유 이미지를 저장했습니다.');
+  }, 'image/png');
+}
+window.shareCurrentCard = shareCurrentCard;
 
 async function copyCurrentText(){
   if(!lastShareText){ showToast('먼저 흐름을 확인해주세요.'); return; }
