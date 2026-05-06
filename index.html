@@ -40,6 +40,10 @@
     textarea::placeholder{color:#3d5570}
     .hint{margin-top:7px;color:#3d5165;font-size:12px;word-break:keep-all}
     .soft-warning{display:none;margin-top:9px;padding:9px 12px;border-radius:12px;border:1px solid rgba(250,204,21,.2);background:rgba(250,204,21,.06);color:#fde68a;font-size:12px}
+    .risk-action-box{margin:0 0 16px;padding:14px 16px;border-radius:16px;border:1px solid rgba(251,146,60,.32);background:linear-gradient(180deg,rgba(251,146,60,.13),rgba(127,29,29,.10));color:#fed7aa;box-shadow:0 12px 34px rgba(0,0,0,.20)}
+    .risk-action-kicker{font-size:11px;font-weight:950;color:#fdba74;letter-spacing:.04em;text-transform:uppercase;margin-bottom:5px}
+    .risk-action-box strong{display:block;font-size:15px;line-height:1.55;color:#ffedd5;letter-spacing:-.03em;margin-bottom:4px}
+    .risk-action-box p{font-size:12.5px;line-height:1.7;color:#d6a58b;word-break:keep-all;margin:0}
     .error{display:none;margin-top:8px;color:#fecaca;font-size:12px}
     .row{display:flex;gap:8px;margin-top:12px}
     .main-btn{flex:1;border-radius:14px;padding:13px 16px;color:#fff;font-weight:900;font-size:14px;background:linear-gradient(135deg,#0ea5e9,#2563eb);box-shadow:0 12px 32px rgba(37,99,235,.2);transition:.1s}
@@ -47,11 +51,11 @@
     .main-btn:active{transform:scale(.99)}
     .secondary{flex:.45;border-radius:14px;padding:13px 14px;color:#94a3b8;background:rgba(30,41,59,.8);border:1px solid var(--line2);font-weight:700;font-size:13px}
     .dice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
-    .dice{border:1px solid var(--line);border-radius:18px;background:rgba(2,6,23,.7);padding:16px 12px;text-align:center}
-    .kind{color:#4a6275;font-size:11px;margin-bottom:8px;letter-spacing:.02em}
-    .icon{font-size:34px;line-height:1;margin-bottom:6px;color:#c7dff0}
-    .name{font-size:20px;font-weight:950;letter-spacing:-.04em}
-    .keyword{margin-top:4px;color:#4a6275;font-size:12px}
+    .dice{border:1px solid var(--line);border-radius:18px;background:rgba(2,6,23,.7);padding:14px 8px;text-align:center;min-width:0;overflow:hidden}
+    .kind{color:#4a6275;font-size:10px;margin-bottom:8px;letter-spacing:-.01em;white-space:nowrap}
+    .icon{font-size:32px;line-height:1;margin-bottom:6px;color:#c7dff0}
+    .name{font-size:clamp(15px,3.7vw,18px);font-weight:950;letter-spacing:-.06em;white-space:nowrap;word-break:keep-all;line-height:1.25}
+    .keyword{margin-top:4px;color:#4a6275;font-size:10.5px;white-space:nowrap;word-break:keep-all;letter-spacing:-.03em}
     .result{margin-top:16px}
     .r-question{font-size:12px;color:#2a3d52;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line2);word-break:break-word}
     .r-signal{margin-bottom:18px}
@@ -98,17 +102,17 @@
     .guide-box.meaning{grid-column:1 / -1;border-right:0}
     .guide-box.meaning + .guide-box{border-bottom:0}
     .guide-label{display:block;margin-bottom:6px;font-size:11px;font-weight:900;letter-spacing:.04em;color:#7dd3fc}
-    .guide-box p{font-size:13px;line-height:1.75;color:#8fa6bb;word-break:keep-all}
+    .guide-box p{font-size:13px;line-height:1.85;color:#8fa6bb;word-break:keep-all}.guide-box p br{content:'';display:block;margin-bottom:5px}
     .guide-box.clear .guide-label{color:#5eead4}
     .guide-box.remember .guide-label{color:#fdba74}
     .guide-box.meaning p{color:#9db4c9}
     .guide-box.clear p{color:#86afa7}
     .guide-box.remember p{color:#b79386}
-    .coord-chips{display:flex;gap:7px;flex-wrap:wrap}
-    .coord-chip{display:flex;align-items:center;gap:5px;border:1px solid rgba(148,163,184,.2);border-radius:999px;padding:5px 12px;background:rgba(148,163,184,.07)}
-    .coord-chip .c-icon{font-size:14px;color:#7a8fa8}
-    .coord-chip .c-name{font-size:12px;font-weight:800;color:#a0b4c8;letter-spacing:-.02em}
-    .coord-chip .c-key{font-size:10px;color:#5a7080;margin-left:2px}
+    .coord-chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;width:100%}
+    .coord-chip{display:flex;align-items:center;justify-content:center;gap:4px;min-width:0;border:1px solid rgba(148,163,184,.2);border-radius:999px;padding:6px 8px;background:rgba(148,163,184,.07);white-space:nowrap;overflow:hidden}
+    .coord-chip .c-icon{font-size:13px;color:#7a8fa8;flex-shrink:0}
+    .coord-chip .c-name{font-size:11px;font-weight:800;color:#a0b4c8;letter-spacing:-.03em;white-space:nowrap;flex-shrink:0}
+    .coord-chip .c-key{font-size:9px;color:#5a7080;margin-left:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
     .share-row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
     .small-btn{border-radius:999px;padding:7px 13px;background:rgba(226,232,240,.06);color:#8090a8;border:1px solid rgba(226,232,240,.08);font-size:12px}
     .notice{margin-top:12px;padding:10px 14px;border-radius:14px;border:1px solid var(--line2);background:rgba(2,6,23,.3);color:#4a6070;font-size:12px;word-break:keep-all}
@@ -140,11 +144,10 @@
     /* 질문 강화 */
     .r-question{font-size:16px;color:#b0c4d8;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line2);word-break:break-word;line-height:1.6;font-weight:700;letter-spacing:-.02em}
             @media(max-width:640px){
-      .wrap{width:calc(100% - 24px);padding:22px 0 56px}.card{border-radius:20px;padding:18px}h1{font-size:24px}.row{flex-direction:column}.secondary{flex:1}.soft-grid{grid-template-columns:1fr}.signal-title{font-size:24px}.r-status{gap:6px}.history-item{grid-template-columns:1fr}.share-row{justify-content:stretch}.small-btn{flex:1}.guide-grid{grid-template-columns:1fr 1fr}.read-guide-body{grid-template-columns:1fr}.guide-box{border-right:0}.guide-box:nth-last-child(2){border-bottom:1px solid rgba(148,163,184,.10)}
+      .wrap{width:calc(100% - 24px);padding:22px 0 56px}.card{border-radius:20px;padding:18px}h1{font-size:24px}.dice{padding:14px 6px}.icon{font-size:30px}.name{font-size:17px}.keyword{font-size:10.5px}.kind{font-size:10px}.row{flex-direction:column}.secondary{flex:1}.soft-grid{grid-template-columns:1fr}.signal-title{font-size:24px}.r-status{gap:6px}.history-item{grid-template-columns:1fr}.share-row{justify-content:stretch}.small-btn{flex:1}.guide-grid{grid-template-columns:1fr 1fr}.read-guide-body{grid-template-columns:1fr}.guide-box{border-right:0}.guide-box:nth-last-child(2){border-bottom:1px solid rgba(148,163,184,.10)}
     }
   </style>
-<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=3639"></script>
-<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=15034"></script>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=6222"></script>
 </head>
 <body>
   <main class="wrap">
@@ -164,6 +167,7 @@
       <div id="broadWarning" class="soft-warning">질문 범위가 넓어 흐름이 여러 층으로 퍼질 수 있습니다.<br>하나의 방향으로 좁혀 보면 더 선명해집니다.</div>
       <div id="repeatWarning" class="soft-warning">비슷한 질문이 기록에 있습니다.<br>확인을 반복하기보다, 이번에는 어느 부분이 달라졌는지 보는 편이 좋습니다.</div>
       <div id="confirmWarning" class="soft-warning">이미 확인하고 싶은 방향이 강한 질문일 수 있습니다.<br>결과보다 질문이 붙잡고 있는 지점을 먼저 보는 편이 맞습니다.</div>
+      <div id="riskWarning" class="soft-warning">대출·빚·투자·퇴사·계약처럼 실제 부담이 큰 질문입니다.<br>이 경우 결과는 실행 권장이 아니라, 판단 전 기준을 확인하는 흐름으로 읽습니다.</div>
       <div id="error" class="error">질문을 먼저 적어주세요.</div>
 
       <div class="row">
@@ -188,9 +192,11 @@
         <strong>기록</strong>
         <div id="historyList" class="hint" style="margin-top:8px;">기록 없음.</div>
         <div class="ai-copy-box">
-          <strong>더 종합적인 해석이 필요하다면</strong>
-          저장된 스냅샷들을 모아 AI에게 종합해석을 요청할 수 있습니다.
-          <button type="button" onclick="copyAiSummaryPrompt()">AI 종합해석용으로 복사</button>
+          <strong>여러 스냅샷을 한 번에 읽고 싶다면?</strong>
+          astro-compass는 정답보다 지금 흐름을 비추는 나침반에 가깝습니다.<br>
+          결과가 애매하게 느껴질 때는, 여러 기록을 함께 묶어 반복되는 방향과 엇갈리는 신호를 읽는 편이 좋습니다.<br>
+          아래 버튼은 GPT, Gemini, Claude에 붙여넣을 수 있는 종합 해석 프롬프트를 복사합니다.
+          <button type="button" onclick="copyAiSummaryPrompt()">AI 종합 해석 프롬프트 복사</button>
         </div>
       </div>
     </section>
@@ -285,6 +291,34 @@ const $ = (id) => document.getElementById(id);
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function escapeHtml(str){ return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
 function detectVsQuestion(question){ const q = question.replaceAll(' ',''); return /중(에)?(뭐|무엇|어느|어떤)|vs|VS|랑.*중|와.*중|하고.*중|또는/.test(q); }
+function isMobileDevice(){ return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent); }
+function detectRiskActionQuestion(question){
+  const q = question.replace(/\s+/g,' ');
+  const categories = [];
+  if(/대출|빚|차입|빌려|빌릴|카드론|현금서비스|상환|이자|연체|대부|마이너스통장|마통/.test(q)) categories.push('debt');
+  if(/투자|몰빵|레버리지|선물|옵션|코인|주식.*들어|매수|매도|손절|계좌/.test(q)) categories.push('investment');
+  if(/퇴사|그만둘|그만두|이직|폐업|창업|계약|해지|소송|고소|합의|보증/.test(q)) categories.push('majorDecision');
+  if(/헤어질|이별|파혼|이혼|끊어낼|손절/.test(q)) categories.push('relationshipBreak');
+  if(/수술|약을|약 먹|치료|병원|검사/.test(q)) categories.push('bodyDecision');
+  const labelMap = {
+    debt:'대출·빚·상환',
+    investment:'투자·손실 위험',
+    majorDecision:'퇴사·계약·법적 판단',
+    relationshipBreak:'관계 단절 판단',
+    bodyDecision:'몸·치료 판단'
+  };
+  const primary = categories[0] || null;
+  return {isRisk: categories.length > 0, categories, primary, label: primary ? labelMap[primary] : ''};
+}
+function detectQuestionMode(question){
+  const q = question.replace(/\s+/g,' ');
+  if(detectRiskActionQuestion(question).isRisk) return 'riskAction';
+  if(/우울|불안|무기력|외롭|슬프|심란|힘들|지쳤|지침|괜찮|잘 ?하|잘 ?되는|상태|기분|마음|왜 이럴|왜 그럴|왜 그럴까|왜 그럴까/.test(q)) return 'state';
+  if(/뜻이야|아니야|맞지|그치|그런거야|못 번|안 되는|안되는|망한|별로/.test(q)) return 'confirm';
+  if(detectVsQuestion(question)) return 'compare';
+  if(/해야|할까|해\?|하면|계속|이어|유지|도움|나아|방향|선택|고를|갈까|말까/.test(q)) return 'direction';
+  return 'general';
+}
 
 function getSignal(p,s,h){
   // 6단계 신호 구조 v2
@@ -403,11 +437,43 @@ function getSignal(p,s,h){
     className:'signal-blur'
   };
 }
+function getDisplaySignal(signal, qInfo){
+  if(qInfo && qInfo.mode === 'riskAction'){
+    return Object.assign({}, signal, {
+      type:'riskAction', level:Math.min(signal.level || 3, 3), icon:'🟡', label:'판단 전 확인',
+      title:'실행보다 기준을 먼저 보는 흐름',
+      sub:'이 신호는 실행 승인이나 거절 판정이 아니라, 지금 그 선택을 붙잡는 압박과 감당 기준을 확인하는 층입니다.',
+      className:'signal-watch'
+    });
+  }
+  if(qInfo && qInfo.mode === 'state'){
+    const map = {
+      strongOpen:{label:'회복 신호', title:'정리되는 힘이 살아나는 상태', sub:'힘든 감각이 없다는 뜻은 아닙니다. 다만 안쪽에서 다시 정리되고 움직일 힘이 함께 살아나는 흐름입니다.'},
+      open:{label:'풀리는 흐름', title:'막힌 감각이 조금 풀리는 상태', sub:'지금 느끼는 무게를 부정하지 않아도 됩니다. 부담을 낮추면 감각이 조금씩 선명해지는 흐름입니다.'},
+      softOpen:{label:'천천히 정리', title:'천천히 정리되는 상태', sub:'아직 완전히 가볍지는 않아도, 흐름이 조금씩 풀리는 쪽으로 움직입니다. 작은 단위로 나누어 보는 편이 좋습니다.'},
+      adjust:{label:'안쪽 조율', title:'안쪽 조율이 필요한 상태', sub:'좋다/나쁘다로 바로 나누기보다, 어디서 흔들리는지 작게 확인하는 편이 자연스럽습니다.'},
+      check:{label:'부담 점검', title:'부담이 새는 지점을 보는 상태', sub:'막혔다기보다 힘이 새는 지점이 보입니다. 그대로 밀기보다 몸과 마음의 반응을 먼저 보는 편이 좋습니다.'},
+      mixed:{label:'흔들림 큼', title:'감각이 흔들리기 쉬운 상태', sub:'감각과 판단이 섞이기 쉬운 상태입니다. 지금은 결론보다 선명해지는 지점을 천천히 보는 편이 자연스럽습니다.'}
+    };
+    return Object.assign({}, signal, map[signal.type] || map.mixed);
+  }
+  if(qInfo && qInfo.mode === 'confirm'){
+    const map = {
+      mixed:{label:'확인 필요', title:'불안을 확인하고 있는 흐름', sub:'부정 판정이라기보다, 방금 결과를 어떻게 받아들일지 다시 확인하는 흐름에 가깝습니다.'},
+      check:{label:'재확인', title:'기준을 다시 확인하는 흐름', sub:'안 된다는 뜻보다, 질문이 붙잡고 있는 기준을 다시 보는 흐름에 가깝습니다.'}
+    };
+    return Object.assign({}, signal, map[signal.type] || {});
+  }
+  return signal;
+}
 function detectDomain(question){
   const q = question;
   const domains = [];
-  let tone = 'neutral';
+  const mode = detectQuestionMode(question);
+  const riskInfo = detectRiskActionQuestion(question);
+  let tone = (mode === 'state' || mode === 'riskAction') ? 'soft' : 'neutral';
 
+  if(riskInfo.isRisk){ domains.push('riskAction'); tone = 'soft'; }
   if(/가족|부모|엄마|아빠|어머니|아버지|형제|자매|오빠|언니|동생|자녀|아이|아들|딸/.test(q)){ domains.push('family'); tone = 'soft'; }
   if(/불안|무서|두렵|걱정|힘들|모르겠|막막|지쳐|지침|겁|두려/.test(q)){ domains.push('anxious'); tone = 'soft'; }
   if(/건강|몸|컨디션|피로|체력/.test(q)){ domains.push('body'); tone = 'soft'; }
@@ -421,26 +487,27 @@ function detectDomain(question){
 
   const primary = domains[0] || 'general';
   const secondary = domains[1] || null;
-  return {primary, secondary, tone};
+  return {primary, secondary, tone, mode, riskAction:riskInfo.isRisk, riskType:riskInfo.primary, riskLabel:riskInfo.label};
 }
 
 function pickOne(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 function getClosing(signal, p, s, qTone){
+  if(signal.type === 'riskAction') return '지금은 실행 여부보다, 그 선택을 붙잡게 만든 압박과 감당 기준을 먼저 보는 편이 맞다.';
   // 좌표 결에 따라 의미층 다르게 — "여지/방식/결" 각각 다른 각도
   const pTone = p.tone;
   const sSustain = s.sustain;
 
   if(qTone === 'soft'){
     if(signal.type === 'strongOpen') return pickOne([
-      '흐름이 강하게 열려 있다. 지금은 실제로 움직여도 되는 쪽에 가깝다.',
-      '방향과 힘이 같이 살아 있다. 작게라도 실행하면 흐름이 더 선명해진다.',
-      '지금은 닫힘보다 맞물림이 강하다. 움직임을 살려도 된다.'
+      '흐름이 강하게 열려 있습니다. 지금은 실제로 움직여도 되는 쪽에 가깝습니다.',
+      '방향과 힘이 같이 살아 있습니다. 작게라도 실행하면 흐름이 더 선명해집니다.',
+      '지금은 닫힘보다 맞물림이 강합니다. 움직임을 살려도 됩니다.'
     ]);
     if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return pickOne([
-      '지금 방향이 완전히 닫혀 있지는 않다. 조금씩 확인하며 가도 된다.',
-      '열려 있는 방향이 있다. 서두르지 않아도 흐름은 이어진다.',
-      '좋다 나쁘다보다, 지금 어디서 숨이 열리는지를 먼저 보는 편이 맞다.'
+      '지금 방향이 완전히 닫혀 있지는 않습니다. 조금씩 확인하며 가도 됩니다.',
+      '열려 있는 방향이 있습니다. 서두르지 않아도 흐름은 이어집니다.',
+      '좋다 나쁘다보다, 지금 어디서 숨이 열리는지를 먼저 보는 편이 맞습니다.'
     ]);
     if(signal.type === 'softOpen') return pickOne([
       '가능성은 열려 있다. 다만 조금 더 확인하며 가는 편이 안정적이다.',
@@ -544,6 +611,15 @@ function getBridge(signal,p,s,h,q){
   const sSustain = s.sustain;
   const hDomain = h.domain;
   const hVis = h.visibility;
+
+  if(qDomain === 'riskAction'){
+    if(q.riskType === 'debt') return '대출·빚 같은 질문에서는, 열림을 실행 신호로 바로 읽기보다 자금 압박과 안전 기준을 먼저 확인하는 흐름이다.';
+    if(q.riskType === 'investment') return '투자처럼 손실 가능성이 큰 질문에서는, 열림보다 감당 가능한 범위와 기준이 먼저다.';
+    if(q.riskType === 'majorDecision') return '퇴사·계약처럼 되돌리기 어려운 선택에서는, 실행보다 조건과 기준을 먼저 보는 흐름이다.';
+    if(q.riskType === 'relationshipBreak') return '관계 단절 질문에서는, 결론보다 반복되는 반응과 경계 기준을 먼저 보는 흐름이다.';
+    if(q.riskType === 'bodyDecision') return '몸과 치료에 관한 질문에서는, 실행 판단보다 지금 느끼는 불안과 확인 기준을 먼저 보는 흐름이다.';
+    return '부담이 큰 행동 질문에서는, 열림을 실행 권장으로 바로 읽지 않고 판단 기준을 먼저 본다.';
+  }
 
   // 감정 강도 높은 질문 — bridge 압력 낮춤
   if(qTone === 'soft'){
@@ -773,28 +849,44 @@ function normalizeGuideText(text){
     .replaceAll('산다.', '살아납니다.');
 }
 
+function guideParagraphHtml(text){
+  return normalizeGuideText(text).replace(/\.\s+/g, '.<br>');
+}
+
 function getQuestionReadGuide(qInfo, question, p, s, h){
   const domain = qInfo.primary;
-  const isConfirm = /못|안 되는|안되는|아닌|별로|망|실패|나쁜|부정/.test(question);
-  const base = `${p.name}·${s.name}·${h.name}이라는 세 가지 흐름 요소가 함께 드러나는 모습입니다. ${p.name}의 ${p.keyword}이 ${s.name}의 ${s.keyword} 결로 움직이고, ${h.name}의 ${h.keyword} 자리에서 나타납니다.`;
+  const isConfirm = qInfo.mode === 'confirm' || /못|안 되는|안되는|아닌|별로|망|실패|나쁜|부정/.test(question);
+
+  if(qInfo.mode === 'riskAction'){
+    if(qInfo.riskType === 'debt') return '대출 신호가 아니라, 돈 압박과 감당 가능한 선을 먼저 확인하라는 표시입니다.';
+    if(qInfo.riskType === 'investment') return '투자 신호가 아니라, 손실을 감당할 수 있는 범위를 먼저 보라는 표시입니다.';
+    if(qInfo.riskType === 'majorDecision') return '바로 실행하라는 뜻이 아니라, 되돌리기 어려운 조건을 먼저 확인하라는 표시입니다.';
+    if(qInfo.riskType === 'relationshipBreak') return '관계를 끊으라는 뜻이 아니라, 반복되는 반응과 경계 기준을 먼저 보라는 표시입니다.';
+    if(qInfo.riskType === 'bodyDecision') return '몸에 관한 실행 판단이 아니라, 불안과 확인 기준을 먼저 보라는 표시입니다.';
+    return '실행 신호가 아니라, 감당 기준을 먼저 확인하라는 표시입니다.';
+  }
+
+  if(qInfo.mode === 'state'){
+    return '지금 상태를 판정하기보다, 안쪽에서 먼저 올라오는 감각을 보는 흐름입니다.';
+  }
 
   if(isConfirm){
-    return `이 결과는 “그렇다/아니다”를 확정하는 답이라기보다, 방금 떠오른 불안을 어떤 흐름 요소에서 다시 보고 있는지 보여줍니다. ${base}`;
+    return '다시 점치는 흐름이 아니라, 방금 떠오른 불안과 확인 욕구를 앞선 흐름 위에서 보는 표시입니다.';
   }
 
   if(domain === 'money'){
-    return `이 결과는 돈을 번다/못 번다를 단정하기보다, 돈의 흐름이 어디서 움직이고 어디서 정리되어야 하는지를 보여줍니다. ${base}`;
+    return '돈을 번다/못 번다보다, 돈이 들어오고 새는 기준을 먼저 보는 흐름입니다.';
   }
   if(domain === 'relation'){
-    return `이 결과는 친하다/아니다를 단정하기보다, 관계 안에서 어떤 반응과 거리감이 움직이는지를 보여줍니다. ${base}`;
+    return '관계에 이름을 붙이기보다, 서로 사이의 반응과 거리감을 보는 흐름입니다.';
   }
   if(domain === 'work' || domain === 'content' || domain === 'tool'){
-    return `이 결과는 성공/실패를 확정하기보다, 지금 하는 일의 힘이 어디서 살아나고 어디서 새는지를 보여줍니다. ${base}`;
+    return '성공/실패보다, 지금 하는 일에서 힘이 살아나는 지점과 새는 지점을 보는 흐름입니다.';
   }
   if(domain === 'choice'){
-    return `이 결과는 어느 하나를 무조건 고르라는 뜻보다, 선택 앞에서 어떤 기준이 먼저 필요한지 보여줍니다. ${base}`;
+    return '바로 고르라는 뜻보다, 선택 전에 세워야 할 기준을 보는 흐름입니다.';
   }
-  return `이 결과는 확정 판정보다 현재 흐름의 성질을 보여줍니다. ${base}`;
+  return '정답보다 지금 드러난 장면을 먼저 보는 스냅샷입니다.';
 }
 
 function getOveruseGuide(p, s, h){
@@ -847,55 +939,94 @@ function getUnderuseGuide(p, s, h){
 function getClearUseGuide(signal, qInfo, p, s, h){
   const prefix = signal.level >= 4 ? '이미 열린 부분을 살리되, ' : signal.level >= 2 ? '막힌 뜻으로 보지 말고, ' : '확정하려 하기보다, ';
   const domainMap = {
+    anxious:'감정의 이유를 바로 확정하기보다, 지금 흔들리는 감각을 작게 나누어 볼 때 맑습니다.',
+    body:'몸의 반응을 억지로 밀기보다, 부담이 줄어드는 방향을 작게 확인할 때 맑습니다.',
+    family:'가족의 결론보다 서로의 반응과 안전한 기준을 먼저 볼 때 맑습니다.',
     money:'돈의 결과보다 돈이 움직이는 경로와 기준을 먼저 정리하는 편이 맑습니다.',
     relation:'상대와 나 사이의 실제 반응을 하나씩 확인할 때 흐름이 맑습니다.',
     work:'일의 크기를 키우기보다 지금 작동하는 방식부터 정리할 때 맑습니다.',
     content:'표현을 늘리기보다 어떤 결로 보여줄지 잡을 때 맑습니다.',
     tool:'기능을 더하기보다 실제 사용 흐름을 정리할 때 맑습니다.',
     choice:'둘 중 하나로 몰기보다 기준 하나를 먼저 세울 때 맑습니다.',
-    sustain:'그대로 유지할 부분과 조정할 부분을 나눌 때 맑습니다.'
+    sustain:'그대로 유지할 부분과 조정할 부분을 나눌 때 맑습니다.',
+    riskAction:'실행 여부를 바로 정하기보다, 비용·책임·대안·감당 가능한 선을 분리해서 볼 때 맑습니다.'
   };
+  if(qInfo.mode === 'state') return prefix + (domainMap[qInfo.primary] || '지금 상태를 바로 단정하기보다, 흔들리는 감각을 작게 나누어 볼 때 맑습니다.');
   return prefix + (domainMap[qInfo.primary] || '지금 흐름 요소가 가리키는 방향을 작게 확인하면서 쓰는 편이 맑습니다.');
+}
+
+function getActionHint(qInfo, signal, p, s, h){
+  const mode = qInfo.mode;
+  const domain = qInfo.primary;
+
+  if(mode === 'riskAction'){
+    return '작게 해볼 수 있는 것: 바로 실행 여부를 정하지 말고, 비용·책임·대안·감당 가능한 선을 한 줄씩 분리해보세요.';
+  }
+  if(mode === 'state'){
+    return '작게 해볼 수 있는 것: 지금 느끼는 감각을 한 문장으로 적고, 당장 줄일 수 있는 부담 하나만 골라보세요.';
+  }
+  if(mode === 'confirm'){
+    return '작게 해볼 수 있는 것: 바로 결론을 다시 묻기보다, 앞선 질문과 이어지는 지점 하나를 먼저 확인해보세요.';
+  }
+  if(mode === 'compare' || domain === 'choice'){
+    return '작게 해볼 수 있는 것: 선택지를 한 번에 비교하지 말고, 하나씩 따로 놓고 공통으로 반복되는 신호를 봐주세요.';
+  }
+  if(domain === 'money' || domain === 'work' || domain === 'content' || domain === 'tool'){
+    return '작게 해볼 수 있는 것: 지금 해야 하는 일을 작은 단위로 나누고, 가장 만만한 것부터 조금씩 움직여보세요.';
+  }
+  if(domain === 'relation' || domain === 'family'){
+    return '작게 해볼 수 있는 것: 상대의 결론을 먼저 정하려 하기보다, 내 안에서 반복되는 반응과 기준 하나를 확인해보세요.';
+  }
+  if(signal.level <= 2){
+    return '작게 해볼 수 있는 것: 결론을 크게 잡기보다, 지금 가장 선명한 기준 하나만 남겨보세요.';
+  }
+  return '작게 해볼 수 있는 것: 이미 움직이는 흐름을 살리되, 오늘 바로 할 수 있는 가장 작은 행동 하나로 내려보세요.';
+}
+
+function firstSentence(text){
+  return String(text || '').split(/(?<=[.!?다요])\s+/)[0] || '';
 }
 
 function getClearFlowGuide(signal, qInfo, p, s, h){
   const clearUse = getClearUseGuide(signal, qInfo, p, s, h);
-  const healthy = `${p.healthy} ${s.healthy}`;
-  return normalizeGuideText(`${clearUse} ${healthy}`);
+  const healthy = [firstSentence(p.healthy), firstSentence(s.healthy)].filter(Boolean).join(' ');
+  const action = getActionHint(qInfo, signal, p, s, h);
+  return normalizeGuideText(`${clearUse} ${healthy} ${action}`);
 }
 
 function getRememberGuide(p, s, h){
-  const over = getOveruseGuide(p, s, h);
-  const under = getUnderuseGuide(p, s, h);
-  const blurred = `${p.blurred} ${s.blurred}`;
+  const pieces = [p.blurred, s.blurred];
+  if(h.domain === 'resource') pieces.push('손에 쥔 기준을 보지 않으면 감각만 커질 수 있습니다.');
+  if(h.domain === 'relation') pieces.push('상대 반응을 보지 않으면 혼자 결론을 낼 수 있습니다.');
+  if(h.domain === 'routine') pieces.push('반복으로 내려오지 않으면 좋은 방향도 흩어질 수 있습니다.');
+  if(h.domain === 'deep') pieces.push('내 손 밖의 변수를 다 잡으려 하면 힘이 묶일 수 있습니다.');
+  if(h.visibility === '숨김') pieces.push('보이지 않는 걱정에 오래 머물면 기준이 흐려질 수 있습니다.');
+  return normalizeGuideText(pieces.filter(Boolean).slice(0,3).join(' '));
+}
 
-  const pieces = [blurred, over, under]
-    .join(' ')
-    .split(/(?<=다\.)\s+/)
-    .map(v => v.trim())
-    .filter(Boolean);
-
-  const unique = [];
-  for(const piece of pieces){
-    const key = piece.replace(/\s+/g,'');
-    if(!unique.some(v => v.replace(/\s+/g,'') === key)) unique.push(piece);
-    if(unique.length >= 3) break;
-  }
-
-  return normalizeGuideText(unique.join(' '));
+function buildRiskActionBlock(qInfo){
+  if(!qInfo || qInfo.mode !== 'riskAction') return '';
+  const label = qInfo.riskLabel || '부담이 큰 행동 판단';
+  return `
+    <div class="risk-action-box">
+      <div class="risk-action-kicker">${escapeHtml(label)} · 실행 권장 아님</div>
+      <strong>이 결과는 “해도 된다”는 신호가 아니라, 판단 전 기준을 먼저 보라는 표시입니다.</strong>
+      <p>열림이 떠도 바로 행동으로 옮기라는 뜻은 아닙니다. 압박, 감당 가능한 선, 다른 선택지를 먼저 나눠 봅니다.</p>
+    </div>
+  `;
 }
 
 function buildReadGuide(question, signal, qInfo, p, s, h){
-  const meaning = normalizeGuideText(getQuestionReadGuide(qInfo, question, p, s, h));
-  const clear = getClearFlowGuide(signal, qInfo, p, s, h);
-  const remember = getRememberGuide(p, s, h);
+  const meaning = guideParagraphHtml(getQuestionReadGuide(qInfo, question, p, s, h));
+  const clear = guideParagraphHtml(getClearFlowGuide(signal, qInfo, p, s, h));
+  const remember = guideParagraphHtml(getRememberGuide(p, s, h));
   return `
     <div class="read-guide">
       <div class="read-guide-head">스냅샷 해석</div>
       <div class="read-guide-body">
-        <div class="guide-box meaning"><span class="guide-label">현재 흐름의 의미</span><p>${meaning}</p></div>
+        <div class="guide-box meaning"><span class="guide-label">짧은 기준</span><p>${meaning}</p></div>
         <div class="guide-box clear"><span class="guide-label">흐름을 맑게 하는 방법</span><p>${clear}</p></div>
-        <div class="guide-box remember"><span class="guide-label">기억하면 좋은 기준</span><p>${remember}</p></div>
+        <div class="guide-box remember"><span class="guide-label">주의점</span><p>${remember}</p></div>
       </div>
     </div>
   `;
@@ -912,19 +1043,22 @@ function renderDice(p,s,h){
 }
 
 function buildReading(question,p,s,h){
-  const signal = getSignal(p,s,h);
+  const rawSignal = getSignal(p,s,h);
+  const qInfo = detectDomain(question);
+  const signal = getDisplaySignal(rawSignal, qInfo);
   const status = getStatus(p,s,h);
   const scene = makeScene(p,s,h);
-  const qInfo = detectDomain(question);
   const bridge = getBridge(signal,p,s,h,qInfo);
   const closing = getClosing(signal, p, s, qInfo.tone);
   const readGuideBlock = buildReadGuide(question, signal, qInfo, p, s, h);
+  const riskActionBlock = buildRiskActionBlock(qInfo);
   currentSnapshot = {question, p, s, h, signal, scene, bridge, closing, qInfo};
   lastShareText = [
-    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', `${signal.icon} ${signal.label}`, signal.title, signal.sub, '', scene, '', bridge, closing, '', '현재 흐름의 의미', getQuestionReadGuide(qInfo, question, p, s, h), '', '흐름을 맑게 하는 방법', getClearFlowGuide(signal,qInfo,p,s,h), '', '기억하면 좋은 기준', getRememberGuide(p,s,h)
+    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', `${signal.icon} ${signal.label}`, signal.title, signal.sub, '', scene, '', bridge, closing, '', '짧은 기준', getQuestionReadGuide(qInfo, question, p, s, h), '', '흐름을 맑게 하는 방법', getClearFlowGuide(signal,qInfo,p,s,h), '', '주의점', getRememberGuide(p,s,h)
   ].join('\n');
   return `
     <div class="r-question">${escapeHtml(question)}</div>
+    ${riskActionBlock}
     <div class="r-signal ${signal.className}">
       <div class="signal-badge"><span class="signal-dot"></span>${signal.icon} ${signal.label}</div>
       <div class="signal-title ${signal.className}">${signal.title}</div>
@@ -949,21 +1083,25 @@ function buildReading(question,p,s,h){
       <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
     </div>
     <div class="share-row">
-      <button class="small-btn" type="button" onclick="shareCurrentCard()">공유하기</button>
-      <button class="small-btn" type="button" onclick="copyAiSummaryPrompt()">AI 종합해석용 복사</button>
+      ${isMobileDevice()
+        ? '<button class="small-btn" type="button" onclick="shareCurrentCard()">공유하기</button>'
+        : '<button class="small-btn" type="button" onclick="saveCurrentCardImage()">이미지 저장</button><button class="small-btn" type="button" onclick="copyShareLinkText()">링크 공유</button>'}
+      <button class="small-btn" type="button" onclick="copyAiSummaryPrompt()">AI에게 물어보기</button>
     </div>
   `;
 }
 
 const placeholders = [
-  '지금 방향, 계속 이어가도 될까?',
-  '요즘 내가 자꾸 붙잡는 건 뭘까?',
-  '나는 왜 자꾸 흔들릴까?',
-  '이 선택은 지금의 나와 맞는 걸까?',
-  '지금 멈춰야 할까, 계속 가야 할까?',
-  '이 관계, 어디로 흘러가고 있는 걸까?',
-  '지금 내가 놓치고 있는 게 있을까?',
-  '이 방향이 맞는지 모르겠다.',
+  '지금 이 방향, 계속 이어가도 괜찮을까?',
+  '이 사람과 나는 어떤 흐름일까?',
+  '요즘 내가 왜 이렇게 흔들릴까?',
+  '지금 내가 제일 먼저 봐야 할 건 뭘까?',
+  '이 선택은 내 흐름과 맞을까?',
+  '돈 흐름에서 지금 중요한 기준은 뭘까?',
+  '내가 하고 있는 일, 방향은 괜찮을까?',
+  '지금 멈추는 게 나을까, 조금 더 이어가는 게 나을까?',
+  '이 관계에서 내가 기억해야 할 기준은 뭘까?',
+  '지금 나에게 가장 자연스러운 움직임은 뭘까?',
 ];
 function setRandomPlaceholder(){
   $('question').placeholder = placeholders[Math.floor(Math.random()*placeholders.length)];
@@ -984,7 +1122,7 @@ function detectConfirmQuestion(q){
 }
 
 function hideAllWarnings(){
-  ['vsWarning','broadWarning','repeatWarning','confirmWarning'].forEach(id=>{
+  ['vsWarning','broadWarning','repeatWarning','confirmWarning','riskWarning'].forEach(id=>{
     $( id).style.display='none';
   });
 }
@@ -997,7 +1135,8 @@ function roll(){
   hideAllWarnings();
 
   // 질문 상태 감지 — 막지 않고 경고만
-  if(detectVsQuestion(question)) $('vsWarning').style.display='block';
+  if(detectRiskActionQuestion(question).isRisk) $('riskWarning').style.display='block';
+  else if(detectVsQuestion(question)) $('vsWarning').style.display='block';
   else if(detectBroadQuestion(question)) $('broadWarning').style.display='block';
   else if(detectRepeatQuestion(question)) $('repeatWarning').style.display='block';
   else if(detectConfirmQuestion(question)) $('confirmWarning').style.display='block';
@@ -1021,7 +1160,7 @@ function renderHistory(){
   $('historyList').innerHTML = history.map((item,index)=>`
     <div class="history-item" data-index="${index}">
       <div><strong>${escapeHtml(item.question)}</strong><br>${item.p.icon} ${item.p.name} · ${item.s.icon} ${item.s.name} · ${item.h.name}</div>
-      <div class="${item.signal.className}">${item.signal.icon || ''} ${item.signal.label || ''}<br>${item.signal.title}</div>
+      <div class="${getDisplaySignal(item.signal, detectDomain(item.question)).className}">${getDisplaySignal(item.signal, detectDomain(item.question)).icon || ''} ${getDisplaySignal(item.signal, detectDomain(item.question)).label || ''}<br>${getDisplaySignal(item.signal, detectDomain(item.question)).title}</div>
     </div>
   `).join('');
   document.querySelectorAll('.history-item').forEach(el=>{
@@ -1038,7 +1177,7 @@ function renderHistory(){
 function clearAll(){
   $('question').value = '';
   $('error').style.display = 'none';
-  $('vsWarning').style.display = 'none';
+  hideAllWarnings();
   $('diceGrid').innerHTML = `
     <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
     <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
@@ -1189,18 +1328,28 @@ function wrapText(ctx, text, maxW, fontSize){
 
 function getSnapshotForPrompt(item, index){
   const p = item.p, s = item.s, h = item.h;
-  const signal = item.signal || getSignal(p,s,h);
-  const scene = makeScene(p,s,h);
   const qInfo = detectDomain(item.question || '');
+  const signal = getDisplaySignal(item.signal || getSignal(p,s,h), qInfo);
+  const scene = makeScene(p,s,h);
   const bridge = getBridge(signal,p,s,h,qInfo);
+  const closing = getClosing(signal, p, s, qInfo.tone);
+  const shortGuide = getQuestionReadGuide(qInfo, item.question || '', p, s, h);
+  const clearGuide = getClearFlowGuide(signal, qInfo, p, s, h);
+  const caution = getRememberGuide(p, s, h);
+  const riskLine = qInfo.mode === 'riskAction' ? `위험 행동 분기: ${qInfo.riskLabel || '부담이 큰 행동 판단'} · 실행 권장 아님` : '';
   return [
     `${index}.`,
     `질문: ${item.question}`,
-    `결과: ${signal.icon || ''} ${signal.label || signal.title}`,
-    `흐름 요소: ${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`,
-    `핵심 장면: ${scene.replaceAll('\n',' / ')}`,
-    `보조 해석: ${bridge}`
-  ].join('\n');
+    `질문 성격: ${qInfo.mode}${qInfo.primary ? ' / ' + qInfo.primary : ''}`,
+    riskLine,
+    `신호: ${signal.icon || ''} ${signal.label || signal.title} - ${signal.title}`,
+    `요소: ${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`,
+    `장면 해석: ${scene.replaceAll('\n',' / ')}`,
+    `짧은 기준: ${shortGuide}`,
+    `보조 해석: ${bridge} ${closing}`,
+    `맑게 쓰는 법: ${clearGuide}`,
+    `주의점: ${caution}`
+  ].filter(Boolean).join('\n');
 }
 
 async function copyAiSummaryPrompt(){
@@ -1208,18 +1357,43 @@ async function copyAiSummaryPrompt(){
   const items = history.slice().reverse();
   const body = items.map((item, i)=>getSnapshotForPrompt(item, i+1)).join('\n\n');
   const prompt = [
-    '아래 astro-compass 스냅샷들을 하나의 흐름으로 종합해주세요.',
-    '각 결과를 단정하지 말고, 반복되는 방향과 엇갈리는 신호를 중심으로 읽어주세요.',
-    '사용자가 불안해서 되묻는 질문이 있다면, 새 판정으로 보지 말고 앞선 흐름을 확인하는 질문으로 함께 묶어주세요.',
-    '최종 답변은 “무엇이 열려 있는지 / 어디서 조정이 필요한지 / 지금 기억할 기준” 중심으로 짧게 정리해주세요.',
+    '아래는 astro-compass에서 나온 여러 스냅샷 기록입니다.',
+    '새로 점치지 말고, 기록 사이의 반복 흐름과 엇갈리는 신호를 종합해서 읽어주세요.',
     '',
+    '[astro-compass 전제]',
+    'astro-compass는 운명·결과 확정 도구가 아니라, 현재 흐름을 비추는 스냅샷 도구입니다.',
+    '각 결과는 좋다/나쁘다 판정이 아니라, 질문자가 지금 어떤 장면과 기준을 붙잡고 있는지 보여주는 자료입니다.',
+    '같은 신호도 쓰는 방식에 따라 맑게 드러날 수도, 흐려질 수도 있습니다.',
+    '',
+    '[해석 규칙]',
+    '1. 결과를 확정하지 말 것.',
+    '2. “무조건 된다/망했다/바로 해라” 같은 표현을 쓰지 말 것.',
+    '3. 반복되는 신호를 우선해서 읽을 것.',
+    '4. 서로 엇갈리는 신호는 숨기지 말고 함께 정리할 것.',
+    '5. 불안해서 되묻는 질문은 새 점괘처럼 떼어내지 말고, 앞선 질문과 연결해서 읽을 것.',
+    '6. 대출·빚·투자·퇴사·계약·관계 단절 같은 위험 행동 질문은 실행 권장이 아니라 판단 전 기준 확인으로 읽을 것.',
+    '7. 추상적인 철학 설명보다, 사용자가 지금 실제로 붙잡을 수 있는 기준과 장면 중심으로 말할 것.',
+    '8. 마지막에는 현재 가장 자연스러운 방향을 짧게 정리할 것.',
+    '',
+    '[출력 형식]',
+    '1. 전체 흐름 요약',
+    '2. 반복되는 방향',
+    '3. 엇갈리거나 흔들리는 신호',
+    '4. 불안해서 되묻는 질문의 연결 지점',
+    '5. 지금 가장 자연스러운 흐름',
+    '6. 작게 해볼 수 있는 것',
+    '7. 한 줄 결론',
+    '',
+    '[스냅샷 기록]',
     body,
     '',
+    '문체: 부드럽고 관찰적인 해요체. 단정하지 말고, 현실적으로 읽어주세요.',
     '사이트: https://astro-compass.structon.kr/'
   ].join('\n');
+
   try{
     await navigator.clipboard.writeText(prompt);
-    showToast('AI 종합해석용 내용을 복사했습니다.');
+    showToast('AI 종합 해석 프롬프트를 복사했습니다.');
   }catch(e){
     showToast('복사 권한이 막혀 있습니다.');
   }
@@ -1245,7 +1419,16 @@ function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
   return y + lines.length*lineHeight;
 }
 
-async function shareCurrentCard(){
+async function copyShareLinkText(){
+  const text = 'astro-compass에서 지금 흐름의 스냅샷을 확인해보세요.\nhttps://astro-compass.structon.kr/';
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('공유 문구와 링크를 복사했습니다.');
+  }catch(e){ showToast('복사 권한이 막혀 있습니다.'); }
+}
+window.copyShareLinkText = copyShareLinkText;
+
+function makeCardBlob(callback){
   if(!currentSnapshot){ showToast('먼저 흐름을 확인해주세요.'); return; }
   const {question,p,s,h,signal,scene,bridge,closing} = currentSnapshot;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1254,67 +1437,72 @@ async function shareCurrentCard(){
   canvas.width = W*dpr; canvas.height = H*dpr;
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr,dpr);
-
   const bg = ctx.createLinearGradient(0,0,0,H);
   bg.addColorStop(0,'#050e1f'); bg.addColorStop(1,'#020617');
   ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
-
   const glow = ctx.createRadialGradient(W/2,120,0,W/2,120,520);
   glow.addColorStop(0,'rgba(94,234,212,.15)'); glow.addColorStop(1,'rgba(94,234,212,0)');
   ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
-
   ctx.strokeStyle = 'rgba(148,163,184,.20)'; ctx.lineWidth = 2;
   ctx.roundRect(36,36,W-72,H-72,28); ctx.stroke();
-
   let y = 84;
   ctx.fillStyle = '#94a3b8'; ctx.font = '700 22px -apple-system,BlinkMacSystemFont,sans-serif';
   y = drawWrappedText(ctx, question, 72, y, W-144, 34, 3) + 22;
-
   ctx.strokeStyle = 'rgba(148,163,184,.16)'; ctx.beginPath(); ctx.moveTo(72,y); ctx.lineTo(W-72,y); ctx.stroke(); y += 52;
-
   const colorMap = {'signal-strong-open':'#86efac','signal-open':'#ccfbf1','signal-soft-open':'#bae6fd','signal-watch':'#fde68a','signal-cross':'#fed7aa','signal-blur':'#ddd6fe'};
   const sigColor = colorMap[signal.className] || '#ccfbf1';
-  ctx.fillStyle = 'rgba(148,163,184,.10)'; ctx.roundRect(72,y-30,190,44,22); ctx.fill();
+  ctx.fillStyle = 'rgba(148,163,184,.10)'; ctx.roundRect(72,y-30,220,44,22); ctx.fill();
   ctx.fillStyle = sigColor; ctx.font = '900 20px -apple-system,BlinkMacSystemFont,sans-serif';
   ctx.fillText(`${signal.icon || ''} ${signal.label || ''}`, 92, y);
   y += 68;
-
   ctx.fillStyle = sigColor; ctx.font = '900 42px -apple-system,BlinkMacSystemFont,sans-serif';
   y = drawWrappedText(ctx, signal.title, 72, y, W-144, 56, 3) + 16;
   ctx.fillStyle = '#6f879d'; ctx.font = '600 19px -apple-system,BlinkMacSystemFont,sans-serif';
   y = drawWrappedText(ctx, signal.sub, 72, y, W-144, 30, 3) + 38;
-
   ctx.fillStyle = '#e8f0fc'; ctx.font = '500 28px -apple-system,BlinkMacSystemFont,sans-serif';
   y = drawWrappedText(ctx, scene.replaceAll('\n','  '), 72, y, W-144, 44, 7) + 34;
-
   ctx.strokeStyle = 'rgba(148,163,184,.14)'; ctx.beginPath(); ctx.moveTo(72,y); ctx.lineTo(W-72,y); ctx.stroke(); y += 42;
-
   ctx.fillStyle = '#a9c2d8'; ctx.font = '800 22px -apple-system,BlinkMacSystemFont,sans-serif';
   y = drawWrappedText(ctx, bridge, 72, y, W-144, 34, 3) + 18;
   ctx.fillStyle = '#64748b'; ctx.font = '600 18px -apple-system,BlinkMacSystemFont,sans-serif';
   y = drawWrappedText(ctx, closing, 72, y, W-144, 30, 3) + 34;
-
   const coords = `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`;
   ctx.fillStyle = 'rgba(148,163,184,.08)'; ctx.strokeStyle = 'rgba(148,163,184,.18)';
   ctx.roundRect(72, H-154, W-144, 48, 24); ctx.fill(); ctx.stroke();
   ctx.fillStyle = '#94a3b8'; ctx.font = '800 18px -apple-system,BlinkMacSystemFont,sans-serif';
   ctx.fillText(coords, 96, H-124);
-
   ctx.fillStyle = 'rgba(148,163,184,.50)'; ctx.font = '700 17px -apple-system,BlinkMacSystemFont,sans-serif';
   ctx.fillText('astro-compass.structon.kr', 72, H-72);
+  canvas.toBlob(callback, 'image/png');
+}
 
-  canvas.toBlob(async (blob)=>{
-    const file = new File([blob], 'astro-compass.png', {type:'image/png'});
-    if(navigator.canShare && navigator.canShare({files:[file]})){
-      try{ await navigator.share({files:[file], title:'astro-compass', text:'https://astro-compass.structon.kr/'}); showToast('공유를 열었습니다.'); return; }catch(e){}
-    }
+function saveCurrentCardImage(){
+  makeCardBlob((blob)=>{
     const link = document.createElement('a');
     link.download = 'astro-compass.png';
     link.href = URL.createObjectURL(blob);
     link.click();
     setTimeout(()=>URL.revokeObjectURL(link.href), 1000);
-    showToast('공유 이미지를 저장했습니다.');
-  }, 'image/png');
+    showToast('이미지를 저장했습니다.');
+  });
+}
+window.saveCurrentCardImage = saveCurrentCardImage;
+
+async function shareCurrentCard(){
+  makeCardBlob(async (blob)=>{
+    const file = new File([blob], 'astro-compass.png', {type:'image/png'});
+    const shareText = 'https://astro-compass.structon.kr/';
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file], title:'astro-compass', text:shareText}); showToast('공유를 열었습니다.'); return; }catch(e){}
+    }
+    try{ await navigator.clipboard.writeText('astro-compass에서 지금 흐름의 스냅샷을 확인해보세요.\n' + shareText); }catch(e){}
+    const link = document.createElement('a');
+    link.download = 'astro-compass.png';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    setTimeout(()=>URL.revokeObjectURL(link.href), 1000);
+    showToast('공유가 막혀 이미지 저장과 링크 복사를 시도했습니다.');
+  });
 }
 window.shareCurrentCard = shareCurrentCard;
 
@@ -1332,7 +1520,8 @@ window.copyCurrentText = copyCurrentText;
 $('rollBtn').addEventListener('click', roll);
 $('question').addEventListener('input', function(){
   hideAllWarnings();
-  if(detectVsQuestion(this.value)) $('vsWarning').style.display='block';
+  if(detectRiskActionQuestion(this.value).isRisk) $('riskWarning').style.display='block';
+  else if(detectVsQuestion(this.value)) $('vsWarning').style.display='block';
 });
 $('question').addEventListener('keydown', function(e){ if((e.ctrlKey || e.metaKey) && e.key === 'Enter') roll(); });
 
