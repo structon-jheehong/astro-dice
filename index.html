@@ -56,7 +56,12 @@
     .r-question{font-size:12px;color:#2a3d52;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line2);word-break:break-word}
     .r-signal{margin-bottom:18px}
     .signal-title{font-size:clamp(22px,4vw,32px);font-weight:950;letter-spacing:-.06em;line-height:1.25;word-break:keep-all;margin-bottom:6px}
-    .signal-open{color:#ccfbf1}.signal-watch{color:#fde68a}.signal-cross{color:#fecdd3}.signal-blur{color:#ddd6fe}
+    .signal-strong-open{color:#86efac}.signal-open{color:#ccfbf1}.signal-soft-open{color:#d9f99d}.signal-watch{color:#fde68a}.signal-cross{color:#fdba74}.signal-blur{color:#fca5a5}
+    .signal-badge{display:inline-flex;align-items:center;gap:7px;margin-bottom:10px;border:1px solid rgba(148,163,184,.18);border-radius:999px;padding:5px 12px;background:rgba(148,163,184,.07);font-size:12px;font-weight:900;letter-spacing:-.02em}
+    .signal-dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 18px currentColor}
+    .signal-meter{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:10px 0 4px}
+    .meter-seg{height:5px;border-radius:999px;background:rgba(148,163,184,.12)}
+    .meter-seg.on{background:currentColor;box-shadow:0 0 16px currentColor}
     .signal-sub{font-size:13px;color:#5a7285;word-break:keep-all;line-height:1.55}
     .r-status{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line2)}
     .status-chip{display:flex;align-items:center;gap:5px;font-size:11px;color:#5a7285;background:rgba(148,163,184,.06);border:1px solid var(--line2);border-radius:999px;padding:4px 10px}
@@ -76,6 +81,27 @@
     .soft-card p{font-size:13px;line-height:1.75;word-break:keep-all}
     .soft-card-clear p{color:#7ea8a0}
     .soft-card-blur p{color:#a07080}
+
+    .snapshot-help{margin-top:10px;border:1px solid rgba(148,163,184,.14);border-radius:14px;background:rgba(2,6,23,.28);padding:0 12px;color:#6f879d}
+    .snapshot-help summary{list-style:none;cursor:pointer;padding:9px 0;font-size:12px;font-weight:800;color:#8aa4bc}
+    .snapshot-help summary::-webkit-details-marker{display:none}
+    .snapshot-help p{padding:0 0 10px;font-size:12px;line-height:1.65;color:#5f7588;word-break:keep-all}
+
+    .read-guide{margin:16px 0 18px;border:1px solid rgba(148,163,184,.16);border-radius:18px;background:rgba(2,6,23,.34);overflow:hidden}
+    .read-guide-head{padding:12px 15px;border-bottom:1px solid rgba(148,163,184,.10);color:#cbd5e1;font-size:13px;font-weight:900;letter-spacing:-.02em}
+    .read-guide-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+    .guide-box{padding:14px 15px;border-right:1px solid rgba(148,163,184,.10);border-bottom:1px solid rgba(148,163,184,.10)}
+    .guide-box:nth-child(2n){border-right:0}
+    .guide-box:nth-last-child(-n+2){border-bottom:0}
+    .guide-box.meaning{grid-column:1 / -1;border-right:0}
+    .guide-box.meaning + .guide-box{border-bottom:0}
+    .guide-label{display:block;margin-bottom:6px;font-size:11px;font-weight:900;letter-spacing:.04em;color:#7dd3fc}
+    .guide-box p{font-size:13px;line-height:1.75;color:#8fa6bb;word-break:keep-all}
+    .guide-box.clear .guide-label{color:#5eead4}
+    .guide-box.remember .guide-label{color:#fdba74}
+    .guide-box.meaning p{color:#9db4c9}
+    .guide-box.clear p{color:#86afa7}
+    .guide-box.remember p{color:#b79386}
     .coord-chips{display:flex;gap:7px;flex-wrap:wrap}
     .coord-chip{display:flex;align-items:center;gap:5px;border:1px solid rgba(148,163,184,.2);border-radius:999px;padding:5px 12px;background:rgba(148,163,184,.07)}
     .coord-chip .c-icon{font-size:14px;color:#7a8fa8}
@@ -112,9 +138,10 @@
     /* 질문 강화 */
     .r-question{font-size:16px;color:#b0c4d8;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line2);word-break:break-word;line-height:1.6;font-weight:700;letter-spacing:-.02em}
             @media(max-width:640px){
-      .wrap{width:calc(100% - 24px);padding:22px 0 56px}.card{border-radius:20px;padding:18px}h1{font-size:24px}.row{flex-direction:column}.secondary{flex:1}.soft-grid{grid-template-columns:1fr}.signal-title{font-size:24px}.r-status{gap:6px}.history-item{grid-template-columns:1fr}.share-row{justify-content:stretch}.small-btn{flex:1}.guide-grid{grid-template-columns:1fr 1fr}
+      .wrap{width:calc(100% - 24px);padding:22px 0 56px}.card{border-radius:20px;padding:18px}h1{font-size:24px}.row{flex-direction:column}.secondary{flex:1}.soft-grid{grid-template-columns:1fr}.signal-title{font-size:24px}.r-status{gap:6px}.history-item{grid-template-columns:1fr}.share-row{justify-content:stretch}.small-btn{flex:1}.guide-grid{grid-template-columns:1fr 1fr}.read-guide-body{grid-template-columns:1fr}.guide-box{border-right:0}.guide-box:nth-last-child(2){border-bottom:1px solid rgba(148,163,184,.10)}
     }
   </style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=2772"></script>
 <script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=15034"></script>
 </head>
 <body>
@@ -123,7 +150,7 @@
       <div class="hero" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
         <div>
           <h1>astro-compass</h1>
-          <p class="subtitle">점성술 좌표로 지금 흐름을 읽습니다. 정답보다 방향, 판정보다 관찰에 가깝습니다.</p>
+          <p class="subtitle">점성술의 흐름 요소로 지금 상태와 방향을 읽습니다. 결과보다 흐름을 먼저 봅니다.</p>
         </div>
         <button class="guide-btn" id="guideBtn" type="button" style="flex-shrink:0;margin-top:4px;min-width:32px;text-align:center">?</button>
       </div>
@@ -140,6 +167,10 @@
       <div class="row">
         <button id="rollBtn" class="main-btn" type="button">내 흐름의 스냅샷</button>
       </div>
+      <details class="snapshot-help">
+        <summary>왜 스냅샷인가요?</summary>
+        <p>이 결과는 미래 확정이 아니라, 지금 흐르는 감각과 방향의 한 장면을 보여주는 스냅샷입니다.</p>
+      </details>
 
       <div class="dice-grid" id="diceGrid">
         <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
@@ -149,7 +180,7 @@
 
       <div class="result" id="reading"><p class="subtitle" style="margin-top:14px">질문을 입력하고 흐름을 확인하세요.</p></div>
 
-      <div class="notice">질문 범위를 좁힐수록 흐름은 더 선명해집니다.</div>
+      <div class="notice">신호는 정답보다 표지판에 가깝습니다. 열림의 강도와 조정 지점을 함께 봅니다.</div>
 
       <div class="history">
         <strong>기록</strong>
@@ -172,7 +203,7 @@
           행성은 무엇이 움직이는지,<br>
           별자리는 그 힘이 어떤 결로 흐르는지,<br>
           하우스는 어디에서 드러나는지를 보여줍니다.<br><br>
-          세 좌표를 함께 보며 지금 질문의 흐름을 읽습니다.
+          세 가지 흐름 요소를 함께 보며 지금 질문의 흐름을 읽습니다.
         </p>
       </div>
       <div class="guide-section">
@@ -248,43 +279,122 @@ function escapeHtml(str){ return str.replaceAll('&','&amp;').replaceAll('<','&lt
 function detectVsQuestion(question){ const q = question.replaceAll(' ',''); return /중(에)?(뭐|무엇|어느|어떤)|vs|VS|랑.*중|와.*중|하고.*중|또는/.test(q); }
 
 function getSignal(p,s,h){
-  // 흐림 압력 — 해왕성/12하우스/물고기 조합은 blur 우선
-  const hardBlur = (p.tone === 'mist') || (h.visibility === '숨김' && s.sustain === '흐림');
-  const unclear = p.direction === '흐림' || s.sustain === '흐림' || h.visibility === '숨김';
-  const unstable = s.sustain === '불안정' || s.sustain === '변동';
-  const deepOrHidden = h.visibility === '깊음' || h.visibility === '숨김';
+  // 6단계 신호 구조 v2
+  // 목적: 대중 사용자가 먼저 “괜찮은 흐름인지”를 체감하고, 그 다음 세부 해석으로 들어가게 한다.
+  const hardBlur = (
+    p.tone === 'mist' ||
+    (h.visibility === '숨김' && s.sustain === '흐림')
+  );
 
-  if(hardBlur || (unclear && (unstable || deepOrHidden))){
-    return {type:'blur', title:'지금은 판단보다 관찰이 먼저인 흐름', sub:'감각은 움직이지만 기준이 아직 흐려져 있습니다. 결론보다 방향을 먼저 보는 편이 자연스럽습니다.', className:'signal-blur'};
+  // 해왕성/강한 숨김 조합은 유지하되, 부정 판정처럼 보이지 않게 표현 압력을 낮춘다.
+  if(hardBlur){
+    return {
+      type:'mixed', level:1, icon:'🔴', label:'혼선 큼',
+      title:'혼선이 커질 수 있는 흐름',
+      sub:'감각이 예민하게 움직이고 있습니다. 지금은 서두르기보다 흐름을 천천히 보는 편이 자연스럽습니다.',
+      className:'signal-blur'
+    };
   }
 
-  // 가중치 계산
   let score = 0;
+
+  // 행성
   if(p.direction === '열림') score += 2;
   if(p.direction === '깊어짐') score += 1;
   if(p.direction === '머묾') score -= 1;
+
+  // 별자리
   if(s.sustain === '유지 가능') score += 2;
   if(s.sustain === '중립') score += 1;
   if(s.sustain === '변동') score -= 1;
   if(s.sustain === '불안정') score -= 2;
+  if(s.sustain === '흐림') score -= 2;
+
+  // 하우스
   if(h.visibility === '드러남') score += 2;
   if(h.visibility === '내부') score += 1;
   if(h.visibility === '깊음') score -= 1;
-  // 행성 tone 가중치
-  if(p.tone === 'fire' || p.tone === 'spark') score += 1;   // 추진력 있음
-  if(p.tone === 'stable' || p.tone === 'wide') score += 1;  // 안정·확장
-  if(p.tone === 'deep') score -= 1;                          // 깊이 = 느림
-  if(p.tone === 'return') score -= 1;                        // 회귀 = 머묾
+  if(h.visibility === '숨김') score -= 2;
 
-  if(score >= 4){
-    return {type:'open', title:'열려 있지만 결을 살펴야 하는 흐름', sub:'방향은 막히지 않았고, 쓰는 방식에 따라 이어갈 여지가 있습니다.', className:'signal-open'};
+  // 행성 tone 보정
+  if(['center','open','fire','wide','spark','path'].includes(p.tone)) score += 1;
+  if(['stable'].includes(p.tone)) score += 1;
+  if(['deep','return'].includes(p.tone)) score -= 1;
+
+  const supportivePlanet = ['center','open','fire','wide','spark','path'].includes(p.tone);
+  const stableSign = ['유지 가능','중립'].includes(s.sustain);
+  const visibleHouse = ['드러남','내부'].includes(h.visibility);
+  const deepOrHidden = ['깊음','숨김'].includes(h.visibility);
+  const unclear = p.direction === '흐림' || s.sustain === '흐림' || h.visibility === '숨김';
+  const unstable = s.sustain === '불안정' || s.sustain === '변동';
+
+  // 대중형 체감 보정: 좋은 조합이 실제로 열림 계열에 올라오도록 한다.
+  if(supportivePlanet && visibleHouse) score += 1;
+  if(supportivePlanet && stableSign) score += 1;
+  if(stableSign && visibleHouse) score += 1;
+  if(p.tone === 'stable' && s.sustain === '유지 가능') score += 1;
+  if(p.tone === 'fire' && h.visibility === '드러남') score += 1;
+  if(p.tone === 'wide' && !deepOrHidden) score += 1;
+  if(p.tone === 'spark' && s.sustain === '변동') score += 1;
+  if(p.tone === 'open' && ['발현','조율','지속'].includes(s.keyword)) score += 1;
+  if(p.tone === 'path' && h.visibility === '드러남') score += 1;
+
+  // 흐림·불안정 조합은 낮추되, 곧장 부정처럼 떨어뜨리지는 않는다.
+  if(unclear && unstable) score -= 1;
+  if(unclear && deepOrHidden) score -= 1;
+
+  if(score >= 8){
+    return {
+      type:'strongOpen', level:6, icon:'🟢', label:'강하게 열림',
+      title:'흐름이 강하게 맞물리는 상태',
+      sub:'방향과 힘이 함께 살아 있습니다. 지금은 움직임을 실제로 살려볼 수 있는 흐름입니다.',
+      className:'signal-strong-open'
+    };
   }
-  if(score <= 0){
-    return {type:'cross', title:'지금은 힘이 엇갈리기 쉬운 흐름', sub:'그대로 밀기보다 위치와 기준을 다시 보는 편이 흐름이 덜 새입니다.', className:'signal-cross'};
+
+  if(score >= 5){
+    return {
+      type:'open', level:5, icon:'🟢', label:'흐름 열림',
+      title:'열려 있고 이어갈 수 있는 상태',
+      sub:'방향은 막히지 않았고, 쓰는 방식에 따라 안정적으로 이어질 여지가 있습니다.',
+      className:'signal-open'
+    };
   }
-  return {type:'watch', title:'조금 더 좁혀 봐야 선명해지는 흐름', sub:'가능성은 있지만, 기준이 완전히 모이지 않았습니다. 질문의 범위를 좁히면 층이 또렷해집니다.', className:'signal-watch'};
+
+  if(score >= 3){
+    return {
+      type:'softOpen', level:4, icon:'🟢', label:'천천히 열림',
+      title:'가능성이 열려 있는 상태',
+      sub:'좋은 여지는 있습니다. 방식과 기준을 조금 다듬을수록 흐름이 더 선명해집니다.',
+      className:'signal-soft-open'
+    };
+  }
+
+  if(score >= 1){
+    return {
+      type:'adjust', level:3, icon:'🟡', label:'조율 필요',
+      title:'조율하면 살아나는 흐름',
+      sub:'아직 기준이 완전히 모이지 않았습니다. 방향을 조금 더 좁히면 흐름이 더 편하게 이어집니다.',
+      className:'signal-watch'
+    };
+  }
+
+  if(score >= -1){
+    return {
+      type:'check', level:2, icon:'🟠', label:'방향 점검',
+      title:'방향을 점검하면 나아지는 흐름',
+      sub:'막힌 것은 아니지만 그대로 밀면 힘이 새기 쉽습니다. 위치와 방식을 다시 보면 흐름이 정리됩니다.',
+      className:'signal-cross'
+    };
+  }
+
+  return {
+    type:'mixed', level:1, icon:'🔴', label:'혼선 큼',
+    title:'혼선이 커질 수 있는 흐름',
+    sub:'감각과 판단이 섞이기 쉬운 상태입니다. 지금은 서두르기보다 선명해지는 지점을 천천히 보는 편이 자연스럽습니다.',
+    className:'signal-blur'
+  };
 }
-
 function detectDomain(question){
   const q = question;
   const domains = [];
@@ -314,10 +424,20 @@ function getClosing(signal, p, s, qTone){
   const sSustain = s.sustain;
 
   if(qTone === 'soft'){
-    if(signal.type === 'open') return pickOne([
+    if(signal.type === 'strongOpen') return pickOne([
+      '흐름이 강하게 열려 있다. 지금은 실제로 움직여도 되는 쪽에 가깝다.',
+      '방향과 힘이 같이 살아 있다. 작게라도 실행하면 흐름이 더 선명해진다.',
+      '지금은 닫힘보다 맞물림이 강하다. 움직임을 살려도 된다.'
+    ]);
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return pickOne([
       '지금 방향이 완전히 닫혀 있지는 않다. 조금씩 확인하며 가도 된다.',
       '열려 있는 방향이 있다. 서두르지 않아도 흐름은 이어진다.',
       '좋다 나쁘다보다, 지금 어디서 숨이 열리는지를 먼저 보는 편이 맞다.'
+    ]);
+    if(signal.type === 'softOpen') return pickOne([
+      '가능성은 열려 있다. 다만 조금 더 확인하며 가는 편이 안정적이다.',
+      '약하게 열려 있는 흐름이다. 기준을 다듬으면 더 좋아진다.',
+      '막힌 흐름은 아니다. 작게 조정하며 이어가면 된다.'
     ]);
     if(signal.type === 'cross') return pickOne([
       '막혔다기보다, 지금 이 방향에서 힘이 새는 부분이 보이는 상태에 가깝다.',
@@ -337,7 +457,14 @@ function getClosing(signal, p, s, qTone){
   }
 
   // neutral — 좌표 결 따라 의미층 분산
-  if(signal.type === 'open'){
+  if(signal.type === 'strongOpen'){
+    return pickOne([
+      '흐름이 강하게 맞물린다. 지금은 실행 쪽으로 힘이 붙는다.',
+      '열림이 분명하다. 방향을 살리면 움직임이 이어진다.',
+      '좋은 신호가 강하다. 결을 유지하며 밀어도 된다.'
+    ]);
+  }
+  if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
     if(pTone === 'stable' || pTone === 'deep') return pickOne([
       '열려 있는 흐름이다. 빠르게 가기보다 버티는 방식이 먼저다.',
       '막히지 않은 흐름이다. 속도보다 형태가 중요하다.',
@@ -345,7 +472,7 @@ function getClosing(signal, p, s, qTone){
     ]);
     if(pTone === 'fire' || pTone === 'spark') return pickOne([
       '움직임이 실리는 흐름이다. 방향만 잡히면 빠르게 이어진다.',
-      '추진력이 있는 좌표다. 결을 먼저 잡고 밀면 흐름이 산다.',
+      '추진력이 있는 흐름입니다. 결을 먼저 잡고 움직이면 흐름이 살아납니다.',
       '열려 있다. 다만 속도보다 방향이 먼저다.'
     ]);
     if(sSustain === '변동' || sSustain === '불안정') return pickOne([
@@ -357,6 +484,13 @@ function getClosing(signal, p, s, qTone){
       '확정된 좋음이 아니라, 지금 방향으로 이어갈 여지가 있다는 신호에 가깝다.',
       '좋다는 뜻보다, 지금 방향에 여지가 있다는 뜻에 가깝다.',
       '이어갈 수 있는 상태다. 확신보다 결을 먼저 보는 편이 낫다.'
+    ]);
+  }
+  if(signal.type === 'softOpen'){
+    return pickOne([
+      '가능성은 있다. 다만 방식과 기준을 다듬을수록 흐름이 살아난다.',
+      '약하게 열려 있다. 고정보다 조정하며 이어가는 편이 맞다.',
+      '나쁜 흐름은 아니다. 아직은 작은 조정이 필요한 열림이다.'
     ]);
   }
   if(signal.type === 'cross'){
@@ -406,19 +540,19 @@ function getBridge(signal,p,s,h,q){
   // 감정 강도 높은 질문 — bridge 압력 낮춤
   if(qTone === 'soft'){
     if(qDomain === 'family'){
-      if(signal.type === 'open') return '가족 사이의 흐름에서는, 밀기보다 반응을 먼저 보는 쪽이 자연스럽다.';
+      if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return '가족 사이의 흐름에서는, 밀기보다 반응을 먼저 보는 쪽이 자연스럽다.';
       if(signal.type === 'cross') return '가족 사이의 흐름에서는, 지금 방향보다 어디서 걸리는지를 먼저 보는 편이 맞다.';
       if(signal.type === 'blur') return '가족 사이의 흐름은 안쪽에서 먼저 움직인다. 겉보다 감각이 먼저다.';
       return '가족 영역에서는, 기준보다 확인이 먼저다.';
     }
     if(qDomain === 'anxious'){
-      if(signal.type === 'open') return '흐름이 완전히 막혀 있지는 않다. 열려 있는 쪽이 어딘지만 먼저 보면 된다.';
+      if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return '흐름이 완전히 막혀 있지는 않다. 열려 있는 쪽이 어딘지만 먼저 보면 된다.';
       if(signal.type === 'cross') return '걸리는 지점이 있다. 밀기보다 어디서 걸리는지 먼저 보는 편이 맞다.';
       if(signal.type === 'blur') return '지금 흐린 것이 정상인 상태다. 결론을 서두르지 않아도 된다.';
       return '기준이 아직 모이지 않았다. 조금씩 좁혀 가면 된다.';
     }
     if(qDomain === 'body'){
-      if(signal.type === 'open') return '몸의 감각이 먼저 반응한다. 그 방향을 따르는 편이 맞다.';
+      if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return '몸의 감각이 먼저 반응한다. 그 방향을 따르는 편이 맞다.';
       if(signal.type === 'cross') return '몸이 먼저 신호를 보낸다. 무시하고 밀기보다 확인이 먼저다.';
       return '몸 영역에서는, 지금 반응이 먼저다.';
     }
@@ -434,27 +568,27 @@ function getBridge(signal,p,s,h,q){
 
   // 다중 도메인 — money+family 같은 조합 처리
   if(qDomain === 'family' && qSecondary === 'money'){
-    if(signal.type === 'open') return '가족과 수익이 얽힌 영역에서는, 관계 반응이 먼저 안정되어야 흐름이 선다.';
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return '가족과 수익이 얽힌 영역에서는, 관계 반응이 먼저 안정되어야 흐름이 선다.';
     if(signal.type === 'cross') return '가족과 수익이 얽힌 영역에서는, 어느 쪽이 먼저인지 기준이 필요하다.';
   }
 
   // 질문 영역별 분기
   if(qDomain === 'relation'){
-    if(signal.type === 'open'){
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
       if(pTone === 'soft' || pTone === 'open') return '관계 안에서 반응이 자연스럽게 오가는 흐름이 있다.';
       if(pTone === 'fire') return '관계 안에서 먼저 치고 나가는 힘이 있지만, 상대 반응을 같이 볼 때 흐름이 산다.';
       if(sSustain === '불안정' || sSustain === '변동') return '관계 안에서 흐름이 고정되지 않아, 반응을 보며 조율하는 쪽이 맞다.';
       return '관계 영역에서는, 속도보다 상대 반응이 먼저 안정되어야 흐름이 선다.';
     }
     if(signal.type === 'cross'){
-      if(hDomain === 'relation') return '관계 안에서 방향이 서로 엇갈리기 쉬운 좌표다. 밀기보다 확인이 먼저다.';
+      if(hDomain === 'relation') return '관계 안에서 방향이 서로 엇갈리기 쉬운 흐름입니다. 밀기보다 확인이 먼저입니다.';
       return '관계 영역에서는, 지금 방식 그대로 밀면 반응이 어긋나기 쉽다.';
     }
     return '관계 영역에서는, 흐름이 완전히 모이지 않아 상대 반응을 더 보는 편이 맞다.';
   }
 
   if(qDomain === 'content'){
-    if(signal.type === 'open'){
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
       if(pTone === 'center' || pTone === 'fire') return '콘텐츠 영역에서는, 방향이 열려 있지만 표현 방식이 결론보다 먼저다.';
       if(pTone === 'soft' || pTone === 'mist') return '콘텐츠 영역에서는, 감각이 먼저 움직일 때 방향보다 결이 살아난다.';
       if(sSustain === '변동') return '콘텐츠 영역에서는, 고정하기보다 오가며 잡을 때 흐름이 맑다.';
@@ -465,7 +599,7 @@ function getBridge(signal,p,s,h,q){
   }
 
   if(qDomain === 'work'){
-    if(signal.type === 'open'){
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
       if(pTone === 'stable' || pTone === 'deep') return '일 영역에서는, 속도보다 버티는 형태가 있을 때 흐름이 오래 간다.';
       if(pTone === 'spark') return '일 영역에서는, 기존 방식을 조금 바꾸는 쪽으로 흐름이 열린다.';
       if(hDomain === 'social') return '일 영역에서는, 역할과 위치가 바깥에서 드러나는 흐름이 있다.';
@@ -480,7 +614,7 @@ function getBridge(signal,p,s,h,q){
   }
 
   if(qDomain === 'money'){
-    if(signal.type === 'open'){
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
       if(pTone === 'wide') return '수익 영역에서는, 가능성이 넓어지고 있지만 지금 감당 가능한 크기를 같이 봐야 한다.';
       if(sSustain === '유지 가능') return '수익 영역에서는, 지금 형태를 유지하며 쌓는 쪽이 흐름과 맞다.';
       return '수익 영역에서는, 이어갈 여지가 있다. 기반이 먼저다.';
@@ -490,7 +624,7 @@ function getBridge(signal,p,s,h,q){
   }
 
   if(qDomain === 'sustain'){
-    if(signal.type === 'open'){
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
       if(pTone === 'stable' || sSustain === '유지 가능') return '유지하는 방향으로 막히지 않는다. 지금 형태를 이어갈 여지가 있다.';
       if(sSustain === '변동' || sSustain === '불안정') return '흐름이 고정되지 않았다. 그대로 유지보다 결을 조금 바꾸며 가는 편이 맞다.';
       return '이어갈 여지가 있다. 방식을 확인하며 가는 편이 낫다.';
@@ -500,19 +634,19 @@ function getBridge(signal,p,s,h,q){
   }
 
   if(qDomain === 'choice'){
-    if(signal.type === 'open') return '흐름은 열려 있다. 비교보다 하나를 먼저 골라 보는 편이 기준이 잡힌다.';
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return '흐름은 열려 있다. 비교보다 하나를 먼저 골라 보는 편이 기준이 잡힌다.';
     if(signal.type === 'cross') return '선택지가 힘을 나누고 있다. 하나씩 따로 보는 편이 흐름이 더 또렷해진다.';
     return '선택 영역에서는, 기준이 아직 흐려 하나를 먼저 좁히는 편이 맞다.';
   }
 
   if(qDomain === 'tool'){
-    if(signal.type === 'open') return '도구·기술 영역에서는, 이어갈 여지가 있다. 작동 방식이 먼저다.';
+    if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')) return '도구·기술 영역에서는, 이어갈 여지가 있다. 작동 방식이 먼저다.';
     if(signal.type === 'cross') return '도구·기술 영역에서는, 지금 방식보다 구조가 먼저다.';
     return '도구·기술 영역에서는, 기준을 먼저 세울수록 흐름이 또렷해진다.';
   }
 
   // general — 좌표 tone 조합으로 분기
-  if(signal.type === 'open'){
+  if((signal.type === 'open' || signal.type === 'strongOpen' || signal.type === 'softOpen')){
     if(hDomain === 'base') return '안쪽 기반을 다질수록 흐름이 안정된다.';
     if(hDomain === 'hidden') return '겉보다 보이지 않는 감각을 확인할수록 흐름이 맑아진다.';
     if(pTone === 'stable' && sSustain === '유지 가능') return '버티는 힘과 지속 가능한 결이 맞물린다. 천천히 밀어도 흐름이 간다.';
@@ -592,6 +726,173 @@ function makeScene(p,s,h){
 
   return `${pLines.join('\n')}\n${sConn} ${sLines[0]}\n${hConn}\n${hFirst}`;
 }
+
+
+function normalizeGuideText(text){
+  return text
+    .replaceAll('수 있다.', '수 있습니다.')
+    .replaceAll('수 없다.', '수 없습니다.')
+    .replaceAll('어렵다.', '어렵습니다.')
+    .replaceAll('맑다.', '맑습니다.')
+    .replaceAll('맞다.', '맞습니다.')
+    .replaceAll('먼저다.', '먼저입니다.')
+    .replaceAll('필요하다.', '필요합니다.')
+    .replaceAll('상태다.', '상태입니다.')
+    .replaceAll('흐름이다.', '흐름입니다.')
+    .replaceAll('신호다.', '신호입니다.')
+    .replaceAll('뜻이다.', '뜻입니다.')
+    .replaceAll('드러난다.', '드러납니다.')
+    .replaceAll('살아난다.', '살아납니다.')
+    .replaceAll('열린다.', '열립니다.')
+    .replaceAll('안정된다.', '안정됩니다.')
+    .replaceAll('정리된다.', '정리됩니다.')
+    .replaceAll('흐려진다.', '흐려집니다.')
+    .replaceAll('굳는다.', '굳습니다.')
+    .replaceAll('남는다.', '남습니다.')
+    .replaceAll('커진다.', '커집니다.')
+    .replaceAll('움직인다.', '움직입니다.')
+    .replaceAll('이어진다.', '이어집니다.')
+    .replaceAll('늦어진다.', '늦어집니다.')
+    .replaceAll('갈라질 수 있습니다.', '갈라질 수 있습니다.')
+    .replaceAll('줄어들 수 있습니다.', '줄어들 수 있습니다.')
+    .replaceAll('갇힐 수 있습니다.', '갇힐 수 있습니다.')
+    .replaceAll('묶일 수 있습니다.', '묶일 수 있습니다.')
+    .replaceAll('놓칠 수 있습니다.', '놓칠 수 있습니다.')
+    .replaceAll('비어 있다.', '비어 있을 수 있습니다.')
+    .replaceAll('잡는다.', '잡습니다.')
+    .replaceAll('본다.', '봅니다.')
+    .replaceAll('간다.', '갑니다.')
+    .replaceAll('산다.', '살아납니다.');
+}
+
+function getQuestionReadGuide(qInfo, question, p, s, h){
+  const domain = qInfo.primary;
+  const isConfirm = /못|안 되는|안되는|아닌|별로|망|실패|나쁜|부정/.test(question);
+  const base = `${p.name}·${s.name}·${h.name}이라는 세 가지 흐름 요소가 함께 드러나는 모습입니다. ${p.name}의 ${p.keyword}이 ${s.name}의 ${s.keyword} 결로 움직이고, ${h.name}의 ${h.keyword} 자리에서 나타납니다.`;
+
+  if(isConfirm){
+    return `이 결과는 “그렇다/아니다”를 확정하는 답이라기보다, 방금 떠오른 불안을 어떤 흐름 요소에서 다시 보고 있는지 보여줍니다. ${base}`;
+  }
+
+  if(domain === 'money'){
+    return `이 결과는 돈을 번다/못 번다를 단정하기보다, 돈의 흐름이 어디서 움직이고 어디서 정리되어야 하는지를 보여줍니다. ${base}`;
+  }
+  if(domain === 'relation'){
+    return `이 결과는 친하다/아니다를 단정하기보다, 관계 안에서 어떤 반응과 거리감이 움직이는지를 보여줍니다. ${base}`;
+  }
+  if(domain === 'work' || domain === 'content' || domain === 'tool'){
+    return `이 결과는 성공/실패를 확정하기보다, 지금 하는 일의 힘이 어디서 살아나고 어디서 새는지를 보여줍니다. ${base}`;
+  }
+  if(domain === 'choice'){
+    return `이 결과는 어느 하나를 무조건 고르라는 뜻보다, 선택 앞에서 어떤 기준이 먼저 필요한지 보여줍니다. ${base}`;
+  }
+  return `이 결과는 확정 판정보다 현재 흐름의 성질을 보여줍니다. ${base}`;
+}
+
+function getOveruseGuide(p, s, h){
+  const parts = [];
+  if(p.blurred) parts.push(p.blurred);
+  if(s.blurred) parts.push(s.blurred);
+  if(h.visibility === '숨김') parts.push('보이지 않는 감각에 오래 머물면 확인되지 않은 걱정이 커질 수 있습니다.');
+  if(h.visibility === '깊음') parts.push('통제 밖의 영역까지 붙잡으려 하면 힘이 깊은 곳에서 묶일 수 있습니다.');
+  if(h.visibility === '내부') parts.push('안쪽 반응에만 머물면 바깥의 실제 신호를 놓칠 수 있습니다.');
+  return parts.slice(0,3).join(' ');
+}
+
+function getUnderuseGuide(p, s, h){
+  const pMap = {
+    center:'중심을 너무 낮추면 내가 무엇을 원하는지 흐려질 수 있습니다.',
+    soft:'몸과 감정의 반응을 무시하면 안정감이 늦게 잡힐 수 있습니다.',
+    clear:'정보를 정리하지 않으면 흐름이 흩어진 채 남을 수 있습니다.',
+    open:'끌림과 가치를 보지 않으면 선택의 생기가 줄어들 수 있습니다.',
+    fire:'행동이 부족하면 방향이 있어도 실제 변화로 이어지기 어렵습니다.',
+    wide:'시야를 너무 좁히면 작은 계산 안에 가능성이 갇힐 수 있습니다.',
+    stable:'구조를 세우지 않으면 좋은 흐름도 오래 유지되기 어렵습니다.',
+    spark:'바꿔야 할 부분을 놓치면 낡은 방식이 계속 반복될 수 있습니다.',
+    mist:'감각을 완전히 밀어내면 미묘한 신호를 놓칠 수 있습니다.',
+    deep:'깊이를 보지 않으면 표면의 문제만 반복해서 만질 수 있습니다.',
+    path:'낯선 방향을 피하면 다음 흐름으로 넘어가는 힘이 약해질 수 있습니다.',
+    return:'이미 가진 익숙한 기반을 무시하면 안정감이 흔들릴 수 있습니다.'
+  };
+  const sMap = {
+    '돌파':'첫 움직임이 부족하면 시작이 계속 늦어질 수 있습니다.',
+    '지속':'지속성을 놓치면 좋은 흐름도 금방 흩어질 수 있습니다.',
+    '연결':'연결과 정보 교환이 부족하면 선택지가 닫혀 보일 수 있습니다.',
+    '보호':'안쪽을 지키는 힘이 부족하면 쉽게 소진될 수 있습니다.',
+    '발현':'표현을 줄이면 존재감과 매력이 충분히 드러나지 않을 수 있습니다.',
+    '정제':'세부를 다듬지 않으면 가능성이 실제 형태로 굳기 어렵습니다.',
+    '조율':'균형을 보지 않으면 관계나 선택에서 한쪽으로 치우칠 수 있습니다.',
+    '관통':'깊이 보지 않으면 핵심을 비껴갈 수 있습니다.',
+    '확장':'큰 방향을 놓치면 눈앞의 일에만 갇힐 수 있습니다.',
+    '구조':'현실화 기준이 부족하면 생각이 실제 결과로 내려오기 어렵습니다.',
+    '재설계':'거리를 두고 다시 보는 힘이 부족하면 기존 틀에 묶일 수 있습니다.',
+    '용해':'부드럽게 받아들이는 힘이 부족하면 흐름이 지나치게 딱딱해질 수 있습니다.'
+  };
+  const parts = [pMap[p.tone] || '이 힘을 너무 덜 쓰면 흐름이 약하게 남을 수 있습니다.', sMap[s.keyword] || '이 결이 부족하면 흐름 요소의 힘이 충분히 드러나기 어렵습니다.'];
+  if(h.domain === 'resource') parts.push('손에 쥔 자원과 기준을 확인하지 않으면 흐름이 추상적으로 남을 수 있습니다.');
+  if(h.domain === 'relation') parts.push('상대 반응을 보지 않으면 관계의 실제 온도를 놓칠 수 있습니다.');
+  if(h.domain === 'routine') parts.push('반복과 관리가 부족하면 좋은 방향도 생활 안에 자리 잡기 어렵습니다.');
+  if(h.domain === 'deep') parts.push('공유 자원이나 통제 밖의 변수를 보지 않으면 흐름을 오해하기 쉽습니다.');
+  return parts.slice(0,3).join(' ');
+}
+
+function getClearUseGuide(signal, qInfo, p, s, h){
+  const prefix = signal.level >= 4 ? '이미 열린 부분을 살리되, ' : signal.level >= 2 ? '막힌 뜻으로 보지 말고, ' : '확정하려 하기보다, ';
+  const domainMap = {
+    money:'돈의 결과보다 돈이 움직이는 경로와 기준을 먼저 정리하는 편이 맑습니다.',
+    relation:'상대와 나 사이의 실제 반응을 하나씩 확인할 때 흐름이 맑습니다.',
+    work:'일의 크기를 키우기보다 지금 작동하는 방식부터 정리할 때 맑습니다.',
+    content:'표현을 늘리기보다 어떤 결로 보여줄지 잡을 때 맑습니다.',
+    tool:'기능을 더하기보다 실제 사용 흐름을 정리할 때 맑습니다.',
+    choice:'둘 중 하나로 몰기보다 기준 하나를 먼저 세울 때 맑습니다.',
+    sustain:'그대로 유지할 부분과 조정할 부분을 나눌 때 맑습니다.'
+  };
+  return prefix + (domainMap[qInfo.primary] || '지금 흐름 요소가 가리키는 방향을 작게 확인하면서 쓰는 편이 맑습니다.');
+}
+
+function getClearFlowGuide(signal, qInfo, p, s, h){
+  const clearUse = getClearUseGuide(signal, qInfo, p, s, h);
+  const healthy = `${p.healthy} ${s.healthy}`;
+  return normalizeGuideText(`${clearUse} ${healthy}`);
+}
+
+function getRememberGuide(p, s, h){
+  const over = getOveruseGuide(p, s, h);
+  const under = getUnderuseGuide(p, s, h);
+  const blurred = `${p.blurred} ${s.blurred}`;
+
+  const pieces = [blurred, over, under]
+    .join(' ')
+    .split(/(?<=다\.)\s+/)
+    .map(v => v.trim())
+    .filter(Boolean);
+
+  const unique = [];
+  for(const piece of pieces){
+    const key = piece.replace(/\s+/g,'');
+    if(!unique.some(v => v.replace(/\s+/g,'') === key)) unique.push(piece);
+    if(unique.length >= 3) break;
+  }
+
+  return normalizeGuideText(unique.join(' '));
+}
+
+function buildReadGuide(question, signal, qInfo, p, s, h){
+  const meaning = normalizeGuideText(getQuestionReadGuide(qInfo, question, p, s, h));
+  const clear = getClearFlowGuide(signal, qInfo, p, s, h);
+  const remember = getRememberGuide(p, s, h);
+  return `
+    <div class="read-guide">
+      <div class="read-guide-head">스냅샷 해석</div>
+      <div class="read-guide-body">
+        <div class="guide-box meaning"><span class="guide-label">현재 흐름의 의미</span><p>${meaning}</p></div>
+        <div class="guide-box clear"><span class="guide-label">흐름을 맑게 하는 방법</span><p>${clear}</p></div>
+        <div class="guide-box remember"><span class="guide-label">기억하면 좋은 기준</span><p>${remember}</p></div>
+      </div>
+    </div>
+  `;
+}
+
 function getStatus(p,s,h){ return {direction:p.movement, sustain:s.sustain, visibility:h.visibility}; }
 
 function renderDice(p,s,h){
@@ -609,14 +910,17 @@ function buildReading(question,p,s,h){
   const qInfo = detectDomain(question);
   const bridge = getBridge(signal,p,s,h,qInfo);
   const closing = getClosing(signal, p, s, qInfo.tone);
+  const readGuideBlock = buildReadGuide(question, signal, qInfo, p, s, h);
   lastShareText = [
-    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', signal.title, signal.sub, '', scene, '', bridge, closing
+    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', `${signal.icon} ${signal.label}`, signal.title, signal.sub, '', scene, '', bridge, closing, '', '현재 흐름의 의미', getQuestionReadGuide(qInfo, question, p, s, h), '', '흐름을 맑게 하는 방법', getClearFlowGuide(signal,qInfo,p,s,h), '', '기억하면 좋은 기준', getRememberGuide(p,s,h)
   ].join('\n');
   return `
     <div class="r-question">${escapeHtml(question)}</div>
-    <div class="r-signal">
+    <div class="r-signal ${signal.className}">
+      <div class="signal-badge"><span class="signal-dot"></span>${signal.icon} ${signal.label}</div>
       <div class="signal-title ${signal.className}">${signal.title}</div>
       <div class="signal-sub">${signal.sub}</div>
+      <div class="signal-meter">${[1,2,3,4,5,6].map(n=>`<span class="meter-seg ${n <= signal.level ? 'on' : ''}"></span>`).join('')}</div>
     </div>
     <div class="r-status">
       <div class="status-chip">방향 <span class="chip-val">${status.direction}</span></div>
@@ -628,11 +932,8 @@ function buildReading(question,p,s,h){
       <div class="bridge">${bridge}</div>
       <div class="closing">${closing}</div>
     </div>
+    ${readGuideBlock}
     <hr class="r-divider">
-    <div class="soft-grid">
-      <div class="soft-card soft-card-clear"><div class="soft-label soft-label-clear">맑게 쓰일 때</div><p>${p.healthy} ${s.healthy}</p></div>
-      <div class="soft-card soft-card-blur"><div class="soft-label soft-label-blur">흐려질 때</div><p>${p.blurred} ${s.blurred}</p></div>
-    </div>
     <div class="coord-chips">
       <div class="coord-chip"><span class="c-icon">${p.icon}</span><span class="c-name">${p.name}</span><span class="c-key">${p.keyword}</span></div>
       <div class="coord-chip"><span class="c-icon">${s.icon}</span><span class="c-name">${s.name}</span><span class="c-key">${s.keyword}</span></div>
@@ -712,7 +1013,7 @@ function renderHistory(){
   $('historyList').innerHTML = history.map((item,index)=>`
     <div class="history-item" data-index="${index}">
       <div><strong>${escapeHtml(item.question)}</strong><br>${item.p.icon} ${item.p.name} · ${item.s.icon} ${item.s.name} · ${item.h.name}</div>
-      <div class="${item.signal.className}">${item.signal.title}</div>
+      <div class="${item.signal.className}">${item.signal.icon || ''} ${item.signal.label || ''}<br>${item.signal.title}</div>
     </div>
   `).join('');
   document.querySelectorAll('.history-item').forEach(el=>{
@@ -734,7 +1035,7 @@ function clearAll(){
     <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
     <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
     <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>`;
-  $('reading').innerHTML = '<p class="subtitle">질문을 입력하고 좌표를 확인하세요.</p>';
+  $('reading').innerHTML = '<p class="subtitle">질문을 입력하고 흐름을 확인하세요.</p>';
   history = [];
   lastShareText = '';
   renderHistory();
@@ -792,9 +1093,11 @@ function downloadCard(question, signalTitle, signalClass, bridge, coords){
 
   // signal 색상
   const colorMap = {
+    'signal-strong-open': '#86efac',
     'signal-open': '#ccfbf1',
+    'signal-soft-open': '#bae6fd',
     'signal-watch': '#fde68a',
-    'signal-cross': '#fecdd3',
+    'signal-cross': '#fed7aa',
     'signal-blur': '#ddd6fe',
   };
   const signalColor = colorMap[signalClass] || '#ccfbf1';
@@ -876,7 +1179,7 @@ function wrapText(ctx, text, maxW, fontSize){
 }
 
 async function copyCurrentText(){
-  if(!lastShareText){ showToast('먼저 좌표를 확인해주세요.'); return; }
+  if(!lastShareText){ showToast('먼저 흐름을 확인해주세요.'); return; }
   try{
     await navigator.clipboard.writeText(lastShareText);
     showToast('텍스트를 복사했습니다.');
