@@ -1,466 +1,927 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>astro-compass</title>
-<style>
-:root{
-  --bg:#030712;
-  --deep:#07101f;
-  --panel:rgba(12,18,32,.72);
-  --line:rgba(148,163,184,.08);
-  --text:#edf2f7;
-  --muted:#8b9bb3;
-  --soft:#c9d4e5;
-  --silver:rgba(226,232,240,.28);
-}
-*{box-sizing:border-box}
-html{
-  scroll-behavior:smooth;
-}
-body{
-  margin:0;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at top left, rgba(96,165,250,.05), transparent 28%),
-    radial-gradient(circle at top right, rgba(168,85,247,.05), transparent 30%),
-    linear-gradient(180deg,#020617,#07101f 40%,#020617);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  line-height:1.9;
-  overflow-x:hidden;
-}
-.wrap{
-  width:min(760px,92vw);
-  margin:0 auto;
-  padding:72px 0 180px;
-}
-.hero{
-  margin-bottom:54px;
-}
-.logo{
-  font-size:30px;
-  font-weight:700;
-  letter-spacing:-.06em;
-}
-.hero p{
-  margin-top:14px;
-  color:var(--muted);
-  font-size:14px;
-  line-height:2;
-}
-.input-wrap{
-  border:1px solid var(--line);
-  background:var(--panel);
-  border-radius:34px;
-  padding:30px;
-  backdrop-filter:blur(24px);
-  box-shadow:0 20px 60px rgba(0,0,0,.24);
-}
-textarea{
-  width:100%;
-  min-height:120px;
-  border:none;
-  resize:none;
-  outline:none;
-  background:transparent;
-  color:var(--text);
-  font-size:18px;
-  line-height:2;
-}
-textarea::placeholder{
-  color:#64748b;
-}
-.bottom-row{
-  margin-top:24px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.hint{
-  color:#64748b;
-  font-size:12px;
-}
-button{
-  border:none;
-  cursor:pointer;
-  transition:.25s ease;
-}
-.main-btn{
-  background:rgba(255,255,255,.06);
-  color:#e2e8f0;
-  border-radius:999px;
-  padding:14px 24px;
-  font-size:14px;
-  letter-spacing:-.02em;
-}
-.main-btn:hover{
-  background:rgba(255,255,255,.1);
-}
-.snapshot{
-  margin-top:68px;
-  border:1px solid rgba(148,163,184,.06);
-  background:rgba(8,15,28,.54);
-  border-radius:40px;
-  padding:54px 42px 40px;
-  backdrop-filter:blur(26px);
-  box-shadow:0 30px 80px rgba(0,0,0,.34);
-  animation:fadeUp .8s ease;
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(14px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.snapshot-label{
-  color:rgba(148,163,184,.72);
-  font-size:12px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  margin-bottom:34px;
-}
-.question{
-  color:rgba(148,163,184,.56);
-  font-size:13px;
-  margin-bottom:42px;
-  line-height:2;
-}
-.flow-line{
-  font-size:34px;
-  line-height:1.5;
-  letter-spacing:-.06em;
-  margin-bottom:68px;
-  color:#f8fafc;
-}
-.scene{
-  white-space:pre-line;
-  font-size:23px;
-  line-height:2.4;
-  color:white;
-  margin-bottom:72px;
-  letter-spacing:-.03em;
-}
-.bridge{
-  color:#d5deeb;
-  line-height:2.15;
-  font-size:16px;
-  margin-bottom:64px;
-}
-.soft-block{
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-}
-.soft-block p:first-child{
-  color:#b8c6da;
-  font-size:15px;
-  line-height:2.1;
-}
-.soft-block p:last-child{
-  color:rgba(184,198,218,.52);
-  font-size:14px;
-  line-height:2.1;
-}
-.coord{
-  margin-top:90px;
-  color:var(--silver);
-  font-size:11px;
-  letter-spacing:.2em;
-}
-.share-wrap{
-  margin-top:42px;
-  display:flex;
-  justify-content:flex-end;
-}
-.share-box{
-  position:relative;
-}
-.share-btn{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.04);
-  color:#dbe4f1;
-  font-size:15px;
-}
-.share-btn:hover{
-  background:rgba(255,255,255,.08);
-}
-.share-menu{
-  display:none;
-  position:absolute;
-  right:0;
-  margin-top:12px;
-  width:150px;
-  background:#0b1324;
-  border:1px solid rgba(148,163,184,.08);
-  border-radius:18px;
-  overflow:hidden;
-  backdrop-filter:blur(18px);
-}
-.share-menu button{
-  width:100%;
-  background:transparent;
-  color:#dbe4f1;
-  text-align:left;
-  padding:15px 16px;
-  border-bottom:1px solid rgba(255,255,255,.03);
-}
-.share-menu button:last-child{
-  border-bottom:none;
-}
-.card-render{
-  width:1080px;
-  min-height:1400px;
-  position:fixed;
-  left:-99999px;
-  top:0;
-  padding:110px 90px;
-  background:
-    radial-gradient(circle at top left, rgba(96,165,250,.06), transparent 28%),
-    radial-gradient(circle at top right, rgba(168,85,247,.05), transparent 30%),
-    linear-gradient(180deg,#020617,#07101f);
-  color:white;
-}
-.card-small{
-  color:rgba(226,232,240,.42);
-  font-size:24px;
-  margin-bottom:46px;
-  letter-spacing:.14em;
-}
-.card-question{
-  color:rgba(226,232,240,.48);
-  font-size:28px;
-  line-height:2;
-  margin-bottom:72px;
-}
-.card-flow{
-  font-size:60px;
-  line-height:1.45;
-  letter-spacing:-.06em;
-  margin-bottom:92px;
-}
-.card-scene{
-  white-space:pre-line;
-  font-size:46px;
-  line-height:2.25;
-  margin-bottom:110px;
-}
-.card-bridge{
-  color:rgba(255,255,255,.74);
-  font-size:34px;
-  line-height:2.2;
-}
-.card-coord{
-  margin-top:150px;
-  color:rgba(255,255,255,.24);
-  font-size:20px;
-  letter-spacing:.18em;
-}
-@media(max-width:700px){
-  .snapshot{padding:42px 28px 34px}
-  .flow-line{font-size:28px}
-  .scene{font-size:20px}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>astro-compass</title>
+  <style>
+    :root{
+      --bg:#020617;--text:#edf2f7;--muted:#64748b;--soft:#94a3b8;
+      --line:rgba(148,163,184,.18);--line2:rgba(148,163,184,.10);
+      --accent:#38bdf8;--teal:#5eead4;--violet:#a78bfa;--gold:#facc15;--rose:#fb7185;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      min-height:100vh;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+      color:var(--text);line-height:1.68;
+      background:
+        radial-gradient(ellipse at 18% 0%,rgba(56,189,248,.12),transparent 38%),
+        radial-gradient(ellipse at 84% 4%,rgba(167,139,250,.10),transparent 36%),
+        linear-gradient(180deg,#020617 0%,#08101e 50%,#020617 100%);
+    }
+    button,textarea{font:inherit}
+    button{border:0;cursor:pointer}
+    .wrap{width:min(820px,92vw);margin:0 auto;padding:36px 0 80px}
+    .card{border:1px solid var(--line);border-radius:24px;background:rgba(10,18,36,.90);box-shadow:0 24px 72px rgba(0,0,0,.48);backdrop-filter:blur(24px);padding:clamp(20px,4vw,32px)}
+    .tab-row{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+    .tab-btn{padding:9px 16px;background:none;color:var(--muted);font-size:13px;font-weight:700;border-radius:10px 10px 0 0;border:1px solid transparent;border-bottom:none;cursor:pointer;transition:.1s;letter-spacing:-.01em}
+    .tab-btn.active{color:var(--text);background:rgba(10,18,36,.9);border-color:var(--line)}
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+    .hero{margin-bottom:22px}
+    h1{font-size:28px;letter-spacing:-.07em;line-height:1.2;font-weight:900}
+    .subtitle{color:var(--muted);font-size:13px;word-break:keep-all;margin-top:4px}
+    label{display:block;margin:20px 0 8px;font-size:14px;font-weight:800;color:#e2e8f0}
+    .label-note{display:inline-block;margin-left:6px;color:rgba(250,204,21,.8);font-size:11px;font-weight:500}
+    textarea{width:100%;min-height:100px;resize:vertical;border:1px solid rgba(148,163,184,.25);border-radius:16px;outline:0;padding:15px 17px;background:rgba(5,12,28,.75);color:#d8e8f4;font-size:16px;line-height:1.85;font-weight:500}
+    textarea:focus{border-color:rgba(94,234,212,.5);box-shadow:0 0 0 3px rgba(94,234,212,.09)}
+    textarea::placeholder{color:#3d5570}
+    .hint{margin-top:7px;color:#3d5165;font-size:12px;word-break:keep-all}
+    .soft-warning{display:none;margin-top:9px;padding:9px 12px;border-radius:12px;border:1px solid rgba(250,204,21,.2);background:rgba(250,204,21,.06);color:#fde68a;font-size:12px}
+    .error{display:none;margin-top:8px;color:#fecaca;font-size:12px}
+    .row{display:flex;gap:8px;margin-top:12px}
+    .main-btn{flex:1;border-radius:14px;padding:13px 16px;color:#fff;font-weight:900;font-size:14px;background:linear-gradient(135deg,#0ea5e9,#2563eb);box-shadow:0 12px 32px rgba(37,99,235,.2);transition:.1s}
+    .main-btn:hover{filter:brightness(1.07)}
+    .main-btn:active{transform:scale(.99)}
+    .secondary{flex:.45;border-radius:14px;padding:13px 14px;color:#94a3b8;background:rgba(30,41,59,.8);border:1px solid var(--line2);font-weight:700;font-size:13px}
+    .dice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+    .dice{border:1px solid var(--line);border-radius:18px;background:rgba(2,6,23,.7);padding:16px 12px;text-align:center}
+    .kind{color:#4a6275;font-size:11px;margin-bottom:8px;letter-spacing:.02em}
+    .icon{font-size:34px;line-height:1;margin-bottom:6px;color:#c7dff0}
+    .name{font-size:20px;font-weight:950;letter-spacing:-.04em}
+    .keyword{margin-top:4px;color:#4a6275;font-size:12px}
+    .result{margin-top:16px}
+    .r-question{font-size:12px;color:#2a3d52;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line2);word-break:break-word}
+    .r-signal{margin-bottom:18px}
+    .signal-title{font-size:clamp(22px,4vw,32px);font-weight:950;letter-spacing:-.06em;line-height:1.25;word-break:keep-all;margin-bottom:6px}
+    .signal-open{color:#ccfbf1}.signal-watch{color:#fde68a}.signal-cross{color:#fecdd3}.signal-blur{color:#ddd6fe}
+    .signal-sub{font-size:13px;color:#5a7285;word-break:keep-all;line-height:1.55}
+    .r-status{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line2)}
+    .status-chip{display:flex;align-items:center;gap:5px;font-size:11px;color:#5a7285;background:rgba(148,163,184,.06);border:1px solid var(--line2);border-radius:999px;padding:4px 10px}
+    .status-chip .chip-val{color:#8aa0b8;font-weight:700}
+    .r-scene-area{margin-bottom:0}
+    .scene{white-space:pre-line;color:#e8f0fc;font-size:clamp(16px,2.6vw,21px);line-height:2.05;letter-spacing:-.03em;word-break:keep-all;margin-bottom:14px}
+    .bridge{padding:11px 0 9px;border-top:1px solid var(--line2);color:#9ab4cc;font-size:14px;font-weight:700;word-break:keep-all;line-height:1.65}
+    .closing{color:#5a7285;font-size:12px;word-break:keep-all;line-height:1.6;margin-top:4px}
+    .r-divider{border:none;border-top:1px solid var(--line2);margin:18px 0 16px}
+    .soft-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+    .soft-card{border:1px solid rgba(148,163,184,.22);background:rgba(15,25,45,.65);border-radius:14px;padding:14px 16px}
+    .soft-card-clear{border-color:rgba(94,234,212,.2);background:rgba(5,40,35,.5)}
+    .soft-card-blur{border-color:rgba(251,113,133,.18);background:rgba(40,10,20,.5)}
+    .soft-label{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px}
+    .soft-label-clear{color:#5eead4}
+    .soft-label-blur{color:#fb7185}
+    .soft-card p{font-size:13px;line-height:1.75;word-break:keep-all}
+    .soft-card-clear p{color:#7ea8a0}
+    .soft-card-blur p{color:#a07080}
+    .coord-chips{display:flex;gap:7px;flex-wrap:wrap}
+    .coord-chip{display:flex;align-items:center;gap:5px;border:1px solid rgba(148,163,184,.2);border-radius:999px;padding:5px 12px;background:rgba(148,163,184,.07)}
+    .coord-chip .c-icon{font-size:14px;color:#7a8fa8}
+    .coord-chip .c-name{font-size:12px;font-weight:800;color:#a0b4c8;letter-spacing:-.02em}
+    .coord-chip .c-key{font-size:10px;color:#5a7080;margin-left:2px}
+    .share-row{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+    .small-btn{border-radius:999px;padding:7px 13px;background:rgba(226,232,240,.06);color:#8090a8;border:1px solid rgba(226,232,240,.08);font-size:12px}
+    .notice{margin-top:12px;padding:10px 14px;border-radius:14px;border:1px solid var(--line2);background:rgba(2,6,23,.3);color:#4a6070;font-size:12px;word-break:keep-all}
+    .history{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+    .history strong{font-size:13px;color:#5a7285}
+    .history-item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:9px 8px;border-bottom:1px solid var(--line2);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
+    .history-item:hover{background:rgba(2,6,23,.5);color:var(--text)}
+    .history-item:last-child{border-bottom:0}
+    .guide-section{margin-bottom:20px}
+    .guide-section h3{margin:0 0 10px;font-size:11px;color:#2a3d52;letter-spacing:.06em;text-transform:uppercase}
+    .guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px}
+    .guide-item{border:1px solid var(--line2);border-radius:12px;background:rgba(2,6,23,.45);padding:11px 13px}
+    .guide-item .g-icon{font-size:20px;margin-bottom:5px;color:#c7dff0}
+    .guide-item .g-name{font-size:13px;font-weight:900;letter-spacing:-.03em;margin-bottom:2px}
+    .guide-item .g-key{font-size:11px;color:var(--accent);margin-bottom:3px}
+    .guide-item .g-desc{font-size:11px;color:#4a6070;line-height:1.5;word-break:keep-all}
+    .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:none;padding:11px 16px;border-radius:999px;background:rgba(10,18,36,.95);border:1px solid var(--line);color:#e2e8f0;font-size:12px;box-shadow:0 12px 32px rgba(0,0,0,.36)}
+    /* 오버레이 */
+    .overlay{display:none;position:fixed;inset:0;background:rgba(2,6,23,.88);z-index:100;backdrop-filter:blur(8px);overflow-y:auto}
+    .overlay.open{display:block}
+    .overlay-inner{width:min(760px,90vw);margin:40px auto;padding-bottom:60px}
+    .overlay-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .overlay-title{font-size:15px;font-weight:800;color:#94a3b8;letter-spacing:-.02em}
+    .overlay-close{background:rgba(148,163,184,.1);border:1px solid var(--line2);border-radius:999px;color:#64748b;padding:6px 14px;font-size:12px;cursor:pointer}
+    .overlay-close:hover{color:var(--text);background:rgba(148,163,184,.15)}
+    /* 가이드 버튼 */
+    .guide-btn{background:rgba(148,163,184,.08);border:1px solid var(--line2);border-radius:999px;color:#64748b;padding:6px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:.1s}
+    .guide-btn:hover{color:#94a3b8;border-color:rgba(148,163,184,.25)}
+    /* 질문 강화 */
+    .r-question{font-size:16px;color:#b0c4d8;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line2);word-break:break-word;line-height:1.6;font-weight:700;letter-spacing:-.02em}
+            @media(max-width:640px){
+      .wrap{width:calc(100% - 24px);padding:22px 0 56px}.card{border-radius:20px;padding:18px}h1{font-size:24px}.row{flex-direction:column}.secondary{flex:1}.dice-grid{grid-template-columns:1fr}.dice{min-height:auto}.soft-grid{grid-template-columns:1fr}.signal-title{font-size:24px}.r-status{gap:6px}.history-item{grid-template-columns:1fr}.share-row{justify-content:stretch}.small-btn{flex:1}.guide-grid{grid-template-columns:1fr 1fr}
+    }
+  </style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=15034"></script>
 </head>
 <body>
-<div class="wrap">
-
-  <section class="hero">
-    <div class="logo">astro-compass</div>
-    <p>질문에 대한 지금의 흐름을 사진처럼 바라봅니다.</p>
-  </section>
-
-  <section class="input-wrap">
-    <textarea id="question" placeholder="예: 지금 만드는 방향, 계속 이어가도 괜찮을까?"></textarea>
-
-    <div class="bottom-row">
-      <div class="hint">결과보다 흐름을 바라보는 질문이 잘 맞습니다.</div>
-      <button class="main-btn" id="generateBtn">스냅샷 남기기</button>
-    </div>
-  </section>
-
-  <section class="snapshot" id="snapshot" style="display:none;">
-
-    <div class="snapshot-label">질문에 대한 스냅샷</div>
-
-    <div class="question" id="questionText"></div>
-
-    <div class="flow-line" id="flowLine"></div>
-
-    <div class="scene" id="scene"></div>
-
-    <div class="bridge" id="bridge"></div>
-
-    <div class="soft-block">
-      <p id="healthyText"></p>
-      <p id="blurredText"></p>
-    </div>
-
-    <div class="coord" id="coord"></div>
-
-    <div class="share-wrap">
-      <div class="share-box">
-        <button class="share-btn" id="shareBtn">↗</button>
-
-        <div class="share-menu" id="shareMenu">
-          <button id="copyBtn">텍스트 복사</button>
-          <button id="saveBtn">이미지 저장</button>
-          <button id="shareNativeBtn">공유하기</button>
+  <main class="wrap">
+    <section class="card">
+      <div class="hero" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+        <div>
+          <h1>astro-compass</h1>
+          <p class="subtitle">점성술 좌표로 지금 흐름을 읽습니다. 정답보다 방향, 판정보다 관찰에 가깝습니다.</p>
         </div>
+        <button class="guide-btn" id="guideBtn" type="button" style="flex-shrink:0;margin-top:4px;min-width:32px;text-align:center">?</button>
+      </div>
+
+      <label for="question" style="margin-top:16px">질문 <span class="label-note">한 방향을 묻는 질문이 더 선명합니다</span></label>
+      <textarea id="question" placeholder="예: 지금 만드는 방향, 계속 이어가도 괜찮을까?"></textarea>
+      <div class="hint">VS형 질문도 막지는 않지만, 하나씩 나누어 보면 흐름이 더 또렷해집니다.</div>
+      <div id="vsWarning" class="soft-warning">비교형 질문은 결과가 흐려질 수 있습니다. 한 방향씩 따로 보면 더 선명합니다.</div>
+      <div id="broadWarning" class="soft-warning">질문 범위가 넓어 흐름이 여러 층으로 퍼질 수 있습니다.<br>하나의 방향으로 좁혀 보면 더 선명해집니다.</div>
+      <div id="repeatWarning" class="soft-warning">비슷한 질문이 기록에 있습니다.<br>확인을 반복하기보다, 이번에는 어느 부분이 달라졌는지 보는 편이 좋습니다.</div>
+      <div id="confirmWarning" class="soft-warning">이미 확인하고 싶은 방향이 강한 질문일 수 있습니다.<br>결과보다 질문이 붙잡고 있는 지점을 먼저 보는 편이 맞습니다.</div>
+      <div id="error" class="error">질문을 먼저 적어주세요.</div>
+
+      <div class="row">
+        <button id="rollBtn" class="main-btn" type="button">내 흐름의 스냅샷</button>
+      </div>
+
+      <div class="dice-grid" id="diceGrid">
+        <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
+        <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
+        <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>
+      </div>
+
+      <div class="result" id="reading"><p class="subtitle" style="margin-top:14px">질문을 입력하고 흐름을 확인하세요.</p></div>
+
+      <div class="notice">질문 범위를 좁힐수록 흐름은 더 선명해집니다.</div>
+
+      <div class="history">
+        <strong>기록</strong>
+        <div id="historyList" class="hint" style="margin-top:8px;">기록 없음.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 소개 + 좌표 안내 오버레이 -->
+  <div class="overlay" id="guideOverlay">
+    <div class="overlay-inner">
+      <div class="overlay-header">
+        <span class="overlay-title">astro-compass 소개</span>
+        <button class="overlay-close" id="overlayClose" type="button">닫기</button>
+      </div>
+      <div style="margin-bottom:28px;padding:18px 20px;border:1px solid rgba(148,163,184,.15);border-radius:14px;background:rgba(2,6,23,.5)">
+        <p style="font-size:14px;color:#8099b0;line-height:2;word-break:keep-all;margin:0">
+          이 시스템은 정답을 판단하기보다,<br>
+          지금 어떤 흐름이 드러나는지를 보기 위한 구조입니다.<br><br>
+          행성은 무엇이 움직이는지,<br>
+          별자리는 그 힘이 어떤 결로 흐르는지,<br>
+          하우스는 어디에서 드러나는지를 보여줍니다.<br><br>
+          세 좌표를 함께 보며 지금 질문의 흐름을 읽습니다.
+        </p>
+      </div>
+      <div class="guide-section">
+        <h3>행성 — 무엇이 움직이는가</h3>
+        <div class="guide-grid" id="guideplanets"></div>
+      </div>
+      <div class="guide-section">
+        <h3>별자리 — 어떤 결로 움직이는가</h3>
+        <div class="guide-grid" id="guidesigns"></div>
+      </div>
+      <div class="guide-section">
+        <h3>하우스 — 어디에서 드러나는가</h3>
+        <div class="guide-grid" id="guidehouses"></div>
       </div>
     </div>
+  </div>
+  <div class="toast" id="toast"></div>
 
-  </section>
-</div>
-
-<div class="card-render" id="shareCard">
-  <div class="card-small">질문에 대한 스냅샷</div>
-
-  <div class="card-question" id="cardQuestion"></div>
-
-  <div class="card-flow" id="cardFlow"></div>
-
-  <div class="card-scene" id="cardScene"></div>
-
-  <div class="card-bridge" id="cardBridge"></div>
-
-  <div class="card-coord" id="cardCoord"></div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+'use strict';
+
 const planets = [
-  {
-    icon:'♄',
-    name:'토성',
-    sign:'염소자리',
-    house:'4하우스',
-    flow:'오래 이어갈수록 형태가 잡히는 흐름',
-    scene:`기둥을 세운다.\n계단을 하나씩 오른다.\n안쪽 구조를 다시 다진다.`,
-    bridge:'방향은 막히지 않았지만, 급히 밀기보다 반복 가능한 형태를 만드는 쪽에 가깝다.',
-    healthy:'급히 밀기보다, 반복 가능한 속도에서 흐름이 오래 이어진다.',
-    blurred:'결론을 서두를수록, 발걸음보다 마음이 먼저 앞서갈 수 있다.'
-  },
-  {
-    icon:'♆',
-    name:'해왕성',
-    sign:'물고기자리',
-    house:'10하우스',
-    flow:'감각이 먼저 움직이는 흐름',
-    scene:`안개가 내려앉는다.\n분명한 선보다 감각이 먼저 움직인다.\n바깥보다 안쪽 울림이 커지는 장면이다.`,
-    bridge:'지금은 결론을 고정하기보다 흐름을 천천히 바라보는 편이 자연스럽다.',
-    healthy:'분명한 선보다 작은 울림을 따라갈 때 흐름이 오래 남는다.',
-    blurred:'바깥 소리를 오래 붙들고 있으면 안쪽 감각이 멀어질 수 있다.'
-  },
-  {
-    icon:'♇',
-    name:'명왕성',
-    sign:'전갈자리',
-    house:'9하우스',
-    flow:'열려 있지만 결을 살펴야 하는 흐름',
-    scene:`뿌리까지 파고든다.\n계단을 하나씩 오른다.\n지도 밖을 바라본다.`,
-    bridge:'방향은 막히지 않았지만, 쓰는 방식이 중요하다. 결론을 통보하기보다 지금 힘이 모이는 장면을 남긴다.',
-    healthy:'깊이를 서두르지 않을수록, 흐름은 아래쪽에서 천천히 힘을 만든다.',
-    blurred:'한 방향만 오래 바라보고 있으면, 주변 풍경이 조용히 멀어질 수 있다.'
+  {name:'태양',icon:'☉',keyword:'자아·중심',direction:'열림',movement:'밖으로 드러남',group:'self',tone:'center',scene:'불이 켜진다.\n숨은 기준이 밖으로 나온다.\n스스로의 방향을 확인하는 흐름이다.',healthy:'중심을 세우되, 증명하려 들지 않을 때 맑게 드러난다.',blurred:'나를 보여주려는 힘이 강해지면, 방향보다 인정 욕구가 앞설 수 있다.'},
+  {name:'달',icon:'☽',keyword:'반응·정서',direction:'머묾',movement:'안쪽에서 반응함',group:'inner',tone:'soft',scene:'몸이 먼저 반응한다.\n익숙한 감각이 올라온다.\n안전한 자리를 확인하는 흐름이다.',healthy:'감정을 억누르기보다, 몸의 반응을 차분히 확인할 때 맑다.',blurred:'익숙함에만 머물면, 흔들려야 할 자리에서 버티게 된다.'},
+  {name:'수성',icon:'☿',keyword:'인식·정리',direction:'중립',movement:'정보가 움직임',group:'mind',tone:'clear',scene:'흩어진 종이를 맞춘다.\n말과 생각이 연결된다.\n결정보다 정리가 먼저인 흐름이다.',healthy:'말과 생각을 정리하는 쪽이 먼저일 때 맑다.',blurred:'생각이 너무 많아지면, 판단이 계속 갈라질 수 있다.'},
+  {name:'금성',icon:'♀',keyword:'끌림·가치',direction:'열림',movement:'끌리는 쪽으로 움직임',group:'value',tone:'open',scene:'손이 한쪽으로 간다.\n억지보다 끌림이 먼저다.\n무엇을 취할지 확인하는 흐름이다.',healthy:'억지보다 자연스러운 끌림을 볼 때 맑다.',blurred:'좋아 보이는 것과 실제 가치가 섞이면 손이 엉뚱한 쪽으로 간다.'},
+  {name:'화성',icon:'♂',keyword:'추진·행동',direction:'열림',movement:'앞으로 움직임',group:'action',tone:'fire',scene:'발이 먼저 나간다.\n힘이 앞쪽으로 실린다.\n움직임이 생기는 흐름이다.',healthy:'힘이 실릴 방향이 있을 때 움직임이 맑다.',blurred:'속도가 앞서면, 방향보다 충동이 먼저 튀어나올 수 있다.'},
+  {name:'목성',icon:'♃',keyword:'확장·의미',direction:'열림',movement:'넓어짐',group:'expand',tone:'wide',scene:'시야가 넓어진다.\n작은 선택이 큰 방향으로 이어진다.\n의미가 붙는 흐름이다.',healthy:'넓게 보되, 지금 감당할 수 있는 크기를 함께 볼 때 맑다.',blurred:'의미가 커질수록 발밑이 멀어질 수 있다.'},
+  {name:'토성',icon:'♄',keyword:'구조·지속',direction:'머묾',movement:'자리를 굳힘',group:'structure',tone:'stable',scene:'기둥을 세운다.\n빠른 결과보다 버티는 힘을 본다.\n구조를 먼저 잡는 흐름이다.',healthy:'버티는 형태가 있을 때 힘이 새지 않는다.',blurred:'무게에 먼저 눌리면, 움직임 자체가 부담이 될 수 있다.'},
+  {name:'천왕성',icon:'♅',keyword:'전환·재설계',direction:'열림',movement:'기존 판을 바꿈',group:'change',tone:'spark',scene:'낡은 회로가 끊긴다.\n익숙한 방식이 흔들린다.\n다른 구조가 들어오는 흐름이다.',healthy:'끊어낼 것과 남길 것을 같이 볼 때 전환이 맑다.',blurred:'새로움에만 반응하면, 아직 쓸 수 있는 기반까지 끊을 수 있다.'},
+  {name:'해왕성',icon:'♆',keyword:'감각·흐림',direction:'흐림',movement:'경계가 흐려짐',group:'blur',tone:'mist',scene:'안개가 내려앉는다.\n분명한 선보다 감각이 먼저 움직인다.\n바깥보다 안쪽 울림이 커지는 장면이다.',healthy:'감각이 움직이는 방향을 두되, 곧바로 붙잡으려 하지 않을 때 맑다.',blurred:'경계가 흐려지면, 감각과 착각이 쉽게 섞일 수 있다.'},
+  {name:'명왕성',icon:'♇',keyword:'재편·근원',direction:'깊어짐',movement:'근원으로 들어감',group:'deep',tone:'deep',scene:'뿌리까지 파고든다.\n표면보다 아래가 움직인다.\n근본이 다시 짜이는 흐름이다.',healthy:'깊이를 보되, 통제하려 들지 않을 때 힘이 정리된다.',blurred:'한 지점에 과하게 꽂히면, 전체 흐름이 좁아질 수 있다.'},
+  {name:'북노드',icon:'☊',keyword:'방향·낯섦',direction:'열림',movement:'낯선 쪽으로 향함',group:'path',tone:'path',scene:'낯선 길이 열린다.\n편하지는 않지만 몸이 기울어진다.\n다음 방향을 보는 흐름이다.',healthy:'불편해도 새 방향을 조금씩 받아들일 때 열린다.',blurred:'방향에만 꽂히면, 지금 서 있는 자리가 보이지 않는다.'},
+  {name:'남노드',icon:'☋',keyword:'회귀·익숙함',direction:'머묾',movement:'익숙한 자리로 돌아감',group:'return',tone:'return',scene:'발이 익숙한 자리로 돌아간다.\n안정은 있지만 반복이 남는다.\n기본값으로 돌아가는 흐름이다.',healthy:'익숙한 기술을 기반으로 삼을 때 안정된다.',blurred:'편한 반복에 머물면, 발이 그 자리에 굳는다.'}
+];
+
+const signs = [
+  {name:'양자리',icon:'♈︎',keyword:'돌파',sustain:'불안정',style:'직선적',scene:'문이 열리기 전에 손이 먼저 나간다.\n막힘을 힘으로 뚫는 결이다.',healthy:'멈추지 않고 먼저 치고 나갈 때 힘이 산다.',blurred:'앞만 보면 주변 반응을 놓치기 쉽다.'},
+  {name:'황소자리',icon:'♉︎',keyword:'지속',sustain:'유지 가능',style:'느리지만 단단함',scene:'땅을 다진다.\n급히 바꾸기보다 오래 버틸 형태를 찾는 결이다.',healthy:'속도보다 형태를 먼저 볼 때 힘이 오래 간다.',blurred:'붙잡는 힘이 강해지면 흐름이 손 안에서 굳는다.'},
+  {name:'쌍둥이자리',icon:'♊︎',keyword:'연결',sustain:'변동',style:'가볍고 빠름',scene:'말과 정보가 오간다.\n하나에 고정되기보다 가능성이 움직이는 결이다.',healthy:'하나에 고정하기보다 오가며 잡을 때 맑다.',blurred:'선택지가 많아질수록 손이 어디에도 닿지 않는다.'},
+  {name:'게자리',icon:'♋︎',keyword:'보호',sustain:'유지 가능',style:'감정 기반',scene:'문을 닫고 안쪽을 살핀다.\n내부를 지키는 결이다.',healthy:'반응을 안에서 먼저 확인할 때 흔들리지 않는다.',blurred:'방어가 강해지면 바깥 신호를 밀어낼 수 있다.'},
+  {name:'사자자리',icon:'♌︎',keyword:'발현',sustain:'중립',style:'드러냄',scene:'무대 위에 불이 들어온다.\n숨기기보다 존재를 드러내는 결이다.',healthy:'존재감을 자연스럽게 보여준다.',blurred:'표현이 강해지면 확인받고 싶은 마음이 앞설 수 있다.'},
+  {name:'처녀자리',icon:'♍︎',keyword:'정제',sustain:'유지 가능',style:'세부 조정',scene:'작은 나사를 다시 조인다.\n빠진 부분을 정리하는 결이다.',healthy:'빠진 부분을 먼저 볼수록 전체가 단단해진다.',blurred:'완벽하게 맞추려다 시작이 늦어질 수 있다.'},
+  {name:'천칭자리',icon:'♎︎',keyword:'조율',sustain:'중립',style:'균형 감각',scene:'저울이 흔들린다.\n한쪽으로 밀기보다 균형점을 찾는 결이다.',healthy:'양쪽을 같이 볼 때 결정이 덜 흔들린다.',blurred:'눈치를 오래 보면 결정이 흐려질 수 있다.'},
+  {name:'전갈자리',icon:'♏︎',keyword:'관통',sustain:'중립',style:'깊게 파고듦',scene:'겉껍질을 벗기고 안쪽을 본다.\n넓이보다 깊이를 택하는 결이다.',healthy:'불편한 쪽을 피하지 않을 때 흐름이 깊어진다.',blurred:'깊이가 집착으로 바뀌면 시야가 좁아질 수 있다.'},
+  {name:'사수자리',icon:'♐︎',keyword:'확장',sustain:'불안정',style:'큰 방향',scene:'먼 곳에 깃발이 보인다.\n세부보다 방향이 먼저 보이는 결이다.',healthy:'방향이 보일 때 세부가 따라온다.',blurred:'멀리만 보면 발밑이 비어 있다.'},
+  {name:'염소자리',icon:'♑︎',keyword:'구조',sustain:'유지 가능',style:'현실화',scene:'계단을 하나씩 오른다.\n작동 가능한 기준을 세우는 결이다.',healthy:'무게를 감당할 수 있는 형태가 있을 때 오래 간다.',blurred:'무게가 커지면 시도 자체가 부담이 될 수 있다.'},
+  {name:'물병자리',icon:'♒︎',keyword:'재설계',sustain:'변동',style:'거리두기',scene:'설계도를 다시 그린다.\n감정에서 떨어져 구조를 새로 보는 결이다.',healthy:'거리를 두되 감각까지 끊지 않을 때 맑다.',blurred:'구조만 붙잡으면 몸의 반응이 멀어질 수 있다.'},
+  {name:'물고기자리',icon:'♓︎',keyword:'용해',sustain:'흐림',style:'섞임',scene:'물감이 물에 번진다.\n나누기보다 섞이는 결이다.',healthy:'경계가 부드러워지며 감각이 열린다.',blurred:'나눠야 할 것까지 섞이면 기준이 흐려질 수 있다.'}
+];
+
+const houses = [
+  {name:'1하우스',icon:'1',keyword:'자아·존재감',visibility:'드러남',domain:'self',scene:'내가 앞으로 나온다.\n질문이 나의 태도로 드러나는 자리다.'},
+  {name:'2하우스',icon:'2',keyword:'자원·소유',visibility:'드러남',domain:'resource',scene:'손에 쥔 것을 확인한다.\n감당할 수 있는 자리를 보는 무대다.'},
+  {name:'3하우스',icon:'3',keyword:'정보·소통',visibility:'드러남',domain:'mind',scene:'말과 신호를 확인한다.\n정보와 소통이 드러나는 무대다.'},
+  {name:'4하우스',icon:'4',keyword:'기반·뿌리',visibility:'내부',domain:'base',scene:'집의 바닥을 본다.\n안쪽의 기반이 드러나는 무대다.'},
+  {name:'5하우스',icon:'5',keyword:'표현·창조',visibility:'드러남',domain:'create',scene:'손에서 무언가 만들어진다.\n자발적 표현이 살아나는 무대다.'},
+  {name:'6하우스',icon:'6',keyword:'유지·관리',visibility:'드러남',domain:'routine',scene:'매일 쓰는 도구를 닦는다.\n반복과 관리가 드러나는 무대다.'},
+  {name:'7하우스',icon:'7',keyword:'관계·타자',visibility:'드러남',domain:'relation',scene:'마주 앉은 사람이 있다.\n상대와의 반응이 드러나는 무대다.'},
+  {name:'8하우스',icon:'8',keyword:'공유·통제 밖',visibility:'깊음',domain:'deep',scene:'내 손 밖의 것이 얽힌다.\n통제 밖의 깊이가 드러나는 무대다.'},
+  {name:'9하우스',icon:'9',keyword:'의미·확장',visibility:'드러남',domain:'meaning',scene:'지도 밖을 바라본다.\n믿음과 방향이 드러나는 무대다.'},
+  {name:'10하우스',icon:'10',keyword:'사회·역할',visibility:'드러남',domain:'social',scene:'바깥 간판이 바뀐다.\n역할과 위치가 드러나는 무대다.'},
+  {name:'11하우스',icon:'11',keyword:'집단·미래',visibility:'드러남',domain:'group',scene:'사람들의 흐름 속에 선다.\n집단과 방향성이 드러나는 무대다.'},
+  {name:'12하우스',icon:'12',keyword:'비가시·무의식',visibility:'숨김',domain:'hidden',scene:'불 꺼진 방에서 소리가 들린다.\n보이지 않는 감각이 작동하는 무대다.'}
+];
+
+let history = [];
+let lastShareText = '';
+
+const $ = (id) => document.getElementById(id);
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function escapeHtml(str){ return str.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;'); }
+function detectVsQuestion(question){ const q = question.replaceAll(' ',''); return /중(에)?(뭐|무엇|어느|어떤)|vs|VS|랑.*중|와.*중|하고.*중|또는/.test(q); }
+
+function getSignal(p,s,h){
+  // 흐림 압력 — 해왕성/12하우스/물고기 조합은 blur 우선
+  const hardBlur = (p.tone === 'mist') || (h.visibility === '숨김' && s.sustain === '흐림');
+  const unclear = p.direction === '흐림' || s.sustain === '흐림' || h.visibility === '숨김';
+  const unstable = s.sustain === '불안정' || s.sustain === '변동';
+  const deepOrHidden = h.visibility === '깊음' || h.visibility === '숨김';
+
+  if(hardBlur || (unclear && (unstable || deepOrHidden))){
+    return {type:'blur', title:'지금은 판단보다 관찰이 먼저인 흐름', sub:'감각은 움직이지만 기준이 아직 흐려져 있습니다. 결론보다 방향을 먼저 보는 편이 자연스럽습니다.', className:'signal-blur'};
   }
-]
 
-const questionInput = document.getElementById('question')
-const snapshot = document.getElementById('snapshot')
+  // 가중치 계산
+  let score = 0;
+  if(p.direction === '열림') score += 2;
+  if(p.direction === '깊어짐') score += 1;
+  if(p.direction === '머묾') score -= 1;
+  if(s.sustain === '유지 가능') score += 2;
+  if(s.sustain === '중립') score += 1;
+  if(s.sustain === '변동') score -= 1;
+  if(s.sustain === '불안정') score -= 2;
+  if(h.visibility === '드러남') score += 2;
+  if(h.visibility === '내부') score += 1;
+  if(h.visibility === '깊음') score -= 1;
+  // 행성 tone 가중치
+  if(p.tone === 'fire' || p.tone === 'spark') score += 1;   // 추진력 있음
+  if(p.tone === 'stable' || p.tone === 'wide') score += 1;  // 안정·확장
+  if(p.tone === 'deep') score -= 1;                          // 깊이 = 느림
+  if(p.tone === 'return') score -= 1;                        // 회귀 = 머묾
 
-const questionText = document.getElementById('questionText')
-const flowLine = document.getElementById('flowLine')
-const scene = document.getElementById('scene')
-const bridge = document.getElementById('bridge')
-const healthyText = document.getElementById('healthyText')
-const blurredText = document.getElementById('blurredText')
-const coord = document.getElementById('coord')
-
-const cardQuestion = document.getElementById('cardQuestion')
-const cardFlow = document.getElementById('cardFlow')
-const cardScene = document.getElementById('cardScene')
-const cardBridge = document.getElementById('cardBridge')
-const cardCoord = document.getElementById('cardCoord')
-
-let currentText = ''
-
-function pick(arr){
-  return arr[Math.floor(Math.random()*arr.length)]
+  if(score >= 4){
+    return {type:'open', title:'열려 있지만 결을 살펴야 하는 흐름', sub:'방향은 막히지 않았고, 쓰는 방식에 따라 이어갈 여지가 있습니다.', className:'signal-open'};
+  }
+  if(score <= 0){
+    return {type:'cross', title:'지금은 힘이 엇갈리기 쉬운 흐름', sub:'그대로 밀기보다 위치와 기준을 다시 보는 편이 흐름이 덜 새입니다.', className:'signal-cross'};
+  }
+  return {type:'watch', title:'조금 더 좁혀 봐야 선명해지는 흐름', sub:'가능성은 있지만, 기준이 완전히 모이지 않았습니다. 질문의 범위를 좁히면 층이 또렷해집니다.', className:'signal-watch'};
 }
 
-function generate(){
-  const q = questionInput.value.trim()
+function detectDomain(question){
+  const q = question;
+  const domains = [];
+  let tone = 'neutral';
 
-  if(!q){
-    alert('질문을 적어주세요.')
-    return
-  }
+  if(/가족|부모|엄마|아빠|어머니|아버지|형제|자매|오빠|언니|동생|자녀|아이|아들|딸/.test(q)){ domains.push('family'); tone = 'soft'; }
+  if(/불안|무서|두렵|걱정|힘들|모르겠|막막|지쳐|지침|겁|두려/.test(q)){ domains.push('anxious'); tone = 'soft'; }
+  if(/건강|몸|컨디션|피로|체력/.test(q)){ domains.push('body'); tone = 'soft'; }
+  if(/관계|연애|파트너|친구|상대|같이|함께|만나/.test(q)) domains.push('relation');
+  if(/돈|수익|수입|투자|매출|자금|비용|수익화/.test(q)) domains.push('money');
+  if(/콘텐츠|글|영상|블로그|채널|창작|작업|만드는|쓰는|올리는/.test(q)) domains.push('content');
+  if(/일|프로젝트|업무|사업|커리어|직장|팀/.test(q)) domains.push('work');
+  if(/도구|기술|툴|시스템|앱|개발|기능/.test(q)) domains.push('tool');
+  if(/유지|계속|이어|지속|그대로/.test(q)) domains.push('sustain');
+  if(/선택|비교|고를|결정|둘 중|어떤/.test(q)) domains.push('choice');
 
-  const p = pick(planets)
-
-  snapshot.style.display = 'block'
-
-  questionText.innerHTML = `“${q}”`
-  flowLine.textContent = p.flow
-  scene.textContent = p.scene
-  bridge.textContent = p.bridge
-  healthyText.textContent = p.healthy
-  blurredText.textContent = p.blurred
-  coord.textContent = `${p.icon} ${p.name} · ${p.sign} · ${p.house}`
-
-  cardQuestion.innerHTML = `“${q}”`
-  cardFlow.textContent = p.flow
-  cardScene.textContent = p.scene
-  cardBridge.textContent = p.bridge
-  cardCoord.textContent = `${p.icon} ${p.name} · ${p.sign} · ${p.house}`
-
-  currentText = `질문에 대한 스냅샷\n\n“${q}”\n\n${p.flow}\n\n${p.scene}\n\n${p.bridge}`
-
-  snapshot.scrollIntoView({behavior:'smooth'})
+  const primary = domains[0] || 'general';
+  const secondary = domains[1] || null;
+  return {primary, secondary, tone};
 }
 
-document.getElementById('generateBtn').addEventListener('click',generate)
+function pickOne(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-const shareBtn = document.getElementById('shareBtn')
-const shareMenu = document.getElementById('shareMenu')
+function getClosing(signal, p, s, qTone){
+  // 좌표 결에 따라 의미층 다르게 — "여지/방식/결" 각각 다른 각도
+  const pTone = p.tone;
+  const sSustain = s.sustain;
 
-shareBtn.addEventListener('click',()=>{
-  shareMenu.style.display = shareMenu.style.display === 'block' ? 'none' : 'block'
-})
-
-document.addEventListener('click',(e)=>{
-  if(!e.target.closest('.share-box')){
-    shareMenu.style.display = 'none'
+  if(qTone === 'soft'){
+    if(signal.type === 'open') return pickOne([
+      '지금 방향이 완전히 닫혀 있지는 않다. 조금씩 확인하며 가도 된다.',
+      '열려 있는 방향이 있다. 서두르지 않아도 흐름은 이어진다.',
+      '좋다 나쁘다보다, 지금 어디서 숨이 열리는지를 먼저 보는 편이 맞다.'
+    ]);
+    if(signal.type === 'cross') return pickOne([
+      '막혔다기보다, 지금 이 방향에서 힘이 새는 부분이 보이는 상태에 가깝다.',
+      '어렵다는 신호보다, 잠깐 멈춰 확인이 필요하다는 신호에 가깝다.',
+      '지금 방식 그대로 밀기보다, 어디서 걸리는지를 먼저 보는 편이 맞다.'
+    ]);
+    if(signal.type === 'blur') return pickOne([
+      '지금 당장 결론을 내지 않아도 된다. 흐려진 부분이 먼저 보이면 선명한 부분도 따라온다.',
+      '불분명한 게 지금 상태다. 거기서 시작하면 된다.',
+      '흐린 채로 두어도 된다. 감각이 움직이는 방향만 보는 편이 낫다.'
+    ]);
+    return pickOne([
+      '기준이 아직 모이지 않았다. 조급하지 않아도 된다.',
+      '지금은 정리보다 확인이 먼저다.',
+      '하나씩 좁혀 가면 방향이 잡힌다.'
+    ]);
   }
-})
 
-document.getElementById('copyBtn').addEventListener('click',async()=>{
-  await navigator.clipboard.writeText(currentText)
-  alert('텍스트를 복사했습니다.')
-})
-
-document.getElementById('saveBtn').addEventListener('click', async()=>{
-  const canvas = await html2canvas(document.getElementById('shareCard'), {
-    scale:2
-  })
-
-  const link = document.createElement('a')
-  link.download = 'astro-compass.png'
-  link.href = canvas.toDataURL('image/png')
-  link.click()
-})
-
-document.getElementById('shareNativeBtn').addEventListener('click', async()=>{
-  if(navigator.share){
-    navigator.share({
-      title:'astro-compass',
-      text:currentText
-    })
+  // neutral — 좌표 결 따라 의미층 분산
+  if(signal.type === 'open'){
+    if(pTone === 'stable' || pTone === 'deep') return pickOne([
+      '열려 있는 흐름이다. 빠르게 가기보다 버티는 방식이 먼저다.',
+      '막히지 않은 흐름이다. 속도보다 형태가 중요하다.',
+      '이어갈 수 있다. 다만 구조가 먼저 서야 흐름이 오래 간다.'
+    ]);
+    if(pTone === 'fire' || pTone === 'spark') return pickOne([
+      '움직임이 실리는 흐름이다. 방향만 잡히면 빠르게 이어진다.',
+      '추진력이 있는 좌표다. 결을 먼저 잡고 밀면 흐름이 산다.',
+      '열려 있다. 다만 속도보다 방향이 먼저다.'
+    ]);
+    if(sSustain === '변동' || sSustain === '불안정') return pickOne([
+      '여지가 있는 흐름이다. 고정보다 오가며 잡는 편이 맞다.',
+      '열려 있지만 흐름이 고정되지 않아, 결론보다 움직임이 먼저다.',
+      '막히지 않았다. 하나로 좁히며 가면 더 선명해진다.'
+    ]);
+    return pickOne([
+      '확정된 좋음이 아니라, 지금 방향으로 이어갈 여지가 있다는 신호에 가깝다.',
+      '좋다는 뜻보다, 지금 방향에 여지가 있다는 뜻에 가깝다.',
+      '이어갈 수 있는 상태다. 확신보다 결을 먼저 보는 편이 낫다.'
+    ]);
   }
-})
+  if(signal.type === 'cross'){
+    if(pTone === 'stable') return pickOne([
+      '구조는 있지만 방향이 엇갈려 있다. 기준부터 다시 잡는 편이 맞다.',
+      '버티는 힘은 있지만, 지금 방향이 맞는지 먼저 확인이 필요하다.',
+      '안 된다기보다, 지금 형태가 맞지 않는 부분이 있는 상태에 가깝다.'
+    ]);
+    if(pTone === 'fire' || pTone === 'spark') return pickOne([
+      '힘은 실리지만 방향이 어긋나기 쉬운 상태다. 속도보다 결이 먼저다.',
+      '추진력이 있어도 지금 방향 그대로 밀면 걸리기 쉽다.',
+      '막혔다기보다, 방향을 먼저 정리하는 흐름이다.'
+    ]);
+    return pickOne([
+      '막혔다기보다, 지금 방식 그대로 밀면 힘이 새기 쉬운 상태에 가깝다.',
+      '안 된다는 신호보다, 방식을 점검하라는 신호에 가깝다.',
+      '힘이 엇갈리는 지점이 보인다. 거기서 먼저 본다.'
+    ]);
+  }
+  if(signal.type === 'blur') return pickOne([
+    '흐려지는 지점이 먼저 보이면, 선명해지는 지점도 따라 드러난다.',
+    '기준이 흐린 채 움직이고 있다. 서두르기보다 어디서 선명해지는지를 먼저 본다.',
+    '안개가 있는 상태다. 억지로 걷어내기보다 방향만 먼저 잡는 편이 맞다.',
+    '지금은 결론보다 관찰이 먼저인 흐름이다.'
+  ]);
+  // watch
+  if(sSustain === '변동') return pickOne([
+    '흐름이 움직이는 중이다. 고정하기보다 하나씩 좁히며 기준을 잡는 편이 맞다.',
+    '아직 모이지 않았다. 방향을 하나로 줄이면 층이 또렷해진다.'
+  ]);
+  return pickOne([
+    '하나의 방향으로 좁혀 다시 보면, 지금보다 층이 또렷해진다.',
+    '기준이 먼저 서면, 방향은 그다음에 보인다.',
+    '범위를 좁힐수록 흐름이 잡힌다.'
+  ]);
+}
+
+function getBridge(signal,p,s,h,q){
+  const qDomain = q.primary;
+  const qSecondary = q.secondary;
+  const qTone = q.tone;
+  const pTone = p.tone;
+  const sSustain = s.sustain;
+  const hDomain = h.domain;
+  const hVis = h.visibility;
+
+  // 감정 강도 높은 질문 — bridge 압력 낮춤
+  if(qTone === 'soft'){
+    if(qDomain === 'family'){
+      if(signal.type === 'open') return '가족 사이의 흐름에서는, 밀기보다 반응을 먼저 보는 쪽이 자연스럽다.';
+      if(signal.type === 'cross') return '가족 사이의 흐름에서는, 지금 방향보다 어디서 걸리는지를 먼저 보는 편이 맞다.';
+      if(signal.type === 'blur') return '가족 사이의 흐름은 안쪽에서 먼저 움직인다. 겉보다 감각이 먼저다.';
+      return '가족 영역에서는, 기준보다 확인이 먼저다.';
+    }
+    if(qDomain === 'anxious'){
+      if(signal.type === 'open') return '흐름이 완전히 막혀 있지는 않다. 열려 있는 쪽이 어딘지만 먼저 보면 된다.';
+      if(signal.type === 'cross') return '걸리는 지점이 있다. 밀기보다 어디서 걸리는지 먼저 보는 편이 맞다.';
+      if(signal.type === 'blur') return '지금 흐린 것이 정상인 상태다. 결론을 서두르지 않아도 된다.';
+      return '기준이 아직 모이지 않았다. 조금씩 좁혀 가면 된다.';
+    }
+    if(qDomain === 'body'){
+      if(signal.type === 'open') return '몸의 감각이 먼저 반응한다. 그 방향을 따르는 편이 맞다.';
+      if(signal.type === 'cross') return '몸이 먼저 신호를 보낸다. 무시하고 밀기보다 확인이 먼저다.';
+      return '몸 영역에서는, 지금 반응이 먼저다.';
+    }
+  }
+
+  // blur 신호
+  if(signal.type === 'blur'){
+    if(hDomain === 'hidden') return '보이지 않는 층이 먼저 움직인다. 겉보다 안쪽 감각이 먼저다.';
+    if(pTone === 'mist') return '경계가 흐려진 채 움직이고 있다. 결론보다 방향이 먼저다.';
+    if(pTone === 'deep') return '표면 아래에서 흐름이 움직인다. 드러난 답보다 근원이 먼저다.';
+    return '기준이 아직 흐려져 있다. 선명해지는 지점을 먼저 찾는 흐름이다.';
+  }
+
+  // 다중 도메인 — money+family 같은 조합 처리
+  if(qDomain === 'family' && qSecondary === 'money'){
+    if(signal.type === 'open') return '가족과 수익이 얽힌 영역에서는, 관계 반응이 먼저 안정되어야 흐름이 선다.';
+    if(signal.type === 'cross') return '가족과 수익이 얽힌 영역에서는, 어느 쪽이 먼저인지 기준이 필요하다.';
+  }
+
+  // 질문 영역별 분기
+  if(qDomain === 'relation'){
+    if(signal.type === 'open'){
+      if(pTone === 'soft' || pTone === 'open') return '관계 안에서 반응이 자연스럽게 오가는 흐름이 있다.';
+      if(pTone === 'fire') return '관계 안에서 먼저 치고 나가는 힘이 있지만, 상대 반응을 같이 볼 때 흐름이 산다.';
+      if(sSustain === '불안정' || sSustain === '변동') return '관계 안에서 흐름이 고정되지 않아, 반응을 보며 조율하는 쪽이 맞다.';
+      return '관계 영역에서는, 속도보다 상대 반응이 먼저 안정되어야 흐름이 선다.';
+    }
+    if(signal.type === 'cross'){
+      if(hDomain === 'relation') return '관계 안에서 방향이 서로 엇갈리기 쉬운 좌표다. 밀기보다 확인이 먼저다.';
+      return '관계 영역에서는, 지금 방식 그대로 밀면 반응이 어긋나기 쉽다.';
+    }
+    return '관계 영역에서는, 흐름이 완전히 모이지 않아 상대 반응을 더 보는 편이 맞다.';
+  }
+
+  if(qDomain === 'content'){
+    if(signal.type === 'open'){
+      if(pTone === 'center' || pTone === 'fire') return '콘텐츠 영역에서는, 방향이 열려 있지만 표현 방식이 결론보다 먼저다.';
+      if(pTone === 'soft' || pTone === 'mist') return '콘텐츠 영역에서는, 감각이 먼저 움직일 때 방향보다 결이 살아난다.';
+      if(sSustain === '변동') return '콘텐츠 영역에서는, 고정하기보다 오가며 잡을 때 흐름이 맑다.';
+      return '콘텐츠 영역에서는, 이어갈 여지가 있다. 쓰는 방식이 먼저다.';
+    }
+    if(signal.type === 'cross') return '콘텐츠 영역에서는, 지금 방식보다 표현 결을 다시 보는 편이 낫다.';
+    return '콘텐츠 영역에서는, 기준이 아직 모이지 않아 방향을 하나 더 좁히는 편이 맞다.';
+  }
+
+  if(qDomain === 'work'){
+    if(signal.type === 'open'){
+      if(pTone === 'stable' || pTone === 'deep') return '일 영역에서는, 속도보다 버티는 형태가 있을 때 흐름이 오래 간다.';
+      if(pTone === 'spark') return '일 영역에서는, 기존 방식을 조금 바꾸는 쪽으로 흐름이 열린다.';
+      if(hDomain === 'social') return '일 영역에서는, 역할과 위치가 바깥에서 드러나는 흐름이 있다.';
+      return '일 영역에서는, 이어갈 여지가 있다. 작동 방식이 결론보다 먼저다.';
+    }
+    if(signal.type === 'cross'){
+      if(pTone === 'spark') return '일 영역에서는, 유지와 전환 사이 긴장이 있어 지금 방식 점검이 먼저다.';
+      if(hDomain === 'social') return '일 영역에서는, 바깥 역할보다 안쪽 기준을 먼저 잡는 편이 낫다.';
+      return '일 영역에서는, 힘을 더 쓰기보다 방향을 다시 보는 흐름이다.';
+    }
+    return '일 영역에서는, 기준이 완전히 모이지 않아 범위를 좁힐수록 흐름이 잡힌다.';
+  }
+
+  if(qDomain === 'money'){
+    if(signal.type === 'open'){
+      if(pTone === 'wide') return '수익 영역에서는, 가능성이 넓어지고 있지만 지금 감당 가능한 크기를 같이 봐야 한다.';
+      if(sSustain === '유지 가능') return '수익 영역에서는, 지금 형태를 유지하며 쌓는 쪽이 흐름과 맞다.';
+      return '수익 영역에서는, 이어갈 여지가 있다. 기반이 먼저다.';
+    }
+    if(signal.type === 'cross') return '수익 영역에서는, 지금 방식 그대로 밀기보다 기준을 먼저 정리하는 흐름이다.';
+    return '수익 영역에서는, 흐름이 아직 모이지 않아 하나의 방향을 먼저 잡는 편이 낫다.';
+  }
+
+  if(qDomain === 'sustain'){
+    if(signal.type === 'open'){
+      if(pTone === 'stable' || sSustain === '유지 가능') return '유지하는 방향으로 막히지 않는다. 지금 형태를 이어갈 여지가 있다.';
+      if(sSustain === '변동' || sSustain === '불안정') return '흐름이 고정되지 않았다. 그대로 유지보다 결을 조금 바꾸며 가는 편이 맞다.';
+      return '이어갈 여지가 있다. 방식을 확인하며 가는 편이 낫다.';
+    }
+    if(signal.type === 'cross') return '지금 방식 그대로 유지하면 힘이 새기 쉽다. 형태를 점검하는 편이 먼저다.';
+    return '유지 여부보다, 지금 기준이 먼저 서야 흐름이 보인다.';
+  }
+
+  if(qDomain === 'choice'){
+    if(signal.type === 'open') return '흐름은 열려 있다. 비교보다 하나를 먼저 골라 보는 편이 기준이 잡힌다.';
+    if(signal.type === 'cross') return '선택지가 힘을 나누고 있다. 하나씩 따로 보는 편이 흐름이 더 또렷해진다.';
+    return '선택 영역에서는, 기준이 아직 흐려 하나를 먼저 좁히는 편이 맞다.';
+  }
+
+  if(qDomain === 'tool'){
+    if(signal.type === 'open') return '도구·기술 영역에서는, 이어갈 여지가 있다. 작동 방식이 먼저다.';
+    if(signal.type === 'cross') return '도구·기술 영역에서는, 지금 방식보다 구조가 먼저다.';
+    return '도구·기술 영역에서는, 기준을 먼저 세울수록 흐름이 또렷해진다.';
+  }
+
+  // general — 좌표 tone 조합으로 분기
+  if(signal.type === 'open'){
+    if(hDomain === 'base') return '안쪽 기반을 다질수록 흐름이 안정된다.';
+    if(hDomain === 'hidden') return '겉보다 보이지 않는 감각을 확인할수록 흐름이 맑아진다.';
+    if(pTone === 'stable' && sSustain === '유지 가능') return '버티는 힘과 지속 가능한 결이 맞물린다. 천천히 밀어도 흐름이 간다.';
+    if(pTone === 'spark' && sSustain === '변동') return '기존 방식이 흔들리는 쪽으로 틈이 열린다. 바꾸는 방향이 맞다.';
+    if(pTone === 'fire' && sSustain === '불안정') return '움직임이 빠르게 실린다. 방향이 고정되지 않아 결을 먼저 잡는 편이 맞다.';
+    if(pTone === 'soft' && hDomain === 'relation') return '관계 안에서 반응을 보며 움직일 때 흐름이 이어진다.';
+    if(pTone === 'wide') return '가능성이 넓어진다. 감당할 수 있는 크기를 같이 봐야 한다.';
+    if(pTone === 'deep') return '표면보다 아래에서 움직인다. 근원이 먼저다.';
+    if(hDomain === 'social') return '역할과 위치가 바깥에서 드러나는 흐름이 있다.';
+    return '이어갈 여지가 있다. 결론보다 쓰는 방식이 더 중요하게 드러난다.';
+  }
+  if(signal.type === 'cross'){
+    if(hDomain === 'base') return '안쪽 기반이 먼저 흔들린다. 바깥보다 정리가 먼저다.';
+    if(hDomain === 'relation') return '상대와의 반응을 보지 않고 밀면 어긋나기 쉽다.';
+    if(pTone === 'spark' && sSustain === '유지 가능') return '바꾸려는 힘과 유지하려는 힘이 같이 걸려 있다. 점검이 먼저다.';
+    if(hVis === '깊음' || hVis === '숨김') return '보이지 않는 곳에서 힘이 걸린다. 밀기보다 확인이 먼저다.';
+    return '힘을 더 쓰기보다, 방향과 위치를 다시 보는 흐름이다.';
+  }
+  if(sSustain === '변동' || sSustain === '불안정') return '흐름이 고정되지 않은 채 움직인다. 범위를 좁힐수록 기준이 잡힌다.';
+  return '방향보다 기준이 먼저 서야 흐름이 열린다.';
+}
+
+function makeScene(p,s,h){
+  // 행성 장면 → 별자리 결 → 하우스 무대로 약한 연결어 끼워 넣기
+  const pLines = p.scene.split('\n');
+  const sLines = s.scene.split('\n');
+  const hLines = h.scene.split('\n');
+
+  // 별자리 연결어: 행성 tone × 별자리 style 조합
+  let sConn = '';
+  if(p.tone === 'fire' || p.tone === 'spark'){
+    sConn = s.sustain === '불안정' || s.sustain === '변동'
+      ? '그 힘이 흩어지며' : '그 힘이 실리며';
+  } else if(p.tone === 'stable' || p.tone === 'deep'){
+    sConn = s.sustain === '유지 가능' ? '그 무게 안에서' : '그 구조가 흔들리며';
+  } else if(p.tone === 'mist'){
+    sConn = '경계가 흐려지며';
+  } else if(p.tone === 'soft'){
+    sConn = s.sustain === '유지 가능' ? '그 반응 안에서' : '감각이 오가며';
+  } else if(p.tone === 'wide'){
+    sConn = '시야가 넓어지며';
+  } else {
+    sConn = s.sustain === '변동' ? '흐름이 바뀌며' : '그 흐름 위에서';
+  }
+
+  // 하우스 연결어: 별자리 sustain × 하우스 visibility 조합
+  let hConn = '';
+  if(h.visibility === '숨김'){
+    hConn = '그 감각이 보이지 않는 곳으로 이어진다.';
+  } else if(h.visibility === '깊음'){
+    hConn = '그 결이 깊은 층으로 내려간다.';
+  } else if(h.visibility === '내부'){
+    hConn = '그 흐름이 안쪽으로 모인다.';
+  } else {
+    // 드러남 — p.tone + h.domain 조합으로 연결어 다양화
+    if(h.domain === 'social'){
+      hConn = (p.tone === 'stable' || p.tone === 'deep') ? '그 무게가 바깥 역할 위로 올라온다.' : '그것이 바깥에서 드러난다.';
+    } else if(h.domain === 'relation'){
+      hConn = (p.tone === 'soft' || p.tone === 'open') ? '그 감각이 관계 위로 번진다.' : '그것이 관계 위에서 드러난다.';
+    } else if(h.domain === 'create'){
+      hConn = (p.tone === 'fire' || p.tone === 'center') ? '그 힘이 표현으로 흘러나온다.' : '그것이 표현 위에서 살아난다.';
+    } else if(h.domain === 'base'){
+      hConn = '그 흐름이 기반으로 내려앉는다.';
+    } else if(h.domain === 'hidden'){
+      hConn = '그 감각이 보이지 않는 층으로 스민다.';
+    } else if(h.domain === 'resource'){
+      hConn = '그것이 손에 쥔 것 위로 드러난다.';
+    } else if(h.domain === 'meaning'){
+      hConn = '그 흐름이 방향 감각과 맞닿는다.';
+    } else {
+      hConn = p.tone === 'wide' ? '그 가능성이 바깥으로 펼쳐진다.' : '그것이 밖으로 드러난다.';
+    }
+  }
+
+  // 하우스 장면 첫 줄
+  const hFirst = hLines[0];
+
+  return `${pLines.join('\n')}\n${sConn} ${sLines[0]}\n${hConn}\n${hFirst}`;
+}
+function getStatus(p,s,h){ return {direction:p.movement, sustain:s.sustain, visibility:h.visibility}; }
+
+function renderDice(p,s,h){
+  $('diceGrid').innerHTML = `
+    <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">${p.icon}</div><div class="name">${p.name}</div><div class="keyword">${p.keyword}</div></div>
+    <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">${s.icon}</div><div class="name">${s.name}</div><div class="keyword">${s.keyword}</div></div>
+    <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">${h.icon}</div><div class="name">${h.name}</div><div class="keyword">${h.keyword}</div></div>
+  `;
+}
+
+function buildReading(question,p,s,h){
+  const signal = getSignal(p,s,h);
+  const status = getStatus(p,s,h);
+  const scene = makeScene(p,s,h);
+  const qInfo = detectDomain(question);
+  const bridge = getBridge(signal,p,s,h,qInfo);
+  const closing = getClosing(signal, p, s, qInfo.tone);
+  lastShareText = [
+    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', signal.title, signal.sub, '', scene, '', bridge, closing
+  ].join('\n');
+  return `
+    <div class="r-question">${escapeHtml(question)}</div>
+    <div class="r-signal">
+      <div class="signal-title ${signal.className}">${signal.title}</div>
+      <div class="signal-sub">${signal.sub}</div>
+    </div>
+    <div class="r-status">
+      <div class="status-chip">방향 <span class="chip-val">${status.direction}</span></div>
+      <div class="status-chip">유지 <span class="chip-val">${status.sustain}</span></div>
+      <div class="status-chip">가시성 <span class="chip-val">${status.visibility}</span></div>
+    </div>
+    <div class="r-scene-area">
+      <div class="scene">${scene}</div>
+      <div class="bridge">${bridge}</div>
+      <div class="closing">${closing}</div>
+    </div>
+    <hr class="r-divider">
+    <div class="soft-grid">
+      <div class="soft-card soft-card-clear"><div class="soft-label soft-label-clear">맑게 쓰일 때</div><p>${p.healthy} ${s.healthy}</p></div>
+      <div class="soft-card soft-card-blur"><div class="soft-label soft-label-blur">흐려질 때</div><p>${p.blurred} ${s.blurred}</p></div>
+    </div>
+    <div class="coord-chips">
+      <div class="coord-chip"><span class="c-icon">${p.icon}</span><span class="c-name">${p.name}</span><span class="c-key">${p.keyword}</span></div>
+      <div class="coord-chip"><span class="c-icon">${s.icon}</span><span class="c-name">${s.name}</span><span class="c-key">${s.keyword}</span></div>
+      <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
+    </div>
+    <div class="share-row">
+      <button class="small-btn" type="button" onclick="copyCurrentText()">텍스트 복사</button>
+      <button class="small-btn" type="button" onclick="downloadCard(${JSON.stringify(question)}, ${JSON.stringify(signal.title)}, ${JSON.stringify(signal.className)}, ${JSON.stringify(bridge)}, ${JSON.stringify(`${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`)})">카드 저장</button>
+      <button class="small-btn" type="button" onclick="copySiteLink()">링크 복사</button>
+    </div>
+  `;
+}
+
+const placeholders = [
+  '지금 방향, 계속 이어가도 될까?',
+  '요즘 내가 자꾸 붙잡는 건 뭘까?',
+  '나는 왜 자꾸 흔들릴까?',
+  '이 선택은 지금의 나와 맞는 걸까?',
+  '지금 멈춰야 할까, 계속 가야 할까?',
+  '이 관계, 어디로 흘러가고 있는 걸까?',
+  '지금 내가 놓치고 있는 게 있을까?',
+  '이 방향이 맞는지 모르겠다.',
+];
+function setRandomPlaceholder(){
+  $('question').placeholder = placeholders[Math.floor(Math.random()*placeholders.length)];
+}
+setRandomPlaceholder();
+
+function detectBroadQuestion(q){
+  return /다 잘|모든 게|모든 것|인생|앞으로 다|전부|다 괜찮|다 될까|다 잘 될|무엇이든|뭐든/.test(q);
+}
+function detectRepeatQuestion(q){
+  const norm = q.trim().replace(/\s+/g,'');
+  return history.some(item => item.question.trim().replace(/\s+/g,'') === norm);
+}
+function detectConfirmQuestion(q){
+  const hits = (q.match(/괜찮을까|맞는거지|맞죠|되겠지|될거야|잘 될까|잘될까/g)||[]).length;
+  const words = q.replace(/\s+/g,' ').split(' ').length;
+  return hits >= 2 && words <= 15;
+}
+
+function hideAllWarnings(){
+  ['vsWarning','broadWarning','repeatWarning','confirmWarning'].forEach(id=>{
+    $( id).style.display='none';
+  });
+}
+
+function roll(){
+  const questionEl = $('question');
+  const question = questionEl.value.trim();
+  if(!question){ $('error').style.display='block'; questionEl.focus(); return; }
+  $('error').style.display='none';
+  hideAllWarnings();
+
+  // 질문 상태 감지 — 막지 않고 경고만
+  if(detectVsQuestion(question)) $('vsWarning').style.display='block';
+  else if(detectBroadQuestion(question)) $('broadWarning').style.display='block';
+  else if(detectRepeatQuestion(question)) $('repeatWarning').style.display='block';
+  else if(detectConfirmQuestion(question)) $('confirmWarning').style.display='block';
+
+  const p = pick(planets), s = pick(signs), h = pick(houses);
+  const signal = getSignal(p,s,h);
+  renderDice(p,s,h);
+  $('reading').innerHTML = buildReading(question,p,s,h);
+  history.unshift({question,p,s,h,signal,time:new Date()});
+  if(history.length > 15) history = history.slice(0,15);
+  renderHistory();
+  $('reading').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // 입력란 비우고 placeholder 새로 설정
+  questionEl.value = '';
+  setRandomPlaceholder();
+}
+
+function renderHistory(){
+  if(!history.length){ $('historyList').textContent = '기록 없음.'; return; }
+  $('historyList').innerHTML = history.map((item,index)=>`
+    <div class="history-item" data-index="${index}">
+      <div><strong>${escapeHtml(item.question)}</strong><br>${item.p.icon} ${item.p.name} · ${item.s.icon} ${item.s.name} · ${item.h.name}</div>
+      <div class="${item.signal.className}">${item.signal.title}</div>
+    </div>
+  `).join('');
+  document.querySelectorAll('.history-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const item = history[Number(el.dataset.index)];
+      if(!item) return;
+      renderDice(item.p,item.s,item.h);
+      $('reading').innerHTML = buildReading(item.question,item.p,item.s,item.h);
+      $('reading').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+}
+
+function clearAll(){
+  $('question').value = '';
+  $('error').style.display = 'none';
+  $('vsWarning').style.display = 'none';
+  $('diceGrid').innerHTML = `
+    <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
+    <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
+    <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>`;
+  $('reading').innerHTML = '<p class="subtitle">질문을 입력하고 좌표를 확인하세요.</p>';
+  history = [];
+  lastShareText = '';
+  renderHistory();
+}
+
+function showToast(message){
+  const toast = $('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(()=>{toast.style.display='none';}, 1600);
+}
+
+async function copySiteLink(){
+  try{
+    await navigator.clipboard.writeText('https://astro-compass.structon.kr/');
+    showToast('링크를 복사했습니다.');
+  }catch(e){
+    showToast('복사 권한이 막혀 있습니다.');
+  }
+}
+window.copySiteLink = copySiteLink;
+
+function downloadCard(question, signalTitle, signalClass, bridge, coords){
+  const canvas = document.createElement('canvas');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = 800, H = 480;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  // 배경
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#050e1f');
+  bg.addColorStop(1, '#020817');
+  ctx.fillStyle = bg;
+  ctx.roundRect(0, 0, W, H, 20);
+  ctx.fill();
+
+  // 상단 글로우
+  const glow = ctx.createRadialGradient(160, 0, 0, 160, 0, 300);
+  glow.addColorStop(0, 'rgba(56,189,248,.10)');
+  glow.addColorStop(1, 'rgba(56,189,248,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // 테두리
+  ctx.strokeStyle = 'rgba(148,163,184,.2)';
+  ctx.lineWidth = 1;
+  ctx.roundRect(0.5, 0.5, W-1, H-1, 20);
+  ctx.stroke();
+
+  // signal 색상
+  const colorMap = {
+    'signal-open': '#ccfbf1',
+    'signal-watch': '#fde68a',
+    'signal-cross': '#fecdd3',
+    'signal-blur': '#ddd6fe',
+  };
+  const signalColor = colorMap[signalClass] || '#ccfbf1';
+
+  // 질문 텍스트
+  ctx.fillStyle = '#6a8ba8';
+  ctx.font = '500 13px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText(truncate(question, 48), 36, 44);
+
+  // 구분선
+  ctx.strokeStyle = 'rgba(148,163,184,.15)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(36, 56); ctx.lineTo(W-36, 56); ctx.stroke();
+
+  // signal title — 긴 제목은 줄바꿈
+  ctx.fillStyle = signalColor;
+  ctx.font = '900 28px -apple-system, BlinkMacSystemFont, sans-serif';
+  const titleLines = wrapText(ctx, signalTitle, W - 72, 28);
+  titleLines.forEach((line, i) => ctx.fillText(line, 36, 96 + i * 38));
+  const titleBottom = 96 + titleLines.length * 38;
+
+  // 구분선
+  ctx.strokeStyle = 'rgba(148,163,184,.12)';
+  ctx.beginPath(); ctx.moveTo(36, titleBottom + 14); ctx.lineTo(W-36, titleBottom + 14); ctx.stroke();
+
+  // bridge
+  ctx.fillStyle = '#8aa4bc';
+  ctx.font = '600 15px -apple-system, BlinkMacSystemFont, sans-serif';
+  const bridgeLines = wrapText(ctx, bridge, W - 72, 15);
+  bridgeLines.forEach((line, i) => ctx.fillText(line, 36, titleBottom + 42 + i * 24));
+  const bridgeBottom = titleBottom + 42 + bridgeLines.length * 24;
+
+  // 좌표 칩
+  ctx.fillStyle = 'rgba(148,163,184,.08)';
+  ctx.strokeStyle = 'rgba(148,163,184,.18)';
+  ctx.lineWidth = 1;
+  ctx.font = '700 12px -apple-system, BlinkMacSystemFont, sans-serif';
+  const chipParts = coords.split(' · ');
+  let cx = 36;
+  chipParts.forEach(chip => {
+    const tw = ctx.measureText(chip).width;
+    const pw = tw + 20;
+    ctx.beginPath();
+    ctx.roundRect(cx, bridgeBottom + 16, pw, 26, 13);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(chip, cx + 10, bridgeBottom + 33);
+    ctx.fillStyle = 'rgba(148,163,184,.08)';
+    cx += pw + 8;
+  });
+
+  // 하단 브랜드
+  ctx.fillStyle = 'rgba(148,163,184,.3)';
+  ctx.font = '500 11px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillText('astro-compass.structon.kr', 36, H - 20);
+
+  // 다운로드
+  const link = document.createElement('a');
+  link.download = 'astro-compass.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('카드를 저장했습니다.');
+}
+window.downloadCard = downloadCard;
+
+function truncate(str, max){ return str.length > max ? str.slice(0, max) + '…' : str; }
+function wrapText(ctx, text, maxW, fontSize){
+  const words = text.split('');
+  const lines = [];
+  let cur = '';
+  for(const ch of words){
+    const test = cur + ch;
+    if(ctx.measureText(test).width > maxW){ lines.push(cur); cur = ch; }
+    else cur = test;
+  }
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+async function copyCurrentText(){
+  if(!lastShareText){ showToast('먼저 좌표를 확인해주세요.'); return; }
+  try{
+    await navigator.clipboard.writeText(lastShareText);
+    showToast('텍스트를 복사했습니다.');
+  }catch(e){
+    showToast('복사 권한이 막혀 있습니다.');
+  }
+}
+window.copyCurrentText = copyCurrentText;
+
+$('rollBtn').addEventListener('click', roll);
+$('question').addEventListener('input', function(){
+  hideAllWarnings();
+  if(detectVsQuestion(this.value)) $('vsWarning').style.display='block';
+});
+$('question').addEventListener('keydown', function(e){ if((e.ctrlKey || e.metaKey) && e.key === 'Enter') roll(); });
+
+// 오버레이
+$('guideBtn').addEventListener('click',()=>{ $('guideOverlay').classList.add('open'); document.body.style.overflow='hidden'; });
+$('overlayClose').addEventListener('click',()=>{ $('guideOverlay').classList.remove('open'); document.body.style.overflow=''; });
+$('guideOverlay').addEventListener('click',(e)=>{ if(e.target===$('guideOverlay')){ $('guideOverlay').classList.remove('open'); document.body.style.overflow=''; } });
+
+// 좌표 안내 렌더링
+function renderGuide(){
+  $('guideplanets').innerHTML = planets.map(p=>`
+    <div class="guide-item">
+      <div class="g-icon">${p.icon}</div>
+      <div class="g-name">${p.name}</div>
+      <div class="g-key">${p.keyword}</div>
+      <div class="g-desc">${p.movement}</div>
+    </div>`).join('');
+  $('guidesigns').innerHTML = signs.map(s=>`
+    <div class="guide-item">
+      <div class="g-icon">${s.icon}</div>
+      <div class="g-name">${s.name}</div>
+      <div class="g-key">${s.keyword}</div>
+      <div class="g-desc">${s.style} · ${s.sustain}</div>
+    </div>`).join('');
+  $('guidehouses').innerHTML = houses.map(h=>`
+    <div class="guide-item">
+      <div class="g-icon" style="font-size:16px;font-weight:900;color:var(--accent)">${h.name}</div>
+      <div class="g-key">${h.keyword}</div>
+      <div class="g-desc">${h.scene.split('\n')[0]}</div>
+    </div>`).join('');
+}
+renderGuide();
 </script>
 </body>
 </html>
