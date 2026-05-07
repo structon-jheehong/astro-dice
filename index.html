@@ -11,16 +11,21 @@
   <meta name="apple-mobile-web-app-title" content="astro-compass">
   <meta name="theme-color" content="#020617">
   <link rel="manifest" href="./manifest.json">
-  <meta name="description" content="운명이 아닌 현재의 흐름을 비추는 스냅샷 도구, astro-compass">
-  <meta name="keywords" content="점성술, 운세, 별자리, 심리테스트, 아스트로컴퍼스, 흐름읽기">
+  <meta name="description" content="막막한 선택의 순간, 지금 무엇이 살아있고 흔들리는지를 비춰봅니다. 반복되는 고민이 답답하다면 점성술 상징으로 현재의 상태와 기준을 확인하세요.">
+  <meta name="keywords" content="현재 흐름, 상태 확인, 선택 기준, 결정 기준, 내 상태 확인, 흐름 읽기, 점성술 기반 흐름 해석, 점성술 주사위, 오늘의 운세, 아스트로컴퍼스">
   <meta name="google-site-verification" content="5VyFRtSDRQ515fLJa4I5aiZ47lvVxh0dvMKVqIHEt5U">
   <meta name="naver-site-verification" content="6e76f7f6259cf1b27816e7e9d7c80146">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="astro-compass">
-  <meta property="og:description" content="지금 당신이 붙잡고 있는 기준은 무엇인가요?">
+  <meta property="og:title" content="아스트로컴퍼스 | 현재 흐름을 비추는 스냅샷">
+  <meta property="og:description" content="막막한 선택의 순간, 지금 무엇이 살아있고 흔들리는지를 비춰봅니다. 반복되는 고민이 답답하다면 점성술 상징으로 현재의 상태와 기준을 확인하세요.">
   <meta property="og:image" content="https://astro-compass.structon.kr/apple-touch-icon.png">
   <meta property="og:url" content="https://astro-compass.structon.kr/">
-  <title>astro-compass</title>
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="아스트로컴퍼스 | 현재 흐름을 비추는 스냅샷">
+  <meta name="twitter:description" content="막막한 선택의 순간, 지금 무엇이 살아있고 흔들리는지를 비춰봅니다. 반복되는 고민이 답답하다면 점성술 상징으로 현재의 상태와 기준을 확인하세요.">
+  <meta name="twitter:image" content="https://astro-compass.structon.kr/apple-touch-icon.png">
+  <title>아스트로컴퍼스 | 현재 흐름을 비추는 스냅샷</title>
   <style>
     :root{
       --bg:#020617;--text:#edf2f7;--muted:#64748b;--soft:#94a3b8;
@@ -380,11 +385,14 @@ function normalizeQuestionText(question){
 function detectLifeCrisisQuestion(question){
   const q = normalizeQuestionText(question);
 
-  // 직접 표현
-  const direct = /죽고싶|죽을까|죽는게|죽으면|죽어야|자살|ㅈㅅ할까|스스로목숨|목숨끊|생을마감|극단적선택|극단적인선택/.test(q);
+  // 직접 표현 — 자살은 단독 또는 명확한 조합으로만 잡는다 (삼성전자살까 오탐 방지)
+  const direct =
+    /죽고싶|죽을까|죽는게|죽으면|죽어야|스스로목숨|목숨끊|생을마감|극단적선택|극단적인선택/.test(q) ||
+    /자살(할까|하고싶|하려|해야|하면|을생각|충동|시도|예방)/.test(q) ||
+    /^자살$/.test(q);
 
-  // 삶 거부·소멸·종결
-  const lifeRefusal = /살기싫|살고싶지않|살아있기싫|더이상못살|이렇게살바엔|그만살|살이유|살필요/.test(q);
+  // 삶 거부·소멸·종결 — 살까·살까봐 같은 일반 구매 표현이 걸리지 않게 조합형으로만
+  const lifeRefusal = /살기싫|살고싶지않|살아있기싫|더이상못살|이렇게살바엔|그만살고|살이유가없|살필요가없/.test(q);
   const vanish = /사라지고싶|없어지고싶|소멸하고싶|증발하고싶|사라지면어떨|없어지면어떨|사라지면안|없어지면안|사라져도|없어져도|사라졌으면|없어졌으면|그냥없어질|안깨어나|못깨어나|영영잠들|그냥자고싶어안깨어나|잠들면어떨|안일어나면어떨/.test(q);
   const ending = /다끝내|그냥끝낼|끝내버릴|모든걸끝|이제끝내|여기서끝|그만끝|끝내고싶/.test(q);
 
@@ -431,24 +439,69 @@ function detectResentmentQuestion(question){
   return angerWords || targetAnger || familyRese;
 }
 
-function detectLowMeaningInput(question){
+// 입력 의미 강도를 5단계로 판정한다.
+// 'low'      : 무의미 입력 (반복문자·모음·초성·감탄음절 등) — 약화 출력
+// 'reaction' : 감탄·탄식·반응형 입력 (조졌다·망했다·미쳤다 등) — 완전 차단
+// 'emotion'  : 감정만 있는 입력 (불안해·힘들어 등) — state 모드 강제 약화
+// 'weak'     : 질문 압력이 낮은 입력 (짧고 방향 없음) — 약화 출력
+// 'question' : 실제 질문 중심이 있는 입력 — 정상 해석
+function getInputMeaningLevel(question){
   const q = normalizeQuestionText(question);
   const raw = question.trim();
 
-  // 의미 신호가 있으면 lowMeaning으로 보지 않는다.
-  const hasMeaningSignal =
+  // 질문 중심 판단 기준
+  // — 불안·힘들은 제거: emotion 단독 입력이 여기서 question으로 튀는 걸 막음
+  const hasQuestionFrame =
     /[?？]/.test(raw) ||
-    /어케|어떻게|해야|하지|할까|될까|괜찮|맞아|맞지|왜|뭐|무엇|어디|언제|계속|그만|힘들|불안|걱정|진짜|돈|일|관계|사람|가족|방향|선택|대출|투자|퇴사|헤어/.test(q);
+    /어케|어떻게|해야|하지|할까|말까|살까|될까|괜찮|맞아|맞지|왜|뭐|무엇|어디|언제|계속|그만|걱정|진짜|돈|일|관계|사람|가족|방향|선택|대출|투자|퇴사|헤어|나아|흐름|기준/.test(q);
 
-  if(hasMeaningSignal) return false;
+  // 0단계: lifeCrisis는 무조건 question으로 올린다 — reaction/low에 묻히지 않게
+  if(detectLifeCrisisQuestion(question)) return 'question';
 
-  if(/(.)\1{3,}/.test(raw)) return true;
-  if(raw.length <= 8 && /^[ㅋㅎㅠㅜㅡㅇㄱㄴㄷㄹㅁㅂㅅㅈㅊㅍㅌㅏㅑㅓㅕㅗㅛㅜㅠㅐㅒㅔㅖ]+$/.test(raw)) return true;
-  if(raw.length <= 5 && /^[아어오우이에애외왜위의으]+$/.test(raw)) return true;
-  if(raw.length <= 6 && /^(옹|앗|헉|흠|으음|아아|에이|에헤|흐에|우와|와아|야아|어머|오오|우우|이이|히히|하하|애오|오우|에오|으어|아오)+$/.test(q)) return true;
-  if(q.length <= 2) return true;
+  // 1단계: 무의미 입력 (반복·초성·감탄음·동물소리·의미없는 음절)
+  const isLow =
+    /(.)\1{3,}/.test(raw) ||
+    (raw.length <= 8 && /^[ㅋㅎㅠㅜㅡㅇㄱㄴㄷㄹㅁㅂㅅㅈㅊㅍㅌㅏㅑㅓㅕㅗㅛㅜㅠㅐㅒㅔㅖ]+$/.test(raw)) ||
+    (raw.length <= 5 && /^[아어오우이에애외왜위의으]+$/.test(raw)) ||
+    // 명시적 무의미 음절 패턴 (미애옹·냐옹·멍멍 계열)
+    /^(미애옹|미애우|냐옹|멍멍|야옹|왈왈|끼룩|삐약|으으으|아아아|에에에|옹옹|앙앙|ㅇㅇ|ㅎㅎ|ㅋㅋ)$/.test(q) ||
+    // 길이 2 이하는 한글/초성에만 적용 — 영문(hi·ok)은 reaction에서 처리
+    (q.length <= 2 && /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(q));
 
-  return false;
+  if(isLow) return 'low';
+
+  // 2단계: 감정 상태만 있는 입력 — 한글 짧은 음절 조건보다 반드시 먼저
+  if(!hasQuestionFrame){
+    const isEmotionOnly =
+      /^(불안해|불안하다|불안|심란해|심란하다|우울해|우울하다|힘들어|힘들다|무서워|무섭다|걱정돼|걱정된다|막막해|막막하다|외로워|외롭다|짜증나|짜증난다|화나|화났다|슬퍼|슬프다|지쳤어|지쳤다|모르겠어|모르겠다|무기력해|무기력하다|공허해|공허하다)$/.test(q);
+    if(isEmotionOnly) return 'emotion';
+  }
+
+  // 3단계: 반응·탄식·감탄형 입력
+  if(!hasQuestionFrame){
+    const isReaction =
+      /^(조졌다|조졌어|망했다|망했어|끝났다|끝났어|미쳤다|미쳤어|아미친|아씨|아시발|시발|씨발|ㅅㅂ|ㄷㄷ|개빡치네|빡치네|어쩌냐|어카냐|어떡하냐|어쩌지|하|하아|와|아ㅋ|ㅋ|ㅎ|ㄹㅇ|진짜로|헉|대박|세상에|이게뭐야|이게뭐지|뭐지|뭐야|모르겠|모르겠다|모르겠어)$/.test(q) ||
+      // 영문 짧은 무의미 입력 (hi·ok·lol 등) — q.length가 아닌 raw.length로 판단
+      (raw.length >= 2 && raw.length <= 8 && /^[a-zA-Z]+$/.test(raw) && !/why|how|what|when|where/.test(raw.toLowerCase()));
+    if(isReaction) return 'reaction';
+  }
+
+  // 4단계: 한글 짧은 음절 — emotion/reaction 통과한 것 (미애옹·요즘어때 계열) → weak
+  if(!hasQuestionFrame && raw.length <= 6 && /^[가-힣]+$/.test(raw)) return 'weak';
+
+  // 4단계: 질문 프레임은 없지만 짧고 방향이 약한 입력
+  if(!hasQuestionFrame && raw.length <= 10){
+    if(detectMoneyPredictionQuestion(question) || detectFortuneFantasyQuestion(question)) return 'question';
+    return 'weak';
+  }
+
+  return 'question';
+}
+
+// 하위 호환 래퍼 — 기존 코드에서 detectLowMeaningInput 호출하는 곳 대응
+function detectLowMeaningInput(question){
+  const level = getInputMeaningLevel(question);
+  return level === 'low' || level === 'reaction' || level === 'weak';
 }
 
 function detectViolenceRiskQuestion(question){
@@ -494,8 +547,13 @@ function detectViolenceRiskQuestion(question){
  *    → 단일 세션 반복 감지 필요 (구현 난이도 있음)
  *
  * [lowMeaningInput 보완 여지]
- * - 현재: 반복문자·모음조합·감탄사 차단 + 의미신호 있으면 통과
- * - 향후: 테스트 패턴 쌓이면 hasMeaningSignal 키워드 보강
+ * - 현재: getInputMeaningLevel() 5단계 분기
+ *   low      : 무의미(반복·초성·감탄음) → 약화 출력
+ *   reaction : 탄식·감탄·반응형(조졌다·망했다 등) → 완전 차단
+ *   emotion  : 감정 상태만 있는 입력(불안해·힘들어 등) → state 약화
+ *   weak     : 질문 압력 낮음(짧고 방향 없음) → 약화 출력
+ *   question : 실제 질문 중심 → 정상 해석
+ * - 향후: 테스트 패턴 쌓이면 reaction/emotion 키워드 보강
  * ============================================================
  */
 function detectExistentialEscapeQuestion(question){
@@ -535,6 +593,22 @@ function isSoftRelationContext(qInfo){
   return !!(qInfo && qInfo.primary === 'relation' && qInfo.tone === 'soft' && qInfo.softRelation);
 }
 
+// 관계 구조 충돌 질문: "결혼했는데 다른 사람 생겼어" 계열
+// 결과 확정 욕구가 강한 도덕 충돌 관계 질문을 잡는다.
+// → 상단 압력을 "열림" 대신 "구조와 기준 충돌"로 교체하는 데 쓴다.
+function detectRelationshipConflict(question){
+  const q = normalizeQuestionText(question);
+  const hasConflictFrame =
+    /결혼|유부|남편|아내|기혼|바람|불륜|갈아타|헤어지고|이혼하고|손절하고/.test(q);
+  const hasOutcomeFrame =
+    /잘될까|잘될것|가능|이어질|이어질까|괜찮|맞을까|될까|갈까|사귀어|사귈수|고백|성공|만날수|만날까/.test(q);
+  // "다른 사람이 생겼다" 계열도 포함
+  const hasOtherPerson =
+    /생겼어|생겼는데|생겼다|흔들려|흔들리는데|끌려|끌리는데|좋아졌|좋아지는데/.test(q) &&
+    /결혼|남편|아내|남친|여친|애인|기혼|유부/.test(q);
+  return (hasConflictFrame && hasOutcomeFrame) || hasOtherPerson;
+}
+
 function detectSensitiveQuestionInfo(question){
   const lifeCrisis = detectLifeCrisisQuestion(question);
   const externalEvent = detectExternalEventQuestion(question);
@@ -570,9 +644,11 @@ function detectSensitiveQuestionInfo(question){
 
 function detectRiskActionQuestion(question){
   const q = question.replace(/\s+/g,' ');
+  const qn = q.replace(/\s+/g,'');
   const categories = [];
   if(/대출|빚|차입|빌려|빌릴|카드론|현금서비스|상환|이자|연체|대부|마이너스통장|마통/.test(q)) categories.push('debt');
-  if(/투자|몰빵|레버리지|선물|옵션|코인|주식.*들어|매수|매도|손절|계좌/.test(q)) categories.push('investment');
+  // 강한 위험 투자: 영끌·몰빵·레버리지·전재산·전재산투자 등 — riskAction으로 강하게 차단
+  if(/영끌|몰빵|레버리지|전재산|전부넣|다넣|다투자|대출받아.*투자|빚내서.*투자|선물|옵션|손절/.test(qn)) categories.push('investment');
   if(/퇴사|그만둘|그만두|이직|폐업|창업|계약|해지|소송|고소|합의|보증/.test(q)) categories.push('majorDecision');
   if(/헤어질|이별|파혼|이혼|끊어낼|손절/.test(q)) categories.push('relationshipBreak');
   if(/수술|약을|약 먹|치료|병원|검사/.test(q)) categories.push('bodyDecision');
@@ -585,6 +661,35 @@ function detectRiskActionQuestion(question){
   };
   const primary = categories[0] || null;
   return {isRisk: categories.length > 0, categories, primary, label: primary ? labelMap[primary] : ''};
+}
+
+// 일반 투자 예언 질문 — 종목명 사전 대신 "투자 대상 + 진입/판단 행위" 패턴 구조로 감지
+// 목적: 오독 완충. 100% 탐지가 아니라 과열되는 방향만 눌러주기.
+function detectMoneyPredictionQuestion(question){
+  const qn = normalizeQuestionText(question);
+
+  // 투자 행위 패턴 — "뭔가를 사거나 들어가거나 버티는" 구조
+  const investAction =
+    /살까|말까|사도돼|사도되|들어갈까|들어가도|들어가볼까|매수할까|매수해도|물타도|추매해도|손절해야|버텨야|버텨도|갈까|갈것같|오를까|내릴까|오르나|내리나|지금이야|지금살까|지금들어|늦었나|늦었어|떨어질까|올라갈까|목표가|언제팔|언제사/.test(qn);
+
+  if(!investAction) return false;
+
+  // 투자 대상처럼 보이는 것 — 종목명 일부 + 자산 유형 + 시장 키워드
+  // 종목명은 핵심만 (삼전·삼성·하이닉스 등), 나머지는 자산 유형으로 넓게 잡음
+  const investTarget =
+    /주식|코인|비트|이더|리플|도지|솔라나|etf|채권|달러|금|원자재|부동산|아파트|삼전|삼성전자|하이닉스|엔비디아|애플|테슬라|구글|나스닥|코스피|코스닥|sp500|s&p/.test(qn);
+
+  // 투자 대상 없이 행위만 있어도: "살까 말까"처럼 맥락이 명확한 경우
+  // — 단, 이건 다른 문맥(음식·물건)과 구분이 어려우므로 target 있을 때만 잡음
+  return investTarget;
+}
+
+// 복권·대박·일확천금 운 예언 질문 — 기대 과열 완충
+function detectFortuneFantasyQuestion(question){
+  const qn = normalizeQuestionText(question);
+  const fantasyTarget = /복권|로또|당첨|일확천금|한방에|벼락부자|황금돼지|재물운|금전운|복권운|대박날/.test(qn);
+  const outcomeFrame = /될까|되냐|있냐|있어|얼마나|나올까|맞을까|언제|터질까|좋아|되나|될것|나올것/.test(qn);
+  return fantasyTarget && outcomeFrame;
 }
 function detectAmbiguousAnxietyQuestion(question){
   const q = question.replace(/\s+/g,' ');
@@ -824,6 +929,33 @@ function getDisplaySignal(signal, qInfo){
       className:'signal-watch'
     });
   }
+  // 관계 구조 충돌 질문: 열림이 떠도 "성사 가능" 메시지를 앞에 두지 않는다
+  if(qInfo && qInfo.relationshipConflict){
+    return Object.assign({}, signal, {
+      type:'relationshipConflict', level:Math.min(signal.level || 3, 3), icon:'🟡', label:'구조 충돌 확인',
+      title:'감정보다 현재 구조와 기준 충돌이 먼저 드러나는 상태',
+      sub:'관계 성사 여부보다, 지금 어떤 구조가 흔들리고 무엇이 비어 있는지가 먼저 보이는 흐름입니다.',
+      className:'signal-watch'
+    });
+  }
+  // 일반 투자 예언 질문: 열림이 떠도 "오른다/사도 된다" 압력을 앞에 두지 않는다
+  if(qInfo && qInfo.moneyPrediction){
+    return Object.assign({}, signal, {
+      type:'moneyPrediction', level:Math.min(signal.level || 3, 3), icon:'🟡', label:'기준 확인',
+      title:'결과 예언보다 기준과 흐름을 먼저 보는 상태',
+      sub:'오른다/내린다 예측이 아니라, 지금 판단 기준과 감당 가능한 선이 어디 있는지를 먼저 보는 흐름입니다.',
+      className:'signal-watch'
+    });
+  }
+  // 복권·대박 운 질문: 결과 확정 욕구를 흐름 확인으로 낮춘다
+  if(qInfo && qInfo.fortuneFantasy){
+    return Object.assign({}, signal, {
+      type:'fortuneFantasy', level:Math.min(signal.level || 3, 3), icon:'🟡', label:'흐름 기준 확인',
+      title:'당첨 예언보다 지금 돈 흐름 기준을 보는 상태',
+      sub:'복권·대박을 확정하는 흐름이 아닙니다. 지금 수익 기대가 어디서 오고 실제 흐름과 얼마나 맞는지를 보는 표시입니다.',
+      className:'signal-watch'
+    });
+  }
   if(qInfo && qInfo.mode === 'casualChoice'){
     return Object.assign({}, signal, {
       level: Math.min(signal.level || 3, 4), icon: signal.icon || '🟢', label: '가볍게 흐름 확인',
@@ -924,17 +1056,26 @@ function detectDomain(question){
   const inferredRiskLabel = (mode === 'riskAction' && !riskInfo.isRisk && sensitive.collapseImpulse && sensitive.concreteActionTarget) ? '중단·포기·큰 결정' : '';
   const broadScope = detectBroadScopeQuestion(question, sensitive, riskInfo);
   const timingMoney = detectTimingMoneyQuestion(question);
-  return {primary, secondary, tone, mode, riskAction:(riskInfo.isRisk || mode === 'riskAction'), riskType:riskInfo.primary, riskLabel:riskInfo.label || inferredRiskLabel, sensitive, softRelation, broadScope, timingMoney};
+  const relationshipConflict = detectRelationshipConflict(question);
+  const moneyPrediction = !riskInfo.isRisk && detectMoneyPredictionQuestion(question);
+  const fortuneFantasy = detectFortuneFantasyQuestion(question);
+  return {primary, secondary, tone, mode, riskAction:(riskInfo.isRisk || mode === 'riskAction'), riskType:riskInfo.primary, riskLabel:riskInfo.label || inferredRiskLabel, sensitive, softRelation, broadScope, timingMoney, relationshipConflict, moneyPrediction, fortuneFantasy};
 }
 
 function pickOne(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 function getClosing(signal, p, s, qTone, qInfo){
+  // casualChoice/casualCompare는 도메인 무관하게 가볍게 처리
+  if(qInfo && qInfo.mode === 'casualChoice') return '지금 몸이 끌리는 쪽을 가볍게 따르면 된다.';
+  if(qInfo && qInfo.mode === 'casualCompare') return '둘 중 지금 더 끌리는 쪽을 가볍게 따르면 된다.';
   if(signal.type === 'lifeCrisis') return '지금은 결말보다, 이 감각이 어디서 멈췄는지를 먼저 보는 흐름이다.';
   if(signal.type === 'violenceRisk') return '지금은 행동 판단보다, 감정 압력이 어디서 터졌는지를 먼저 보는 흐름이다.';
   if(signal.type === 'existentialEscape') return '지금은 다른 삶 상상보다, 지금 삶에서 무엇이 굳고 멀어졌는지를 먼저 보는 흐름이다.';
   if(signal.type === 'externalEvent') return '지금은 사건 예측보다, 내가 무엇을 두려워하고 어디까지 감당하려 하는지를 먼저 보는 흐름이다.';
   if(signal.type === 'collapseImpulse') return '지금은 포기 여부보다, 무엇이 이 감각을 만들었는지를 먼저 보는 흐름이다.';
+  if(signal.type === 'relationshipConflict') return '지금은 관계 성사 여부보다, 현재 구조 안에서 무엇이 비어 있고 흔들리는지를 먼저 보는 흐름이다.';
+  if(signal.type === 'moneyPrediction') return '지금은 오름·내림 예측보다, 판단 기준과 감당 가능한 선을 먼저 보는 흐름이다.';
+  if(signal.type === 'fortuneFantasy') return '지금은 당첨 가능성보다, 수익 기대가 현재 흐름과 얼마나 맞는지를 먼저 보는 흐름이다.';
   if(signal.label === '반복 회로 확인') return '지금은 좋고 나쁨보다, 반복되는 회로와 거기에 얽힌 감각을 먼저 보는 흐름이다.';
   if(signal.label === '굳은 반응 확인') return '지금은 상대 판정보다, 내 안에서 굳은 반응이 어디서 생겼는지를 먼저 보는 흐름이다.';
   if(signal.label === '자기 판정 멈춤') return '지금은 나를 판정하기보다, 자기 인식이 굳은 지점을 먼저 보는 흐름이다.';
@@ -1043,6 +1184,30 @@ function getBridge(signal,p,s,h,q){
   const sSustain = s.sustain;
   const hDomain = h.domain;
   const hVis = h.visibility;
+
+  // casualChoice/casualCompare는 도메인 무관하게 가볍게 처리
+  if(q.mode === 'casualChoice') return '지금 끌리는 쪽이 몸 반응에 가깝다.';
+  if(q.mode === 'casualCompare') return '지금 끌리는 쪽을 먼저 보는 흐름이다.';
+
+  // 관계 구조 충돌 — 성사 여부보다 기존 구조 안의 균열과 결핍을 먼저 본다
+  if(signal.type === 'relationshipConflict'){
+    if(p.tone === 'stable') return '기존 관계 구조를 버티는 힘이 걸려 있다. 새로운 감정이 생겼다기보다, 지금 구조 안에서 무엇이 비어 있는지가 먼저 드러난다.';
+    if(p.tone === 'deep') return '감정 아래에서 더 깊은 결핍이 움직이고 있다. 상대보다 그 결핍이 어디서 왔는지를 먼저 본다.';
+    if(p.tone === 'open') return '끌림이 강하게 살아 있지만, 지금은 그 감각이 관계 성사보다 현재 구조의 무엇을 채우려 하는지를 먼저 본다.';
+    if(p.tone === 'fire') return '감정 추진력이 앞쪽으로 실려 있다. 서두르기 전에 현재 구조와의 충돌 지점을 먼저 확인한다.';
+    return '지금 감정은 살아 있다. 하지만 그 감정이 가리키는 건 상대보다 현재 구조 안의 결핍과 기준 충돌에 가깝다.';
+  }
+  // 일반 투자 예언 — 시세 예측보다 지금 판단 기준을 먼저 본다
+  if(signal.type === 'moneyPrediction'){
+    if(p.tone === 'fire' || p.tone === 'spark') return '움직이고 싶은 힘이 실려 있다. 시세 예측보다 지금 내가 어디까지 감당할 수 있는지를 먼저 본다.';
+    if(p.tone === 'wide') return '가능성이 넓게 보이는 흐름이다. 하지만 크게 보일수록 실제 기준선을 먼저 잡는 편이 맞다.';
+    if(p.tone === 'stable') return '버티는 힘이 걸려 있다. 수익보다 손실 감당선이 먼저다.';
+    return '열림이 보여도 예측이 아니다. 지금 판단 기준과 흐름이 맞는지를 먼저 본다.';
+  }
+  // 복권·대박 운 — 당첨 확정보다 기대와 현실 흐름의 간극을 본다
+  if(signal.type === 'fortuneFantasy'){
+    return '큰 수익 기대가 살아 있는 상태다. 당첨 여부보다, 지금 그 기대가 현재 흐름과 얼마나 맞는지를 먼저 본다.';
+  }
 
   if(qDomain === 'lifeCrisis'){
     if(p.tone === 'mist') return '감각의 경계가 흐려져 있다. 지금은 결말보다 멈춘 지점을 먼저 본다.';
@@ -1682,6 +1847,27 @@ function buildIntentLayerBlock(qInfo){
       <p>이 결과는 바로 실행할 답보다, 지금 어디를 좁히면 흐름이 선명해지는지를 보는 표시입니다.</p>
     </div>
   `;
+  if(qInfo.relationshipConflict) return `
+    <div class="intent-layer-box" style="border-color:rgba(250,204,21,.22);background:linear-gradient(180deg,rgba(250,204,21,.07),rgba(30,41,59,.12))">
+      <div class="intent-layer-kicker" style="color:#fde68a">관계 구조 충돌</div>
+      <strong style="color:#fef9c3">이 결과는 관계 성사 여부를 보는 흐름이 아닙니다.</strong>
+      <p>열림이 보여도 "된다"는 뜻이 아닙니다. 지금 기존 구조 안에서 무엇이 비어 있고 흔들리는지를 먼저 보는 표시입니다.</p>
+    </div>
+  `;
+  if(qInfo.moneyPrediction) return `
+    <div class="intent-layer-box" style="border-color:rgba(251,146,60,.28);background:linear-gradient(180deg,rgba(251,146,60,.09),rgba(30,41,59,.12))">
+      <div class="intent-layer-kicker" style="color:#fdba74">투자 예언 아님</div>
+      <strong style="color:#ffedd5">이 결과는 "사도 된다 / 오른다"는 신호가 아닙니다.</strong>
+      <p>열림이 떠도 시세 예측으로 읽지 않습니다. 지금 판단 기준과 감당 가능한 선이 어디 있는지를 먼저 보는 표시입니다.</p>
+    </div>
+  `;
+  if(qInfo.fortuneFantasy) return `
+    <div class="intent-layer-box" style="border-color:rgba(251,146,60,.28);background:linear-gradient(180deg,rgba(251,146,60,.09),rgba(30,41,59,.12))">
+      <div class="intent-layer-kicker" style="color:#fdba74">당첨 예언 아님</div>
+      <strong style="color:#ffedd5">이 결과는 복권·대박 당첨 여부를 보는 흐름이 아닙니다.</strong>
+      <p>지금 수익 기대가 어디서 오고 현재 흐름과 얼마나 맞는지를 보는 표시입니다. 확정 신호로 읽지 않습니다.</p>
+    </div>
+  `;
   if(qInfo.mode !== 'intentMixed') return '';
   return `
     <div class="intent-layer-box">
@@ -1838,16 +2024,24 @@ function detectTimingMoneyQuestion(question){
 function detectCasualChoiceQuestion(question){
   const q = normalizeQuestionText(question);
   const spaced = String(question || '').replace(/\s+/g,' ').trim();
-  // 16자 이하 짧은 질문만
-  if(spaced.length > 16) return false;
+
   // 가벼운 어미
   const casualEnding = /고\?|갈까|먹을까|마실까|볼까|할까|입을까|들을까|살까|말까/.test(q);
   if(!casualEnding) return false;
-  // 무거운 키워드 있으면 제외
-  const heavyWords = /죽|사라지|헤어|대출|투자|퇴사|이혼|관계|인생|우울|불안|돈|망할|힘들|걱정|무서|두렵|미워|싫어|자살|수면제|끝내/.test(q);
-  if(heavyWords) return false;
+
   // VS형·비교형 질문은 casual 제외
   if(detectVsQuestion(question)) return false;
+
+  // 무거운 키워드 있으면 제외 — 단, 음식/일상 소비 컨텍스트면 돈은 제외에서 뺌
+  const foodContext = /치킨|피자|떡볶이|라면|커피|밥|음식|배달|먹|마실|카페|아이스크림|케이크|디저트|편의점|과자|빵/.test(q);
+  const heavyWords = foodContext
+    ? /죽|사라지|헤어|대출|투자|퇴사|이혼|인생|우울|불안|망할|걱정|무서|두렵|미워|싫어|자살|수면제|끝내/.test(q)
+    : /죽|사라지|헤어|대출|투자|퇴사|이혼|관계|인생|우울|불안|돈|망할|힘들|걱정|무서|두렵|미워|싫어|자살|수면제|끝내/.test(q);
+  if(heavyWords) return false;
+
+  // 길이 제한: 음식 컨텍스트면 길어도 허용, 그 외는 16자 이하
+  if(!foodContext && spaced.length > 16) return false;
+
   return true;
 }
 function detectBroadQuestion(q){
@@ -1886,14 +2080,90 @@ function roll(){
   $('error').style.display='none';
   hideAllWarnings();
 
-  // 의미 밀도 낮은 입력 — 과해석 방지
-  if(detectLowMeaningInput(question)){
+  // 입력 의미 강도 판정 — 3단계 분기
+  const meaningLevel = getInputMeaningLevel(question);
+
+  // reaction: 탄식·감탄형 — 완전 차단, 괘 없음
+  if(meaningLevel === 'reaction'){
+    $('diceGrid').innerHTML = `
+      <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
+      <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
+      <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>`;
+    $('reading').innerHTML = `
+      <div style="margin-top:16px;padding:16px 18px;border:1px solid rgba(148,163,184,.18);border-radius:18px;background:rgba(10,18,36,.7);">
+        <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;">질문 전 단계</div>
+        <p style="font-size:15px;color:#cbd5e1;line-height:1.7;word-break:keep-all;margin:0 0 8px;">입력이 질문보다 반응에 가깝습니다.</p>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">지금은 흐름 해석보다, 무엇이 그렇게 느껴지는지 한 문장으로 잡아보는 편이 자연스럽습니다.</p>
+      </div>`;
+    $('reading').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+
+  // emotion: 감정 상태만 있는 입력 — 괘 열되 state 모드 강제, scene 약화
+  if(meaningLevel === 'emotion'){
     const p = pick(planets), s = pick(signs), h = pick(houses);
     renderDice(p,s,h);
-    $('reading').innerHTML = `<div style="margin-top:16px;padding:16px 18px;border:1px solid rgba(148,163,184,.18);border-radius:18px;background:rgba(10,18,36,.7);">
-      <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;">입력 확인</div>
-      <p style="font-size:15px;color:#cbd5e1;line-height:1.7;word-break:keep-all;margin:0;">입력 의미가 아직 선명하지 않습니다.<br>지금은 흐름 해석보다, 질문을 조금 더 구체적으로 잡아보는 편이 자연스럽습니다.</p>
-    </div>`;
+    const rawSignal = getSignal(p,s,h);
+    const stateSignal = Object.assign({}, rawSignal, {level: Math.min(rawSignal.level, 3)});
+    const emotionMap = {
+      strongOpen:{label:'움직임 살아 있음', title:'감각 안에서 움직임이 살아 있는 상태'},
+      open:{label:'조금 풀리는 흐름', title:'막힌 감각이 조금 풀리는 상태'},
+      softOpen:{label:'천천히 정리', title:'천천히 정리되는 상태'},
+      adjust:{label:'안쪽 조율', title:'안쪽 조율이 필요한 상태'},
+      check:{label:'부담 점검', title:'부담이 새는 지점을 보는 상태'},
+      mixed:{label:'흔들림 큼', title:'감각이 흔들리기 쉬운 상태'},
+      still:{label:'재정비 우선', title:'회복과 정리가 먼저 보이는 상태'},
+      blur:{label:'혼선 큼', title:'감각과 판단이 섞이기 쉬운 상태'}
+    };
+    const eMap = emotionMap[rawSignal.type] || {};
+    $('reading').innerHTML = `
+      <div class="r-question">${escapeHtml(question)}</div>
+      <div class="r-signal ${stateSignal.className}">
+        <div class="signal-badge"><span class="signal-dot"></span>${stateSignal.icon} ${eMap.label || stateSignal.label}</div>
+        <div class="signal-title ${stateSignal.className}">${eMap.title || stateSignal.title}</div>
+        <div class="signal-sub">${stateSignal.sub}</div>
+        <div class="signal-meter">${[1,2,3,4,5,6].map(n=>`<span class="meter-seg ${n <= stateSignal.level ? 'on' : ''}"></span>`).join('')}</div>
+      </div>
+      <div style="margin-top:14px;padding:14px 16px;border:1px solid rgba(148,163,184,.18);border-radius:16px;background:rgba(10,18,36,.6);">
+        <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px;">상태 스냅샷</div>
+        <p style="font-size:14px;color:#94a3b8;line-height:1.75;word-break:keep-all;margin:0 0 6px;">지금 감각이 어디에 걸려 있는지를 먼저 보는 흐름입니다.</p>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">어떤 방향이나 상황이 붙어 있는지 한 문장으로 좁히면 흐름이 더 또렷해집니다.</p>
+      </div>
+      <hr class="r-divider">
+      <div class="coord-chips">
+        <div class="coord-chip"><span class="c-icon">${p.icon}</span><span class="c-name">${p.name}</span><span class="c-key">${p.keyword}</span></div>
+        <div class="coord-chip"><span class="c-icon">${s.icon}</span><span class="c-name">${s.name}</span><span class="c-key">${s.keyword}</span></div>
+        <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
+      </div>
+    `;
+    $('reading').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+
+  // low / weak: 무의미·방향 약한 입력 — 약화 출력 (좌표 + 신호만, 해석 없음)
+  if(meaningLevel === 'low' || meaningLevel === 'weak'){
+    const p = pick(planets), s = pick(signs), h = pick(houses);
+    renderDice(p,s,h);
+    const rawSignal = getSignal(p,s,h);
+    $('reading').innerHTML = `
+      <div class="r-question">${escapeHtml(question)}</div>
+      <div class="r-signal ${rawSignal.className}">
+        <div class="signal-badge"><span class="signal-dot"></span>${rawSignal.icon} ${rawSignal.label}</div>
+        <div class="signal-title ${rawSignal.className}">${rawSignal.title}</div>
+        <div class="signal-meter">${[1,2,3,4,5,6].map(n=>`<span class="meter-seg ${n <= rawSignal.level ? 'on' : ''}"></span>`).join('')}</div>
+      </div>
+      <div style="margin-top:14px;padding:14px 16px;border:1px solid rgba(148,163,184,.18);border-radius:16px;background:rgba(10,18,36,.6);">
+        <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px;">신호는 잡혔지만</div>
+        <p style="font-size:14px;color:#94a3b8;line-height:1.75;word-break:keep-all;margin:0 0 6px;">좌표는 움직였지만, 지금은 질문 중심이 흐려 읽힘이 약합니다.</p>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">하나의 방향, 하나의 상황으로 좁혀서 다시 넣으면 흐름이 더 또렷해집니다.</p>
+      </div>
+      <hr class="r-divider">
+      <div class="coord-chips">
+        <div class="coord-chip"><span class="c-icon">${p.icon}</span><span class="c-name">${p.name}</span><span class="c-key">${p.keyword}</span></div>
+        <div class="coord-chip"><span class="c-icon">${s.icon}</span><span class="c-name">${s.name}</span><span class="c-key">${s.keyword}</span></div>
+        <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
+      </div>
+    `;
     $('reading').scrollIntoView({behavior:'smooth',block:'start'});
     return;
   }
