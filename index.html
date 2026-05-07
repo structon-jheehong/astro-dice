@@ -413,6 +413,11 @@ function detectViolenceRiskQuestion(question){
   return target && violence;
 }
 
+function detectExistentialEscapeQuestion(question){
+  const q = normalizeQuestionText(question);
+  return /다시태어나|다음생|새삶|새인생|다른인생|다시살면|다시시작|환생|전생|태어났어야|운명인가|팔자인가|전생에죄|이번생망|이번생은망|이번생은글렀|이생망|다른사람으로태어나|왜이렇게태어났|다시시작하고싶/.test(q);
+}
+
 
 function detectSelfDoubtQuestion(question){
   const q = normalizeQuestionText(question);
@@ -512,6 +517,7 @@ function detectQuestionMode(question){
   // 1) 가장 강한 신호는 어떤 분기가 먼저 잡혀도 덮어쓴다.
   if(detectViolenceRiskQuestion(question)) return 'violenceRisk';
   if(sensitive.lifeCrisis) return 'lifeCrisis';
+  if(detectExistentialEscapeQuestion(question)) return 'existentialEscape';
   if(sensitive.externalEvent) return 'externalEvent';
 
   // 2) 실제 실행 대상이 있으면 위험 행동 질문으로 본다.
@@ -677,6 +683,14 @@ function getDisplaySignal(signal, qInfo){
       className:'signal-cross'
     });
   }
+  if(qInfo && qInfo.mode === 'existentialEscape'){
+    return Object.assign({}, signal, {
+      type:'existentialEscape', level:Math.min(signal.level || 3, 3), icon:'🟡', label:'삶 거리감 확인',
+      title:'결과보다 지금 삶에서 멀어진 감각을 보는 흐름',
+      sub:'이 신호는 다음 생의 가능성을 예언하는 뜻이 아니라, 지금 삶에서 무엇이 지치고 멀어졌는지를 먼저 보는 층입니다.',
+      className:'signal-watch'
+    });
+  }
   if(qInfo && qInfo.mode === 'externalEvent'){
     return Object.assign({}, signal, {
       type:'externalEvent', level:Math.min(signal.level || 3, 3), icon:'🟡', label:'외부 사건 질문',
@@ -792,11 +806,12 @@ function detectDomain(question){
   const mode = detectQuestionMode(question);
   const riskInfo = detectRiskActionQuestion(question);
   const sensitive = detectSensitiveQuestionInfo(question);
-  let tone = (['state','riskAction','intentMixed','lifeCrisis','externalEvent','collapseImpulse','habitPattern','resentment','selfDoubt','violenceRisk'].includes(mode)) ? 'soft' : 'neutral';
+  let tone = (['state','riskAction','intentMixed','lifeCrisis','externalEvent','collapseImpulse','habitPattern','resentment','selfDoubt','violenceRisk','existentialEscape'].includes(mode)) ? 'soft' : 'neutral';
 
   if(mode === 'lifeCrisis') domains.push('lifeCrisis');
   if(mode === 'externalEvent') domains.push('externalEvent');
   if(mode === 'violenceRisk') domains.push('violenceRisk');
+  if(mode === 'existentialEscape') domains.push('existentialEscape');
   if(mode === 'riskAction') domains.push('riskAction');
   if(mode === 'collapseImpulse') domains.push('collapseImpulse');
   if(mode === 'habitPattern') domains.push('habitPattern');
@@ -832,6 +847,7 @@ function pickOne(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 function getClosing(signal, p, s, qTone, qInfo){
   if(signal.type === 'lifeCrisis') return '지금은 결말보다, 이 감각이 어디서 멈췄는지를 먼저 보는 흐름이다.';
   if(signal.type === 'violenceRisk') return '지금은 행동 판단보다, 감정 압력이 어디서 터졌는지를 먼저 보는 흐름이다.';
+  if(signal.type === 'existentialEscape') return '지금은 다른 삶 상상보다, 지금 삶에서 무엇이 굳고 멀어졌는지를 먼저 보는 흐름이다.';
   if(signal.type === 'externalEvent') return '지금은 사건 예측보다, 내가 무엇을 두려워하고 어디까지 감당하려 하는지를 먼저 보는 흐름이다.';
   if(signal.type === 'collapseImpulse') return '지금은 포기 여부보다, 무엇이 이 감각을 만들었는지를 먼저 보는 흐름이다.';
   if(signal.label === '반복 회로 확인') return '지금은 좋고 나쁨보다, 반복되는 회로와 거기에 얽힌 감각을 먼저 보는 흐름이다.';
@@ -952,6 +968,9 @@ function getBridge(signal,p,s,h,q){
   }
   if(qDomain === 'violenceRisk'){
     return '감정 압력이 한계를 넘은 상태다. 상대보다 지금 내 안의 압력이 어디서 터졌는지를 먼저 본다.';
+  }
+  if(qDomain === 'existentialEscape'){
+    return '지금 삶이 멀어진 감각이 올라온 상태다. 상상보다 그 피로가 어디서 시작됐는지를 먼저 본다.';
   }
   if(qDomain === 'externalEvent'){
     if(p.tone === 'mist') return '경계가 흐려지며 불안 감각이 커지는 흐름이다.';
@@ -1264,6 +1283,9 @@ function getQuestionReadGuide(qInfo, question, p, s, h){
   if(qInfo.mode === 'violenceRisk'){
     return '이 질문은 행동 판단이 아닙니다. 지금 감정 압력이 어디서 한계를 넘었는지를 먼저 보는 표시입니다.';
   }
+  if(qInfo.mode === 'existentialEscape'){
+    return '이 질문은 미래 확정보다, 지금 삶에서 무엇이 지치고 멀어졌는지를 먼저 보는 표시입니다.';
+  }
   if(qInfo.mode === 'externalEvent'){
     return '이 질문은 외부 사건의 발생 여부를 맞히는 흐름이 아니라, 지금 어떤 불안과 대비 감각이 커져 있는지를 보는 표시입니다.';
   }
@@ -1516,6 +1538,13 @@ function buildIntentLayerBlock(qInfo){
       <div class="intent-layer-kicker">위해 행동 질문</div>
       <strong>이 질문은 점괘로 실행 여부를 보지 않습니다. 지금은 행동을 멈추고 감정 압력이 어디서 터졌는지를 먼저 보는 표시입니다.</strong>
       <p>상대를 어떻게 할지보다, 지금 바로 행동으로 옮기면 안 되는 압력이 올라온 상태로 읽습니다.</p>
+    </div>
+  `;
+  if(qInfo.mode === 'existentialEscape') return `
+    <div class="intent-layer-box">
+      <div class="intent-layer-kicker">삶 거리감 확인</div>
+      <strong>이 질문은 미래 확정보다, 지금 삶에서 무엇이 지치고 멀어졌는지를 먼저 보는 표시입니다.</strong>
+      <p>결과를 단정하기보다, 지금 어떤 감각이 현실 밖 상상으로 이어지고 있는지를 먼저 봅니다.</p>
     </div>
   `;
   if(qInfo.mode === 'lifeCrisis') return `
