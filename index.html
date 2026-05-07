@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="astro-compass">
   <meta name="theme-color" content="#020617">
+  <link rel="manifest" href="./manifest.json">
   <title>astro-compass</title>
   <style>
     :root{
@@ -2281,6 +2282,11 @@ if(onboardingModal){ onboardingModal.addEventListener('click', (e)=>{ if(e.targe
 window.openOnboarding = openOnboarding;
 
 renderGuide();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js');
+}
 </script>
 </body>
 </html>
