@@ -61,10 +61,42 @@
     .label-note{display:inline-block;margin-left:6px;color:rgba(250,204,21,.8);font-size:11px;font-weight:500}
     textarea{width:100%;min-height:100px;resize:vertical;border:1px solid rgba(148,163,184,.25);border-radius:16px;outline:0;padding:15px 17px;background:rgba(5,12,28,.75);color:#d8e8f4;font-size:16px;line-height:1.85;font-weight:500}
     textarea:focus{border-color:rgba(94,234,212,.5);box-shadow:0 0 0 3px rgba(94,234,212,.09)}
+    textarea::placeholder{color:#3d5570;-webkit-text-fill-color:#3d5570;opacity:1}
     .flow-ticker{overflow:hidden;height:22px;margin:14px 0 4px;position:relative}
     .flow-ticker-inner{display:flex;flex-direction:column;transition:transform .7s cubic-bezier(.4,0,.2,1)}
     .flow-ticker-line{height:22px;line-height:22px;font-size:12px;color:#3d5570;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
-    textarea::placeholder{color:#3d5570;-webkit-text-fill-color:#3d5570;opacity:1}
+    .pre-snap-hidden{display:none!important}
+    .pre-snap-intro{margin-top:18px;padding:18px 20px;border:1px solid rgba(148,163,184,.10);border-radius:18px;background:rgba(2,6,23,.28)}
+    .pre-snap-intro p{font-size:13px;line-height:2;color:#3d5570;word-break:keep-all;margin:0}
+    .pre-snap-intro p+p{margin-top:10px}
+    /* 인라인 미끼 텍스트 (전자책 진입) — 카드 X, 조용한 문장 블록 */
+    .book-whisper{display:none;width:100%;margin:24px 0 0;padding:16px 18px 16px 16px;border:0;border-left:1px solid rgba(148,163,184,.20);background:transparent;color:#7a92a8;font-size:14.5px;line-height:1.7;letter-spacing:-.02em;word-break:keep-all;cursor:pointer;text-align:left;transition:opacity .35s ease, color .15s ease;font-family:inherit}
+    .book-whisper.shown{display:block;opacity:.55}
+    .book-whisper.full{opacity:1}
+    .book-whisper:hover{color:#a9bed2}
+    .book-whisper .arrow{margin-left:8px;color:#5a7285;font-size:13px;transition:transform .15s, color .15s;display:inline-block}
+    .book-whisper:hover .arrow{color:#94a3b8;transform:translateX(2px)}
+
+    /* 플로팅 커피 버튼 — 3회 이후 우측 하단 고정 */
+    .floating-coffee{position:fixed;bottom:22px;right:22px;z-index:80;display:none;width:48px;height:48px;border-radius:50%;background:rgba(15,23,42,.85);border:1px solid rgba(148,163,184,.18);color:#a9bed2;font-size:21px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4);backdrop-filter:blur(8px);transition:.2s;align-items:center;justify-content:center;padding:0}
+    .floating-coffee.visible{display:flex}
+    .floating-coffee:hover{background:rgba(15,23,42,.95);transform:translateY(-2px);color:#e2e8f0;border-color:rgba(148,163,184,.28)}
+
+    /* 책 모달 */
+    .book-modal{display:none;position:fixed;inset:0;z-index:120;background:rgba(2,6,23,.92);backdrop-filter:blur(10px);padding:22px;align-items:center;justify-content:center}
+    .book-modal.open{display:flex}
+    .book-modal-card{width:min(440px,100%);border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(8,15,30,.96));box-shadow:0 26px 80px rgba(0,0,0,.55);padding:28px 24px 20px;color:#cfd8e3}
+    .book-modal-text{font-size:14.5px;line-height:1.95;color:#a9bed2;letter-spacing:-.01em;word-break:keep-all}
+    .book-modal-text .lead{display:block;color:#dbeafe;font-weight:700;margin-bottom:18px;font-size:15.5px;letter-spacing:-.02em}
+    .book-modal-text p{margin:0 0 14px}
+    .book-modal-divider{height:1px;background:rgba(148,163,184,.15);margin:20px 0 16px}
+    .book-modal-meta{font-size:12.5px;color:#6f879d;margin-bottom:16px;letter-spacing:.01em;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .book-modal-meta strong{color:#cfd8e3;font-weight:700;letter-spacing:-.01em;font-size:13.5px}
+    .book-modal-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+    .book-modal-cta{border-radius:999px;padding:9px 18px;background:rgba(56,189,248,.08);color:#7dd3fc;border:1px solid rgba(56,189,248,.22);font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block;transition:.15s}
+    .book-modal-cta:hover{background:rgba(56,189,248,.14);color:#bae6fd}
+    .book-modal-close{background:transparent;border:1px solid var(--line2);border-radius:999px;color:#5a7285;padding:8px 14px;font-size:12px;cursor:pointer;transition:.15s}
+    .book-modal-close:hover{color:#94a3b8;border-color:var(--line)}
     .hint{margin-top:7px;color:#3d5165;font-size:12px;word-break:keep-all}
     .soft-warning{display:none;margin-top:9px;padding:9px 12px;border-radius:12px;border:1px solid rgba(250,204,21,.2);background:rgba(250,204,21,.06);color:#fde68a;font-size:12px}
     .risk-action-box{margin:0 0 16px;padding:14px 16px;border-radius:16px;border:1px solid rgba(251,146,60,.32);background:linear-gradient(180deg,rgba(251,146,60,.13),rgba(127,29,29,.10));color:#fed7aa;box-shadow:0 12px 34px rgba(0,0,0,.20)}
@@ -250,52 +282,64 @@
         </div>
       </div>
 
-      <div class="flow-ticker" aria-hidden="true">
-        <div class="flow-ticker-inner" id="flowTicker">
-          <div class="flow-ticker-line">현재 상태를 묻는 질문일수록 더 또렷하게 읽힙니다</div>
-          <div class="flow-ticker-line">질문을 하나의 상황으로 좁히면 읽힘이 더 선명해집니다</div>
-          <div class="flow-ticker-line">결과 확정보다, 지금 붙잡는 흐름을 비춰봅니다</div>
-          <div class="flow-ticker-line">예: 왜 같은 고민으로 자꾸 돌아올까?</div>
-          <div class="flow-ticker-line">예: 지금 흐름에서 중요한 기준은 뭘까?</div>
-          <div class="flow-ticker-line">반복되는 고민일수록 질문이 더 선명하게 읽힙니다</div>
+      <!-- ① 입력 섹션 -->
+      <section id="sec-input">
+        <div class="flow-ticker" aria-hidden="true">
+          <div class="flow-ticker-inner" id="flowTicker">
+            <div class="flow-ticker-line">현재 상태를 묻는 질문일수록 더 또렷하게 읽힙니다</div>
+            <div class="flow-ticker-line">질문을 하나의 상황으로 좁히면 읽힘이 더 선명해집니다</div>
+            <div class="flow-ticker-line">결과 확정보다, 지금 붙잡는 흐름을 비춰봅니다</div>
+            <div class="flow-ticker-line">예: 왜 같은 고민으로 자꾸 돌아올까?</div>
+            <div class="flow-ticker-line">예: 지금 흐름에서 중요한 기준은 뭘까?</div>
+            <div class="flow-ticker-line">반복되는 고민일수록 질문이 더 선명하게 읽힙니다</div>
+          </div>
         </div>
-      </div>
 
-      <label for="question" style="margin-top:16px">질문 <span class="label-note">한 방향을 묻는 질문이 더 선명합니다</span></label>
-      <textarea id="question" placeholder="예: 지금 만드는 방향, 계속 이어가도 괜찮을까?"></textarea>
-      <div class="hint">VS형 질문도 막지는 않지만, 하나씩 나누어 보면 흐름이 더 또렷해집니다.</div>
+        <label for="question" style="margin-top:16px">질문 <span class="label-note">한 방향을 묻는 질문이 더 선명합니다</span></label>
+        <textarea id="question" placeholder="예: 지금 만드는 방향, 계속 이어가도 괜찮을까?"></textarea>
+        <div class="hint">VS형 질문도 막지는 않지만, 하나씩 나누어 보면 흐름이 더 또렷해집니다.</div>
 
-      <div id="error" class="error">질문을 먼저 적어주세요.</div>
+        <div id="error" class="error">질문을 먼저 적어주세요.</div>
 
-      <div class="row">
-        <button id="rollBtn" class="main-btn" type="button">내 흐름의 스냅샷</button>
-      </div>
-      <div class="snapshot-help" style="padding:10px 14px;">
-        <div class="snapshot-title">왜 스냅샷인가요?</div>
-        <p style="color:#7a94aa;">미래를 확정하기보다 지금 어디에 힘이 실리고 어디서 흔들리는지를 보는 한 장면입니다.<br>하나의 정답보다 지금 붙잡을 기준 하나를 확인해보세요.</p>
-      </div>
+        <div class="row">
+          <button id="rollBtn" class="main-btn" type="button">내 흐름의 스냅샷</button>
+        </div>
 
-      <div class="dice-grid" id="diceGrid">
-        <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
-        <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
-        <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>
-      </div>
+        <div class="pre-snap-intro" id="preSnapIntro">
+          <p>astro-compass는 결과를 확정하기보다,<br>지금 어떤 흐름이 살아 움직이는지를 비춰보는 스냅샷 도구입니다.</p>
+          <p>좋고 나쁨보다 지금 어디에 힘이 실리고 어디서 흔들리는지를 먼저 봅니다.<br>하나의 정답보다 지금 붙잡을 기준 하나를 확인해보세요.</p>
+        </div>
+      </section>
 
-      <div class="result" id="reading"><p class="subtitle" style="margin-top:14px">질문을 입력하고 흐름을 확인하세요.</p></div>
+      <!-- ② 결과 섹션 -->
+      <section id="sec-result" style="display:none">
+        <div class="dice-grid" id="diceGrid">
+          <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
+          <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
+          <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>
+        </div>
+        <div class="result" id="reading"></div>
+        <div class="notice" id="snapNotice">신호는 정답보다 표지판에 가깝습니다. 열림의 강도와 조정 지점을 함께 봅니다.</div>
+      </section>
 
-      <div class="notice">신호는 정답보다 표지판에 가깝습니다. 열림의 강도와 조정 지점을 함께 봅니다.</div>
-
-      <div class="history">
-        <strong>기록</strong>
-        <div id="historyList" class="hint" style="margin-top:8px;">기록 없음.</div>
-        <div class="ai-copy-box">
-          <strong>여러 스냅샷을 한 번에 읽고 싶다면?</strong>
-          astro-compass는 정답보다 지금 흐름을 비추는 나침반에 가깝습니다.<br>
-          결과가 애매하게 느껴질 때는, 여러 기록을 함께 묶어 반복되는 방향과 엇갈리는 신호를 읽는 편이 좋습니다.<br>
-          그래도 여러 흐름을 함께 이어서 보고 싶다면 아래 버튼을 눌러 GPT, Gemini, Claude에 붙여넣을 수 있는 종합 해석 프롬프트를 복사하세요.
+      <!-- ③ 기록 섹션 -->
+      <section id="sec-history" style="display:none">
+        <div class="history" id="historyWrap">
+          <strong>기록</strong>
+          <div id="historyList" class="hint" style="margin-top:8px;">기록 없음.</div>
+        </div>
+        <div class="ai-copy-box" id="aiCopyBox">
+          <strong>여러 흐름을 이어서 보고 싶다면</strong>
+          기록된 스냅샷을 묶어 GPT·Gemini·Claude에 바로 붙여넣을 수 있는 종합 해석 프롬프트를 복사합니다.
           <button class="ai-flow-button" type="button" onclick="copyAiSummaryPrompt()">AI로 여러 흐름 이어서 보기</button>
         </div>
-      </div>
+      </section>
+
+      <!-- ④ 전자책 진입 — 인라인 미끼 (3회 이후 0.55, 5회 이후 1.0) -->
+      <button type="button" class="book-whisper" id="bookWhisper" onclick="openBookModal()">
+        반복되는 감정에는 흐름이 있습니다<span class="arrow">→</span>
+      </button>
+
     </section>
   </main>
 
@@ -335,6 +379,41 @@
     </div>
   </div>
   <div class="toast" id="toast"></div>
+
+  <!-- 플로팅 커피 버튼 (3회 이후 노출) -->
+  <button type="button" class="floating-coffee" id="floatingCoffee" aria-label="제작자에게 커피 한 잔" title="제작자에게 커피 한 잔" onclick="openCoffeeModal()">☕</button>
+
+  <!-- 커피 모달 -->
+  <div class="book-modal" id="coffeeModal" aria-hidden="true" onclick="if(event.target===this)closeCoffeeModal()">
+    <div class="book-modal-card">
+      <div class="book-modal-text">
+        <span class="lead">제작자에게 커피 한 잔 보내주기</span>
+      </div>
+      <div class="book-modal-actions" style="margin-top:18px">
+        <button type="button" class="book-modal-close" onclick="closeCoffeeModal()">닫기</button>
+        <a class="book-modal-cta" href="https://qr.kakaopay.com/FeN89Kewe5dc04429" target="_blank" rel="noopener" onclick="closeCoffeeModal()">☕ 커피 보내기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 책 모달 -->
+  <div class="book-modal" id="bookModal" aria-hidden="true" onclick="if(event.target===this)closeBookModal()">
+    <div class="book-modal-card">
+      <div class="book-modal-text">
+        <span class="lead">반복되는 감정과 생각은<br>고쳐야 하는 문제가 아닙니다.</span>
+        <p>이 신호들을<br>조금 떨어져 바라보기 시작하면,<br>지금 어떤 흐름이 반복되고 있는지<br>천천히 보이기 시작합니다.</p>
+      </div>
+      <div class="book-modal-divider"></div>
+      <div class="book-modal-meta">
+        <strong>나는 왜 계속 이럴까</strong>
+        <span>10,000원</span>
+      </div>
+      <div class="book-modal-actions">
+        <button type="button" class="book-modal-close" onclick="closeBookModal()">닫기</button>
+        <a class="book-modal-cta" href="https://kmong.com/gig/725495" target="_blank" rel="noopener">구경해보기 →</a>
+      </div>
+    </div>
+  </div>
 
 <script>
 'use strict';
@@ -491,6 +570,13 @@ function getInputMeaningLevel(question){
     const isEmotionOnly =
       /^(불안해|불안하다|불안|심란해|심란하다|우울해|우울하다|힘들어|힘들다|무서워|무섭다|걱정돼|걱정된다|막막해|막막하다|외로워|외롭다|짜증나|짜증난다|화나|화났다|슬퍼|슬프다|지쳤어|지쳤다|모르겠어|모르겠다|무기력해|무기력하다|공허해|공허하다)$/.test(q);
     if(isEmotionOnly) return 'emotion';
+
+    // 2-b단계: 관계/욕망/감각 표출 — emotion과 분리해서 별도 결로 처리
+    // (돈·헤어짐 같은 욕망은 hasQuestionFrame 키워드로 이미 question 처리되는데,
+    //  성욕·연애욕·신체접촉 욕구는 키워드에 없어 weak로 빠지던 형평성 문제 보정)
+    const isDesire =
+      /(섹스하고싶|섹하고싶|성관계하고싶|연애하고싶|연애하고파|사귀고싶|애인갖고싶|애인이생겼으면|애인있었으면|애인필요|누군가만나고싶|누군가안고싶|안기고싶|키스하고싶|사랑하고싶|사랑받고싶|스킨십하고싶|껴안고싶|품에안기고싶)/.test(q);
+    if(isDesire) return 'desire';
   }
 
   // 3단계: 반응·탄식·감탄형 입력
@@ -709,10 +795,15 @@ function detectFortuneFantasyQuestion(question){
 }
 function detectAmbiguousAnxietyQuestion(question){
   const q = question.replace(/\s+/g,' ');
-  const anxiety = /망하|망할|망한|실패|큰일|끝장|불안|걱정|무서|두렵|겁|심란|막막|ㅈ됐|좆됐|안될|안 될|못할|못 하|나락|무너/.test(q);
+  const anxiety = /망하|망할|망한|실패|큰일|끝장|불안|걱정|무서|두렵|겁|심란|막막|ㅈ됐|좆됐|안될|안 될|안돼|못할|못 하|나락|무너/.test(q);
   const vagueFrame = /생각|평가|어때|괜찮|맞아|맞지|그치|되는|될까|상태|느낌|기분|흐름/.test(q);
   const broadFrame = q.length <= 45 || /지금 내가|요즘 내가|이거|이런/.test(q);
-  return anxiety && (vagueFrame || broadFrame);
+  // 불안 재확인 — anxiety 단어 없이 막연한 결말 검토만 있는 케이스
+  // ("잘 풀리겠지 / 잘 될까 / 이게 맞나 / 괜찮을까" 류)
+  // 혼선 라벨이 부정 판정처럼 떨어지지 않도록 intentMixed로 흡수
+  const reassurance = /잘 ?풀리|잘 ?될까|잘 ?되겠|잘 ?하겠|잘 ?살겠|풀리겠|풀릴까|괜찮을까|괜찮겠|괜찮나|괜찮은가|되겠지|살겠지|이게 ?맞|맞을까|맞나|성공할까|성공할 ?수|가능할까|할 ?수 ?있을까|할 ?수 ?있겠/.test(q);
+  const personalScope = q.length <= 30 || /^나 |내가 |내 |요즘 |지금 |그치|이거|이런/.test(q);
+  return (anxiety && (vagueFrame || broadFrame)) || (reassurance && personalScope);
 }
 
 function detectQuestionMode(question){
@@ -1962,14 +2053,27 @@ function buildReading(question,p,s,h){
   const status = getStatus(p,s,h);
   const scene = makeScene(p,s,h);
   const sceneHtml = makeSceneHtml(p,s,h,qInfo);
-  const bridge = getBridge(signal,p,s,h,qInfo);
-  const closing = getClosing(signal, p, s, qInfo.tone, qInfo);
+
+  // 일반 명확 신호(strongOpen/open/softOpen/still)에서는 bridge/closing이
+  // signal.title/sub과 의미 중복을 일으키므로 제거. 정리·조율·완충이 필요한 케이스
+  // (mixed/adjust/check/특수도메인/캐주얼)에서는 유지.
+  const generalClearTypes = ['strongOpen', 'open', 'softOpen', 'still'];
+  const isCasual = qInfo.mode === 'casualChoice' || qInfo.mode === 'casualCompare';
+  const isGeneralClear = !isCasual && generalClearTypes.includes(signal.type);
+
+  const bridge = isGeneralClear ? '' : getBridge(signal,p,s,h,qInfo);
+  const closing = isGeneralClear ? '' : getClosing(signal, p, s, qInfo.tone, qInfo);
   const readGuideBlock = buildReadGuide(question, signal, qInfo, p, s, h);
   const riskActionBlock = buildRiskActionBlock(qInfo);
   const intentLayerBlock = buildIntentLayerBlock(qInfo);
   currentSnapshot = {question, p, s, h, signal, scene, bridge, closing, qInfo};
+
+  // 공유 텍스트 — bridge/closing이 비면 해당 줄 자체를 빼서 빈 줄 누적 방지
+  const shareTail = [];
+  if(bridge) shareTail.push('', bridge);
+  if(closing) shareTail.push(closing);
   lastShareText = [
-    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', `${signal.icon} ${signal.label}`, signal.title, signal.sub, '', scene, '', bridge, closing, '', '짧은 기준', getQuestionReadGuide(qInfo, question, p, s, h), '', '흐름을 맑게 하는 방법', getClearFlowGuide(signal,qInfo,p,s,h), '', '주의점', getRememberGuide(p,s,h)
+    'astro-compass', '', `질문: ${question}`, '', `${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`, '', `${signal.icon} ${signal.label}`, signal.title, signal.sub, '', scene, ...shareTail, '', '짧은 기준', getQuestionReadGuide(qInfo, question, p, s, h), '', '흐름을 맑게 하는 방법', getClearFlowGuide(signal,qInfo,p,s,h), '', '주의점', getRememberGuide(p,s,h)
   ].join('\n');
   return `
     <div class="r-question">${escapeHtml(question)}</div>
@@ -1988,8 +2092,8 @@ function buildReading(question,p,s,h){
     </div>
     <div class="r-scene-area">
       <div class="scene">${sceneHtml}</div>
-      <div class="bridge">${bridge}</div>
-      <div class="closing">${closing}</div>
+      ${bridge ? `<div class="bridge">${bridge}</div>` : ''}
+      ${closing ? `<div class="closing">${closing}</div>` : ''}
     </div>
     ${readGuideBlock}
     <hr class="r-divider">
@@ -2121,6 +2225,7 @@ function roll(){
 
   // reaction: 탄식·감탄형 — 완전 차단, 괘 없음
   if(meaningLevel === 'reaction'){
+    showSections();
     $('diceGrid').innerHTML = `
       <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
       <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
@@ -2137,6 +2242,7 @@ function roll(){
 
   // emotion: 감정 상태만 있는 입력 — 괘 열되 state 모드 강제, scene 약화
   if(meaningLevel === 'emotion'){
+    showSections();
     const p = pick(planets), s = pick(signs), h = pick(houses);
     renderDice(p,s,h);
     const rawSignal = getSignal(p,s,h);
@@ -2176,8 +2282,51 @@ function roll(){
     return;
   }
 
+  // desire: 관계/욕망/감각 표출 — 욕망·몸반응 결로 읽히게
+  if(meaningLevel === 'desire'){
+    showSections();
+    const p = pick(planets), s = pick(signs), h = pick(houses);
+    renderDice(p,s,h);
+    const rawSignal = getSignal(p,s,h);
+    const stateSignal = Object.assign({}, rawSignal, {level: Math.min(rawSignal.level, 4)});
+    const desireMap = {
+      strongOpen:{label:'몸 반응 살아 있음', title:'욕망과 감각이 강하게 살아 있는 상태'},
+      open:{label:'감각이 풀리는 흐름', title:'욕망의 결이 조금 풀리는 상태'},
+      softOpen:{label:'감각이 천천히 정리', title:'욕망의 결이 천천히 정리되는 상태'},
+      adjust:{label:'안쪽 욕망 조율', title:'욕망의 안쪽 결을 조율하는 상태'},
+      check:{label:'감각 점검', title:'욕망이 어디서 새는지 보는 상태'},
+      mixed:{label:'감각 흔들림', title:'욕망이 여러 결로 흔들리기 쉬운 상태'},
+      still:{label:'욕망 정체', title:'욕망이 한 자리에 머무는 상태'},
+      blur:{label:'욕망과 회피 섞임', title:'욕망과 회피가 섞이기 쉬운 상태'}
+    };
+    const dMap = desireMap[rawSignal.type] || {};
+    $('reading').innerHTML = `
+      <div class="r-question">${escapeHtml(question)}</div>
+      <div class="r-signal ${stateSignal.className}">
+        <div class="signal-badge"><span class="signal-dot"></span>${stateSignal.icon} ${dMap.label || stateSignal.label}</div>
+        <div class="signal-title ${stateSignal.className}">${dMap.title || stateSignal.title}</div>
+        <div class="signal-sub">${stateSignal.sub}</div>
+        <div class="signal-meter">${[1,2,3,4,5,6].map(n=>`<span class="meter-seg ${n <= stateSignal.level ? 'on' : ''}"></span>`).join('')}</div>
+      </div>
+      <div style="margin-top:14px;padding:14px 16px;border:1px solid rgba(148,163,184,.18);border-radius:16px;background:rgba(10,18,36,.6);">
+        <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px;">감각 스냅샷</div>
+        <p style="font-size:14px;color:#94a3b8;line-height:1.75;word-break:keep-all;margin:0 0 6px;">이 입력은 질문보다 감각·욕망 표출에 가까워 흐름이 부드럽게 잡힙니다.</p>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">"왜 이렇지", "어떻게 봐야 할까" 같은 시선이 들어오면 흐름이 더 또렷해집니다.</p>
+      </div>
+      <hr class="r-divider">
+      <div class="coord-chips">
+        <div class="coord-chip"><span class="c-icon">${p.icon}</span><span class="c-name">${p.name}</span><span class="c-key">${p.keyword}</span></div>
+        <div class="coord-chip"><span class="c-icon">${s.icon}</span><span class="c-name">${s.name}</span><span class="c-key">${s.keyword}</span></div>
+        <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
+      </div>
+    `;
+    $('reading').scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+
   // low / weak: 무의미·방향 약한 입력 — 약화 출력 (좌표 + 신호만, 해석 없음)
   if(meaningLevel === 'low' || meaningLevel === 'weak'){
+    showSections();
     const p = pick(planets), s = pick(signs), h = pick(houses);
     renderDice(p,s,h);
     const rawSignal = getSignal(p,s,h);
@@ -2190,8 +2339,8 @@ function roll(){
       </div>
       <div style="margin-top:14px;padding:14px 16px;border:1px solid rgba(148,163,184,.18);border-radius:16px;background:rgba(10,18,36,.6);">
         <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px;">신호는 잡혔지만</div>
-        <p style="font-size:14px;color:#94a3b8;line-height:1.75;word-break:keep-all;margin:0 0 6px;">좌표는 움직였지만, 지금은 질문 중심이 흐려 읽힘이 약합니다.</p>
-        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">하나의 방향, 하나의 상황으로 좁혀서 다시 넣으면 흐름이 더 또렷해집니다.</p>
+        <p style="font-size:14px;color:#94a3b8;line-height:1.75;word-break:keep-all;margin:0 0 6px;">이 입력은 질문보다 감각 표출에 가까워 흐름이 약하게 잡힙니다.</p>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">"왜", "어떻게", "해야 할까" 같은 시선이 들어오면 흐름이 또렷해집니다.</p>
       </div>
       <hr class="r-divider">
       <div class="coord-chips">
@@ -2215,13 +2364,27 @@ function roll(){
   renderHistory();
   $('reading').scrollIntoView({behavior:'smooth',block:'start'});
 
+  // 섹션 열기
+  showSections();
+
+  // 누적 스냅샷 카운트 — 3회: 플로팅 커피 + 미끼(0.55), 5회: 미끼(1.0)
+  let snapCount = parseInt(localStorage.getItem('astro_snap_count') || '0') + 1;
+  localStorage.setItem('astro_snap_count', snapCount);
+  applySupportVisibility(snapCount);
+
   // 입력란 비우고 placeholder 새로 설정
   questionEl.value = '';
   setRandomPlaceholder();
 }
 
 function renderHistory(){
-  if(!history.length){ $('historyList').textContent = '기록 없음.'; return; }
+  const wrap = document.getElementById('historyWrap');
+  if(!history.length){
+    if(wrap) wrap.querySelector('#historyList').textContent = '기록 없음.';
+    return;
+  }
+  const sh = document.getElementById('sec-history');
+  if(sh) sh.style.display = 'block';
   $('historyList').innerHTML = history.map((item,index)=>`
     <div class="history-item" data-index="${index}">
       <div><strong>${escapeHtml(item.question)}</strong><br>${item.p.icon} ${item.p.name} · ${item.s.icon} ${item.s.name} · ${item.h.name}</div>
@@ -2395,27 +2558,12 @@ function getSnapshotForPrompt(item, index){
   const p = item.p, s = item.s, h = item.h;
   const qInfo = detectDomain(item.question || '');
   const signal = getDisplaySignal(item.signal || getSignal(p,s,h), qInfo);
-  const scene = makeScene(p,s,h);
-  const sceneHtml = makeSceneHtml(p,s,h,qInfo);
-  const bridge = getBridge(signal,p,s,h,qInfo);
-  const closing = getClosing(signal, p, s, qInfo.tone, qInfo);
-  const shortGuide = getQuestionReadGuide(qInfo, item.question || '', p, s, h);
-  const clearGuide = getClearFlowGuide(signal, qInfo, p, s, h);
-  const caution = getRememberGuide(p, s, h);
-  const riskLine = qInfo.mode === 'riskAction' ? `위험 행동 분기: ${qInfo.riskLabel || '부담이 큰 행동 판단'} · 실행 권장 아님` : '';
+  const riskLine = qInfo.mode === 'riskAction' ? ` [판단 전 확인 — ${qInfo.riskLabel || '부담이 큰 행동 판단'}]` : '';
   return [
-    `${index}.`,
-    `질문: ${item.question}`,
-    `질문 성격: ${qInfo.mode}${qInfo.primary ? ' / ' + qInfo.primary : ''}`,
-    riskLine,
-    `신호: ${signal.icon || ''} ${signal.label || signal.title} - ${signal.title}`,
-    `요소: ${p.icon} ${p.name} · ${s.icon} ${s.name} · ${h.name}`,
-    `장면 해석: ${scene.replaceAll('\n',' / ')}`,
-    `짧은 기준: ${shortGuide}`,
-    `보조 해석: ${bridge} ${closing}`,
-    `맑게 쓰는 법: ${clearGuide}`,
-    `주의점: ${caution}`
-  ].filter(Boolean).join('\n');
+    `${index}. ${item.question}${riskLine}`,
+    `   신호: ${signal.icon || ''} ${signal.label} — ${signal.title}`,
+    `   요소: ${p.icon} ${p.name}(${p.keyword}) · ${s.icon} ${s.name}(${s.keyword}) · ${h.name}(${h.keyword})`
+  ].join('\n');
 }
 
 async function copyAiSummaryPrompt(){
@@ -2423,40 +2571,26 @@ async function copyAiSummaryPrompt(){
   const items = history.slice().reverse();
   const body = items.map((item, i)=>getSnapshotForPrompt(item, i+1)).join('\n\n');
   const prompt = [
-    '아래는 astro-compass에서 나온 여러 스냅샷 기록입니다.',
-    '새로 점치지 말고, 기록 사이의 반복 흐름과 엇갈리는 신호를 종합해서 읽어주세요.',
+    'astro-compass 스냅샷 기록입니다.',
+    '새로 점치지 말고, 기록 사이의 반복과 엇갈림을 읽어주세요.',
     '',
-    '[astro-compass 전제]',
-    'astro-compass는 운명·결과 확정 도구가 아니라, 현재 흐름을 비추는 스냅샷 도구입니다.',
-    '각 결과는 좋다/나쁘다 판정이 아니라, 질문자가 지금 어떤 장면과 기준을 붙잡고 있는지 보여주는 자료입니다.',
-    '같은 신호도 쓰는 방식에 따라 맑게 드러날 수도, 흐려질 수도 있습니다.',
+    '[읽는 방식]',
+    '- 결과 확정 금지. "된다/망했다/바로 해라" 표현 쓰지 말 것.',
+    '- 반복되는 신호를 우선해서 읽을 것.',
+    '- 불안해서 되묻는 질문은 새 점괘로 떼어내지 말고 앞 질문과 연결할 것.',
+    '- 위험 행동 질문(대출·투자·퇴사·관계 단절)은 실행 권장 아님. 판단 전 기준 확인으로 읽을 것.',
+    '- 지금 붙잡을 수 있는 기준 하나로 마무리할 것.',
     '',
-    '[해석 규칙]',
-    '1. 결과를 확정하지 말 것.',
-    '2. “무조건 된다/망했다/바로 해라” 같은 표현을 쓰지 말 것.',
-    '3. 반복되는 신호를 우선해서 읽을 것.',
-    '4. 서로 엇갈리는 신호는 숨기지 말고 함께 정리할 것.',
-    '5. 불안해서 되묻는 질문은 새 점괘처럼 떼어내지 말고, 앞선 질문과 연결해서 읽을 것.',
-    '6. “망하나/괜찮나/내 생각 어때”처럼 숨은 불안이 섞인 질문은 실제 결말보다 무엇을 붙잡고 있는지 먼저 읽을 것.',
-    '7. 대출·빚·투자·퇴사·계약·관계 단절 같은 위험 행동 질문은 실행 권장이 아니라 판단 전 기준 확인으로 읽을 것.',
-    '8. 추상적인 철학 설명보다, 사용자가 지금 실제로 붙잡을 수 있는 기준과 장면 중심으로 말할 것.',
-    '9. 좋다/나쁘다보다 살아 있음·굳음·흔들림·조율·재정비 같은 흐름 상태 언어로 번역할 것.',
-    '10. 마지막에는 현재 가장 자연스러운 방향을 짧게 정리할 것.',
+    '[출력]',
+    '1. 반복되는 흐름',
+    '2. 엇갈리는 신호',
+    '3. 지금 가장 자연스러운 방향',
+    '4. 한 줄 결론',
     '',
-    '[출력 형식]',
-    '1. 전체 흐름 요약',
-    '2. 반복되는 방향',
-    '3. 엇갈리거나 흔들리는 신호',
-    '4. 불안해서 되묻는 질문의 연결 지점',
-    '5. 지금 가장 자연스러운 흐름',
-    '6. 작게 해볼 수 있는 것',
-    '7. 한 줄 결론',
-    '',
-    '[스냅샷 기록]',
+    '[기록]',
     body,
     '',
-    '문체: 부드럽고 관찰적인 해요체. 단정하지 말고, 현실적으로 읽어주세요.',
-    '사이트: https://astro-compass.structon.kr/'
+    '문체: 부드럽고 관찰적인 해요체.'
   ].join('\n');
 
   try{
@@ -2677,6 +2811,113 @@ if(onboardingModal){ onboardingModal.addEventListener('click', (e)=>{ if(e.targe
 window.openOnboarding = openOnboarding;
 
 renderGuide();
+
+// ── 섹션 제어 함수 ──────────────────────────────────────
+function showSections(){
+  const preIntro = document.getElementById('preSnapIntro');
+  if(preIntro) preIntro.style.display = 'none';
+  const sr = document.getElementById('sec-result');
+  if(sr) sr.style.display = 'block';
+  const sh = document.getElementById('sec-history');
+  if(sh) sh.style.display = 'block';
+}
+
+function resetToHome(){
+  // 결과·기록 섹션 숨기기
+  ['sec-result','sec-history'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+  // 미끼·플로팅 커피 숨김
+  const bw = document.getElementById('bookWhisper');
+  if(bw){ bw.classList.remove('shown','full'); }
+  const fc = document.getElementById('floatingCoffee');
+  if(fc){ fc.classList.remove('visible'); }
+  // 앱 의의 다시 보이기
+  const preIntro = document.getElementById('preSnapIntro');
+  if(preIntro) preIntro.style.display = '';
+  // 입력 초기화
+  const q = document.getElementById('question');
+  if(q){ q.value = ''; setRandomPlaceholder(); }
+  // 기록 초기화
+  history = [];
+  const hl = document.getElementById('historyList');
+  if(hl) hl.textContent = '기록 없음.';
+  // 결과 초기화
+  const reading = document.getElementById('reading');
+  if(reading) reading.innerHTML = '';
+  // 3칸 초기화
+  const dg = document.getElementById('diceGrid');
+  if(dg) dg.innerHTML = `
+    <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
+    <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
+    <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>
+  `;
+  // 페이지 상단으로
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// 로고 클릭 → 홈 초기화
+(function(){
+  const h1 = document.querySelector('h1');
+  if(h1){
+    h1.style.cursor = 'pointer';
+    h1.addEventListener('click', resetToHome);
+  }
+})();
+
+// 페이지 로드 시 초기 상태 복원
+(function(){
+  // 카운트는 다음 스냅샷 시 applySupportVisibility에서 사용됨.
+  // 초기 진입 시점에는 결과가 없으므로 미끼/플로팅 커피 모두 노출하지 않음.
+})();
+
+// 후원/전자책 노출 — 스냅샷 카운트 기반
+function applySupportVisibility(count){
+  const bw = document.getElementById('bookWhisper');
+  const fc = document.getElementById('floatingCoffee');
+  if(count >= 3){
+    if(fc) fc.classList.add('visible');
+    if(bw){
+      bw.classList.add('shown');
+      if(count >= 5) bw.classList.add('full');
+    }
+  }
+}
+
+// 책 모달
+function openBookModal(){
+  const m = document.getElementById('bookModal');
+  if(!m) return;
+  m.classList.add('open');
+  m.setAttribute('aria-hidden','false');
+  document.addEventListener('keydown', _bookEsc);
+}
+function closeBookModal(){
+  const m = document.getElementById('bookModal');
+  if(!m) return;
+  m.classList.remove('open');
+  m.setAttribute('aria-hidden','true');
+  document.removeEventListener('keydown', _bookEsc);
+}
+function _bookEsc(e){ if(e.key === 'Escape') closeBookModal(); }
+
+// 커피 모달
+function openCoffeeModal(){
+  const m = document.getElementById('coffeeModal');
+  if(!m) return;
+  m.classList.add('open');
+  m.setAttribute('aria-hidden','false');
+  document.addEventListener('keydown', _coffeeEsc);
+}
+function closeCoffeeModal(){
+  const m = document.getElementById('coffeeModal');
+  if(!m) return;
+  m.classList.remove('open');
+  m.setAttribute('aria-hidden','true');
+  document.removeEventListener('keydown', _coffeeEsc);
+}
+function _coffeeEsc(e){ if(e.key === 'Escape') closeCoffeeModal(); }
 </script>
 <script>
 if('serviceWorker' in navigator){
