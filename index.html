@@ -61,7 +61,10 @@
     .label-note{display:inline-block;margin-left:6px;color:rgba(250,204,21,.8);font-size:11px;font-weight:500}
     textarea{width:100%;min-height:100px;resize:vertical;border:1px solid rgba(148,163,184,.25);border-radius:16px;outline:0;padding:15px 17px;background:rgba(5,12,28,.75);color:#d8e8f4;font-size:16px;line-height:1.85;font-weight:500}
     textarea:focus{border-color:rgba(94,234,212,.5);box-shadow:0 0 0 3px rgba(94,234,212,.09)}
-    textarea::placeholder{color:#3d5570}
+    .flow-ticker{overflow:hidden;height:22px;margin:14px 0 4px;position:relative}
+    .flow-ticker-inner{display:flex;flex-direction:column;transition:transform .7s cubic-bezier(.4,0,.2,1)}
+    .flow-ticker-line{height:22px;line-height:22px;font-size:12px;color:#3d5570;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+    textarea::placeholder{color:#3d5570;-webkit-text-fill-color:#3d5570;opacity:1}
     .hint{margin-top:7px;color:#3d5165;font-size:12px;word-break:keep-all}
     .soft-warning{display:none;margin-top:9px;padding:9px 12px;border-radius:12px;border:1px solid rgba(250,204,21,.2);background:rgba(250,204,21,.06);color:#fde68a;font-size:12px}
     .risk-action-box{margin:0 0 16px;padding:14px 16px;border-radius:16px;border:1px solid rgba(251,146,60,.32);background:linear-gradient(180deg,rgba(251,146,60,.13),rgba(127,29,29,.10));color:#fed7aa;box-shadow:0 12px 34px rgba(0,0,0,.20)}
@@ -244,6 +247,17 @@
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
           </button>
+        </div>
+      </div>
+
+      <div class="flow-ticker" aria-hidden="true">
+        <div class="flow-ticker-inner" id="flowTicker">
+          <div class="flow-ticker-line">현재 상태를 묻는 질문일수록 더 또렷하게 읽힙니다</div>
+          <div class="flow-ticker-line">질문을 하나의 상황으로 좁히면 읽힘이 더 선명해집니다</div>
+          <div class="flow-ticker-line">결과 확정보다, 지금 붙잡는 흐름을 비춰봅니다</div>
+          <div class="flow-ticker-line">예: 왜 같은 고민으로 자꾸 돌아올까?</div>
+          <div class="flow-ticker-line">예: 지금 흐름에서 중요한 기준은 뭘까?</div>
+          <div class="flow-ticker-line">반복되는 고민일수록 질문이 더 선명하게 읽힙니다</div>
         </div>
       </div>
 
@@ -2009,6 +2023,26 @@ function setRandomPlaceholder(){
   $('question').placeholder = placeholders[Math.floor(Math.random()*placeholders.length)];
 }
 setRandomPlaceholder();
+
+// 흐름 배너 — 천천히 한 줄씩 올라가며 순환
+(function(){
+  const ticker = document.getElementById('flowTicker');
+  if(!ticker) return;
+  const total = ticker.querySelectorAll('.flow-ticker-line').length;
+  const lineH = 22;
+  let current = 0;
+  const tickNext = () => {
+    current = (current + 1) % total;
+    if(current === 0){
+      ticker.style.transition = 'none';
+      ticker.style.transform = 'translateY(0)';
+      setTimeout(()=>{ ticker.style.transition = 'transform .7s cubic-bezier(.4,0,.2,1)'; }, 50);
+    } else {
+      ticker.style.transform = 'translateY(-' + (current * lineH) + 'px)';
+    }
+  };
+  setInterval(tickNext, 3800);
+})();
 
 function detectCasualCompareQuestion(question){
   const q = normalizeQuestionText(question);
