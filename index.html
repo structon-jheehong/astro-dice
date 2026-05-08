@@ -660,7 +660,7 @@ function detectViolenceRiskQuestion(question){
  */
 function detectExistentialEscapeQuestion(question){
   const q = normalizeQuestionText(question);
-  return /다시태어나|다음생|새삶|새인생|다른인생|다시살면|다시시작|환생|전생|태어났어야|운명인가|팔자인가|전생에죄|이번생망|이번생은망|이번생은글렀|이생망|다른사람으로태어나|왜이렇게태어났|다시시작하고싶/.test(q);
+  return /다시태어나|다시태어날|다음생|새삶|새인생|다른인생|다시살면|다시시작|환생|전생|태어났어야|운명인가|팔자인가|전생에죄|이번생망|이번생은망|이번생은글렀|이번생조|이번생은조|이번생끝|이번생포기|이번생글러|이생망|이생조|인생조진|인생망한|망한인생|글러먹|글러버린|다른사람으로태어나|왜이렇게태어났|다시시작하고싶/.test(q);
 }
 
 
@@ -700,13 +700,19 @@ function isSoftRelationContext(qInfo){
 // → 상단 압력을 "열림" 대신 "구조와 기준 충돌"로 교체하는 데 쓴다.
 function detectRelationshipConflict(question){
   const q = normalizeQuestionText(question);
+  // 명시적 충돌 키워드 — outcomeFrame 없어도 단독으로 잡는다.
+  // (양다리/환승/불륜은 사용자가 "허가받은 신호"로 오독할 위험이 큰 사각이라
+  //  '돼?', '괜찮아?' 같은 outcome 표현이 없어도 무조건 충돌 분기로 보낸다)
+  const explicit = /양다리|두다리|두사람동시|동시에만나|동시에사귀|환승연애|환승할까|환승해도|환승하면|불륜|바람피|바람펴|바람나|바람났|딴여자|딴남자/.test(q);
+  if(explicit) return true;
+
   const hasConflictFrame =
     /결혼|유부|남편|아내|기혼|바람|불륜|갈아타|헤어지고|이혼하고|손절하고/.test(q);
   const hasOutcomeFrame =
-    /잘될까|잘될것|가능|이어질|이어질까|괜찮|맞을까|될까|갈까|사귀어|사귈수|고백|성공|만날수|만날까/.test(q);
+    /잘될까|잘될것|가능|이어질|이어질까|괜찮|맞을까|될까|갈까|사귀어|사귈수|고백|성공|만날수|만날까|해도돼|해도되|해도괜찮|이래도되/.test(q);
   // "다른 사람이 생겼다" 계열도 포함
   const hasOtherPerson =
-    /생겼어|생겼는데|생겼다|흔들려|흔들리는데|끌려|끌리는데|좋아졌|좋아지는데/.test(q) &&
+    /생겼어|생겼는데|생겼다|흔들려|흔들리는데|끌려|끌리는데|좋아졌|좋아지는데|마음이가|마음간|맘이가|맘간|다른사람한테|다른사람에게|다른사람생겼|다른사람이생|새로운사람|딴사람한테/.test(q) &&
     /결혼|남편|아내|남친|여친|애인|기혼|유부/.test(q);
   return (hasConflictFrame && hasOutcomeFrame) || hasOtherPerson;
 }
@@ -799,9 +805,9 @@ function detectAmbiguousAnxietyQuestion(question){
   const vagueFrame = /생각|평가|어때|괜찮|맞아|맞지|그치|되는|될까|상태|느낌|기분|흐름/.test(q);
   const broadFrame = q.length <= 45 || /지금 내가|요즘 내가|이거|이런/.test(q);
   // 불안 재확인 — anxiety 단어 없이 막연한 결말 검토만 있는 케이스
-  // ("잘 풀리겠지 / 잘 될까 / 이게 맞나 / 괜찮을까" 류)
+  // ("잘 풀리겠지 / 잘 될까 / 이게 맞나 / 괜찮을까 / 도움 되는?" 류)
   // 혼선 라벨이 부정 판정처럼 떨어지지 않도록 intentMixed로 흡수
-  const reassurance = /잘 ?풀리|잘 ?될까|잘 ?되겠|잘 ?하겠|잘 ?살겠|풀리겠|풀릴까|괜찮을까|괜찮겠|괜찮나|괜찮은가|되겠지|살겠지|이게 ?맞|맞을까|맞나|성공할까|성공할 ?수|가능할까|할 ?수 ?있을까|할 ?수 ?있겠/.test(q);
+  const reassurance = /잘 ?풀리|잘 ?될까|잘 ?되겠|잘 ?하겠|잘 ?살겠|풀리겠|풀릴까|괜찮을까|괜찮겠|괜찮나|괜찮은가|되겠지|살겠지|이게 ?맞|맞을까|맞나|성공할까|성공할 ?수|가능할까|할 ?수 ?있을까|할 ?수 ?있겠|도움.{0,2}되|도움.{0,2}될|도움.{0,2}됨|잘 ?가고 ?있|제대로 ?가고 ?있|이대로 ?괜찮|이게 ?길|맞게 ?가|맞는 ?방향|방향이 ?맞|길이 ?맞/.test(q);
   const personalScope = q.length <= 30 || /^나 |내가 |내 |요즘 |지금 |그치|이거|이런/.test(q);
   return (anxiety && (vagueFrame || broadFrame)) || (reassurance && personalScope);
 }
@@ -963,6 +969,21 @@ function getSignal(p,s,h){
     className:'signal-blur'
   };
 }
+// 가벼움/감정/욕망 분기에서 raw 신호 색이 무거우면 한 단계 부드럽게.
+// 라벨/타이틀이 부드러운 톤으로 치환되는데 색만 빨강·주황·보라 그대로 노출되는
+// 압력 미스매치를 보정. 정보 자체(level/sub)는 raw 그대로 두고 className/icon만 치환.
+function softenSignalColor(signal){
+  const heavyToSoft = {
+    mixed: { className: 'signal-soft-open', icon: '🟢' },
+    still: { className: 'signal-soft-open', icon: '🟢' },
+    blur:  { className: 'signal-soft-open', icon: '🟢' },
+    check: { className: 'signal-watch',     icon: '🟡' }
+  };
+  const map = heavyToSoft[signal.type];
+  if(!map) return signal;
+  return Object.assign({}, signal, map);
+}
+
 function getDisplaySignal(signal, qInfo){
   if(qInfo && qInfo.mode === 'lifeCrisis'){
     return Object.assign({}, signal, {
@@ -1064,19 +1085,21 @@ function getDisplaySignal(signal, qInfo){
     });
   }
   if(qInfo && qInfo.mode === 'casualChoice'){
+    const soft = softenSignalColor(signal);
     return Object.assign({}, signal, {
-      level: Math.min(signal.level || 3, 4), icon: signal.icon || '🟢', label: '가볍게 흐름 확인',
+      level: Math.min(signal.level || 3, 4), icon: soft.icon, label: '가볍게 흐름 확인',
       title: '지금 감각이 가볍게 움직이는 흐름',
       sub: '큰 의미보다 현재 몸 반응을 먼저 보는 흐름입니다.',
-      className: signal.className
+      className: soft.className
     });
   }
   if(qInfo && qInfo.mode === 'casualCompare'){
+    const soft = softenSignalColor(signal);
     return Object.assign({}, signal, {
-      level: Math.min(signal.level || 3, 4), icon: signal.icon || '🟢', label: '가볍게 비교 확인',
+      level: Math.min(signal.level || 3, 4), icon: soft.icon, label: '가볍게 비교 확인',
       title: '지금 끌리는 쪽을 먼저 보는 흐름',
       sub: '정답보다 지금 끌리는 쪽과 현재 컨디션이 먼저 드러나는 흐름입니다.',
-      className: signal.className
+      className: soft.className
     });
   }
   if(qInfo && qInfo.timingMoney && (signal.type === 'mixed' || signal.type === 'still')){
@@ -2246,7 +2269,8 @@ function roll(){
     const p = pick(planets), s = pick(signs), h = pick(houses);
     renderDice(p,s,h);
     const rawSignal = getSignal(p,s,h);
-    const stateSignal = Object.assign({}, rawSignal, {level: Math.min(rawSignal.level, 3)});
+    const softened = softenSignalColor(rawSignal);
+    const stateSignal = Object.assign({}, softened, {level: Math.min(rawSignal.level, 3)});
     const emotionMap = {
       strongOpen:{label:'움직임 살아 있음', title:'감각 안에서 움직임이 살아 있는 상태'},
       open:{label:'조금 풀리는 흐름', title:'막힌 감각이 조금 풀리는 상태'},
@@ -2288,7 +2312,8 @@ function roll(){
     const p = pick(planets), s = pick(signs), h = pick(houses);
     renderDice(p,s,h);
     const rawSignal = getSignal(p,s,h);
-    const stateSignal = Object.assign({}, rawSignal, {level: Math.min(rawSignal.level, 4)});
+    const softened = softenSignalColor(rawSignal);
+    const stateSignal = Object.assign({}, softened, {level: Math.min(rawSignal.level, 4)});
     const desireMap = {
       strongOpen:{label:'몸 반응 살아 있음', title:'욕망과 감각이 강하게 살아 있는 상태'},
       open:{label:'감각이 풀리는 흐름', title:'욕망의 결이 조금 풀리는 상태'},
