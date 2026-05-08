@@ -180,6 +180,10 @@
     .history-item{display:grid;grid-template-columns:1fr auto;gap:10px;padding:9px 8px;border-bottom:1px solid var(--line2);border-radius:10px;font-size:12px;color:var(--muted);cursor:pointer}
     .history-item:hover{background:rgba(2,6,23,.5);color:var(--text)}
     .history-item:last-child{border-bottom:0}
+    .history-header{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+    .history-clear{background:transparent;border:0;color:#5a7285;font-size:12px;cursor:pointer;padding:4px 0;letter-spacing:-.01em;transition:color .15s}
+    .history-clear:hover{color:#94a3b8}
+    .history-clear:disabled{opacity:.35;cursor:not-allowed}
     .guide-section{margin-bottom:20px}
     .guide-section h3{margin:0 0 10px;font-size:11px;color:#2a3d52;letter-spacing:.06em;text-transform:uppercase}
     .guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:7px}
@@ -325,7 +329,10 @@
       <!-- ③ 기록 섹션 -->
       <section id="sec-history" style="display:none">
         <div class="history" id="historyWrap">
-          <strong>기록</strong>
+          <div class="history-header">
+            <strong>기록</strong>
+            <button type="button" class="history-clear" id="historyClearBtn" onclick="clearHistoryFlow()">기록 비우기</button>
+          </div>
           <div id="historyList" class="hint" style="margin-top:8px;">기록 없음.</div>
         </div>
         <div class="ai-copy-box" id="aiCopyBox">
@@ -527,11 +534,25 @@ function detectHabitPatternQuestion(question){
 
 function detectResentmentQuestion(question){
   const q = normalizeQuestionText(question);
-  const angerWords = /미워|싫어|짜증|화나|화가나|원망|분노|억울|꼴보기싫|열받|빡치|개빡|존나빡|ㅈ같|좆같|새끼|개새끼|썅|씨발|시발|ㅅㅂ|왜저래|왜그러는|밉다|싫다/.test(q);
-  const targetWords = /상사|팀장|대표|사장|직장|회사|동료|거래처|고객|엄마|아빠|가족|남편|아내|남자친구|여자친구/.test(q);
-  const targetAnger = targetWords && angerWords;
+
+  // 행위 거부는 분노가 아니라 상태/저항 — 명시적 제외
+  // ("자기싫어 / 일어나기싫어 / 쉬기싫어 / 가기싫어 / 하기싫어 / 먹기싫어 / 보기싫어"
+  //  같이 동사+싫어 형태는 행위 거부지 사람·상황에 대한 원망이 아님)
+  const actionRefusal = /자기싫|일어나기싫|쉬기싫|가기싫|하기싫|먹기싫|보기싫|읽기싫|쓰기싫|말하기싫|만나기싫|움직이기싫|나가기싫|들어가기싫|운동하기싫|공부하기싫|일하기싫/.test(q);
+  if(actionRefusal) return false;
+
+  // 약한 키워드("싫어/싫다/미워/밉다") 단독은 resentment 아님 — 대상이 있어야
+  const softAngerOnly = /싫어|싫다|미워|밉다/.test(q);
+  // 명확한 분노 표현 — 단독으로도 resentment
+  const strongAnger = /짜증|화나|화가나|원망|분노|억울|꼴보기싫|열받|빡치|빡친|빡쳐|빡쳤|빡침|개빡|존나빡|ㅈ같|좆같|새끼|개새끼|썅|씨발|시발|ㅅㅂ|왜저래|왜그러는/.test(q);
+  // 대상어
+  const targetWords = /상사|팀장|대표|사장|직장|회사|동료|거래처|고객|엄마|아빠|가족|남편|아내|남자친구|여자친구|걔|쟤|그사람|이사람|친구|선배|후배/.test(q);
+
+  if(strongAnger) return true;                    // 강한 분노 표현은 단독으로 통과
+  if(softAngerOnly && targetWords) return true;   // 약한 표현은 대상이 있을 때만
   const familyRese = /(엄마|아빠|가족|남편|아내|남자친구|여자친구|상사|동료).*(때문에|때문|못살|미치겠|힘들어죽겠)/.test(q);
-  return angerWords || targetAnger || familyRese;
+  if(familyRese) return true;
+  return false;
 }
 
 // 입력 의미 강도를 5단계로 판정한다.
@@ -922,7 +943,7 @@ function getSignal(p,s,h){
     return {
       type:'strongOpen', level:6, icon:'🟢', label:'강하게 열림',
       title:'흐름이 강하게 맞물리는 상태',
-      sub:'방향과 힘이 함께 살아 있습니다. 지금 이 움직임을 실제로 살려볼 수 있는 흐름입니다.',
+      sub:'방향과 힘이 함께 살아 있습니다. 어떻게 쓸지가 함께 보이는 흐름입니다.',
       className:'signal-strong-open'
     };
   }
@@ -931,7 +952,7 @@ function getSignal(p,s,h){
     return {
       type:'open', level:5, icon:'🟢', label:'흐름 열림',
       title:'열려 있고 이어갈 수 있는 상태',
-      sub:'방향은 막히지 않았고, 쓰는 방식에 따라 안정적으로 이어질 여지가 있습니다.',
+      sub:'방향은 막히지 않았습니다. 쓰는 방식이 어디로 향하는지를 함께 보는 흐름입니다.',
       className:'signal-open'
     };
   }
@@ -940,7 +961,7 @@ function getSignal(p,s,h){
     return {
       type:'softOpen', level:4, icon:'🟢', label:'천천히 열림',
       title:'가능성이 열려 있는 상태',
-      sub:'좋은 여지는 있습니다. 방식과 기준을 조금 다듬을수록 흐름이 더 선명해집니다.',
+      sub:'방식과 기준이 아직 한 자리에 모이지 않았습니다. 어디가 모이고 어디가 흩어지는지를 보는 흐름입니다.',
       className:'signal-soft-open'
     };
   }
@@ -948,8 +969,8 @@ function getSignal(p,s,h){
   if(score >= 1){
     return {
       type:'adjust', level:3, icon:'🟡', label:'조율 필요',
-      title:'조율하면 살아나는 흐름',
-      sub:'아직 기준이 완전히 모이지 않았습니다. 방향을 조금 더 좁히면 흐름이 더 편하게 이어집니다.',
+      title:'기준과 방향 사이가 흔들리는 상태',
+      sub:'아직 기준이 한 자리에 모이지 않았습니다. 무엇과 무엇 사이가 흔들리는지를 보는 흐름입니다.',
       className:'signal-watch'
     };
   }
@@ -957,8 +978,8 @@ function getSignal(p,s,h){
   if(score >= -1){
     return {
       type:'check', level:2, icon:'🟠', label:'방향 점검',
-      title:'방향을 점검하면 나아지는 흐름',
-      sub:'막힌 것은 아니지만 그대로 밀면 힘이 새기 쉽습니다. 위치와 방식을 다시 보면 흐름이 정리됩니다.',
+      title:'방식과 위치가 어긋나는 상태',
+      sub:'막힌 것은 아니지만 그대로 밀면 힘이 새기 쉽습니다. 어디서 힘이 새고 있는지를 보는 흐름입니다.',
       className:'signal-cross'
     };
   }
@@ -975,7 +996,7 @@ function getSignal(p,s,h){
   return {
     type:'mixed', level:1, icon:'🔴', label:'혼선 큼',
     title:'혼선이 커질 수 있는 흐름',
-    sub:'감각과 판단이 섞이기 쉬운 상태입니다. 지금은 서두르기보다 선명해지는 지점을 천천히 보는 편이 자연스럽습니다.',
+    sub:'감각과 판단이 섞이기 쉬운 상태입니다. 어디가 섞이고 어디가 분리되는지를 보는 흐름입니다.',
     className:'signal-blur'
   };
 }
@@ -2286,6 +2307,9 @@ function roll(){
   $('error').style.display='none';
   hideAllWarnings();
 
+  // 직전 입력이 weak/low여서 diceGrid가 숨겨져 있을 수 있음 — 매 입력마다 복원.
+  $('diceGrid').style.display = '';
+
   // 입력 의미 강도 판정 — 3단계 분기
   const meaningLevel = getInputMeaningLevel(question);
 
@@ -2392,34 +2416,20 @@ function roll(){
     return;
   }
 
-  // low / weak: 무의미·방향 약한 입력 — 약화 출력 (좌표 + 신호만, 해석 없음)
+  // low / weak: 무의미·방향 약한 입력 — 좌표 자체를 생성하지 않음.
+  // 무구 피드백: 의미 없는 입력에 좌표·장면·해석이 붙으면 실제 괘처럼 읽혀
+  // 어색함이 남는다. 색 압력을 줄이는 것보다, 깊이 자체를 차단하는 편이 정합.
+  // → diceGrid 숨김, reading에 짧은 안내만, history 저장 없음(이미 return으로 차단).
   if(meaningLevel === 'low' || meaningLevel === 'weak'){
     showSections();
-    const p = pick(planets), s = pick(signs), h = pick(houses);
-    renderDice(p,s,h);
-    const rawSignal = getSignal(p,s,h);
-    // weak 안내문 자체가 이미 완충 역할인데 raw가 mixed/blur/still/check면 압력 중복.
-    // 1) 색을 한 단계 부드럽게. 2) 강한 라벨/타이틀도 약한 입력 결로 치환.
-    const softSignal = applyWeakLabelMap(softenSignalColor(rawSignal));
+    $('diceGrid').innerHTML = '';
+    $('diceGrid').style.display = 'none';
     $('reading').innerHTML = `
-      <div class="r-question">${escapeHtml(question)}</div>
-      <div class="r-signal ${softSignal.className}">
-        <div class="signal-badge"><span class="signal-dot"></span>${softSignal.icon} ${softSignal.label}</div>
-        <div class="signal-title ${softSignal.className}">${softSignal.title}</div>
-        <div class="signal-meter">${[1,2,3,4,5,6].map(n=>`<span class="meter-seg ${n <= softSignal.level ? 'on' : ''}"></span>`).join('')}</div>
-      </div>
-      <div style="margin-top:14px;padding:14px 16px;border:1px solid rgba(148,163,184,.18);border-radius:16px;background:rgba(10,18,36,.6);">
-        <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px;">신호는 잡혔지만</div>
-        <p style="font-size:14px;color:#94a3b8;line-height:1.75;word-break:keep-all;margin:0 0 6px;">이 입력은 질문보다 감각 표출에 가까워 흐름이 약하게 잡힙니다.</p>
-        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">"왜", "어떻게", "해야 할까" 같은 시선이 들어오면 흐름이 또렷해집니다.</p>
-      </div>
-      <hr class="r-divider">
-      <div class="coord-chips">
-        <div class="coord-chip"><span class="c-icon">${p.icon}</span><span class="c-name">${p.name}</span><span class="c-key">${p.keyword}</span></div>
-        <div class="coord-chip"><span class="c-icon">${s.icon}</span><span class="c-name">${s.name}</span><span class="c-key">${s.keyword}</span></div>
-        <div class="coord-chip"><span class="c-name">${h.name}</span><span class="c-key">${h.keyword}</span></div>
-      </div>
-    `;
+      <div style="margin-top:16px;padding:16px 18px;border:1px solid rgba(148,163,184,.18);border-radius:18px;background:rgba(10,18,36,.7);">
+        <div style="font-size:11px;font-weight:950;color:#94a3b8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;">질문 전 단계</div>
+        <p style="font-size:15px;color:#cbd5e1;line-height:1.7;word-break:keep-all;margin:0 0 8px;">흐름이 충분히 잡히지 않습니다.</p>
+        <p style="font-size:13px;color:#64748b;line-height:1.65;word-break:keep-all;margin:0;">이 입력은 질문보다 감각 표출에 가까워요. "왜", "어떻게", "해야 할까"처럼 시선이 들어오면 더 또렷하게 읽힙니다.</p>
+      </div>`;
     $('reading').scrollIntoView({behavior:'smooth',block:'start'});
     return;
   }
@@ -2919,13 +2929,39 @@ function resetToHome(){
   if(reading) reading.innerHTML = '';
   // 3칸 초기화
   const dg = document.getElementById('diceGrid');
-  if(dg) dg.innerHTML = `
-    <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
-    <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
-    <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>
-  `;
+  if(dg){
+    dg.style.display = ''; // weak/low 분기로 숨겨졌을 수 있어 복원
+    dg.innerHTML = `
+      <div class="dice"><div class="kind">행성 / 엔진</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">무엇을 한다</div></div>
+      <div class="dice"><div class="kind">별자리 / 스타일</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어떻게 한다</div></div>
+      <div class="dice"><div class="kind">하우스 / 무대</div><div class="icon">-</div><div class="name">대기</div><div class="keyword">어디서 드러난다</div></div>
+    `;
+  }
   // 페이지 상단으로
   window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// 기록 비우기 — 2단계 확인.
+// 1번 클릭: "정말 비울까요?"로 라벨 바뀜 + 4초 후 자동 원복
+// 2번 클릭: 실제 초기화 (resetToHome 재사용 — 입력/결과/기록/좌표/노출상태 일관 정리)
+let _clearConfirmTimer = null;
+function clearHistoryFlow(){
+  const btn = document.getElementById('historyClearBtn');
+  if(!btn) return;
+  if(btn.dataset.confirming === '1'){
+    clearTimeout(_clearConfirmTimer);
+    btn.dataset.confirming = '';
+    btn.textContent = '기록 비우기';
+    resetToHome();
+    showToast('기록을 비웠어요.');
+    return;
+  }
+  btn.dataset.confirming = '1';
+  btn.textContent = '정말 비울까요? 한 번 더 누르기';
+  _clearConfirmTimer = setTimeout(() => {
+    btn.dataset.confirming = '';
+    btn.textContent = '기록 비우기';
+  }, 4000);
 }
 
 // 로고 클릭 → 홈 초기화
